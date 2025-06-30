@@ -23,9 +23,46 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className         = {`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navigation />
+        
+        <div className    = "container">
+          <h1>hello</h1>
+        </div>
+
+        <div className    = ".container">
+          <h1>hello</h1>
+        </div>
+
+        <div className    = ".container-sm">
+          <h1>hello</h1>
+        </div>
+
+        <div className    = ".container-md">
+          <h1>hello</h1>
+        </div>
+
+        <div className    = ".container-lg">
+          <h1>hello</h1>
+        </div>
+
+        <div className    = ".container-xl">
+          <h1>hello</h1>
+        </div>
+
+        <div className    = ".container-xxl">
+          <h1>hello</h1>
+        </div>
+
+        <div className    = "container-fluid">
+          <h1>hello</h1>
+        </div>
+        
+
+
+        
+        
         {children}
       </body>
     </html>
