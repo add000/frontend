@@ -1,7 +1,11 @@
+import Carousel from './components/carousel';
+import Card from './components/card';
+
 export default function Home() {
   return (
-    <>
-    <h1 className="ftext-4xl text-center text-bule-950">Home page</h1>
-    </>
+    <main>
+      <Carousel />
+      <Card />
+    </main>
   );
 }
