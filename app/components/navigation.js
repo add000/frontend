@@ -36,8 +36,11 @@ export default function Navbar() {
       </ul>
       <form className="d-flex" role="search">
         <input className="form-control me-2" type="search" placeholder="ค้นหา" aria-label="Search" />
-        <button className="btn btn-outline-warning" type="submit">ค้นหา</button>
+        <button className="btn btn-outline-primary" type="submit">ค้นหา</button>
+        <div className="ms-2">
+        </div>
       </form>
+      <a href="/login" className="btn btn-primary" tabIndex={-1} role="button">เข้าสู่ระบบ</a>
     </div>
   </div>
 </nav>
