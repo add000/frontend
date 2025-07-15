@@ -168,12 +168,16 @@ export default function RegisterPage() {
         </div>
 
         <br />
+
+        <div content="flex" style={{ display: 'flex', justifyContent: 'end', gap: '1em' }}>
+        <a className="btn btn-primary" href="/login" role="button">ย้อนกลับ</a>
         <button 
         type                  = "submit"
         className             = "btn btn-primary">
             สมัครสมาชิก
         </button>
-        
+        </div>
+
       </form>
     </div>
   );
