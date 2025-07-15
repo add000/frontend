@@ -54,20 +54,24 @@ export default function LoginPage() {
 
         </div>
 
+        <div content="flex" style={{ display: 'flex', justifyContent: 'end', gap: '1em' }}>
+        <a className="btn btn-primary" href="/" role="button">ย้อนกลับ</a>
+
         <button 
         type                  = "submit"
         className             = "btn btn-primary">
           เข้าสู่ระบบ
         </button>
+        </div>
 
         <br />
         <br />
 
         <div>
-          <flex style         = {{ gap: '6em', display: 'flex', justifyContent: 'center' }}>
+          <div style         = {{ gap: '6em', display: 'flex', justifyContent: 'center' }}>
           <a href             = "/forgot-password" className="text-decoration-none">ลืมรหัสผ่าน?</a>
           <a href             = "/register" className="text-decoration-none">สมัครสมาชิก</a>
-          </flex>
+          </div>
         </div>
 
       </form>
