@@ -1,7 +1,8 @@
 export default function LoginPage() {
   return (
+
     <div className            = "container" style={{ maxWidth: '400px', marginTop: '50px' }}>
-      <form className         = "border p-4 rounded">
+      <form className         = "border-none p-5 rounded-5" style={{backdropFilter: 'blur(16px)', backgroundColor: 'rgba(0, 0, 0, 0)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'}}>
         <div className        = "mb-3">
 
           <label 
@@ -12,7 +13,7 @@ export default function LoginPage() {
 
           <input 
           type                = "text"
-          className           = "form-control"
+          className           = "form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none"
           id                  = "exampleInputText1"
           aria-describedby    = "TextHelp"
           placeholder         = "โปรดใส่ชื่อของคุณ"
@@ -35,7 +36,7 @@ export default function LoginPage() {
 
           <input 
           type                = "password"
-          className           = "form-control"
+          className           = "form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none"
           id                  = "exampleInputPassword1"
           placeholder         = "อย่าลืมใส่รหัสผ่านของคุณด้วยละ"
           />
@@ -44,7 +45,7 @@ export default function LoginPage() {
         <div className        = "mb-3 form-check">
           <input 
           type                = "checkbox"
-          className           = "form-check-input"
+          className           = "form-check-input bg-transparent focus:outline-none"
           id                  = "exampleCheck1" />
           <label 
           className           = "form-check-label"
