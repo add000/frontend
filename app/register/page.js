@@ -1,7 +1,7 @@
 export default function RegisterPage() {
   return (
     <div className            = "container" style={{ maxWidth: '400px', marginTop: '50px' }}>
-      <form className         = "border p-4 rounded">
+      <form className         = "border-none rounded-5 p-5" style={{backdropFilter: 'blur(16px)', backgroundColor: 'rgba(0, 0, 0, 0)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'}}>
         <div className        = "mb-3">
 
           <label 
@@ -12,7 +12,7 @@ export default function RegisterPage() {
 
           <input 
           type                = "text"
-          className           = "form-control"
+          className           = "form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none"
           id                  = "exampleInputText1"
           aria-describedby    = "TextHelp"
           placeholder         = "โปรดตั้งชื่อผู้ใช้ของคุณ"
@@ -35,7 +35,7 @@ export default function RegisterPage() {
 
           <input 
           type                = "password"
-          className           = "form-control"
+          className           = "form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none"
           id                  = "exampleInputPassword1"
           placeholder         = "สร้างรหัสผ่าน"
           />
@@ -47,7 +47,8 @@ export default function RegisterPage() {
           className           = "form-label">
             คำนำหน้าชื่อ
         </label>
-        <select className     = "form-select" aria-label="Default select example">
+        
+        <select className     = "form-select bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none" aria-label="Default select example">
             <option>โปรดเลือกคำนำหน้าชื่อ</option>
             <option value     = "1">นาย</option>
             <option value     = "2">นาง</option>
@@ -66,7 +67,7 @@ export default function RegisterPage() {
 
         <input 
           type                = "text"
-          className           = "form-control"
+          className           = "form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none"
           id                  = "exampleInputText1"
           placeholder         = "ใส่ชื่อของคุณที่นี่ซะ"
           />
@@ -83,7 +84,7 @@ export default function RegisterPage() {
 
         <input 
           type                = "text"
-          className           = "form-control"
+          className           = "form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none"
           id                  = "exampleInputText1"
           placeholder         = "ใส่นามสกุลของคุณด้วย"
           />
@@ -97,7 +98,7 @@ export default function RegisterPage() {
            ที่อยู่ของคุณ
         </label>
         <textarea 
-        className             = "form-control"
+        className             = "form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none"
         id                    = "exampleFormControlTextarea1"
         rows                  = {3} />
         </div>
@@ -111,25 +112,25 @@ export default function RegisterPage() {
         <div>
 
             <div className    = "form-check form-check-inline">
-            <input className  = "form-check-input" type="radio" name="radioDefault" id="radioDefault1" />
+            <input className  = "form-check-input bg-transparent focus:outline-none" type="radio" name="radioDefault" id="radioDefault1" />
             <label className  = "form-check-label" htmlFor="radioDefault1">
                 ชาย
             </label>
             </div>
             <div className    = "form-check form-check-inline">
-            <input className  = "form-check-input" type="radio" name="radioDefault" id="radioDefault2" />
+            <input className  = "form-check-input bg-transparent focus:outline-none" type="radio" name="radioDefault" id="radioDefault2" />
             <label className  = "form-check-label" htmlFor="radioDefault2">
                 หญิง
             </label>
             </div>
             <div className    = "form-check form-check-inline">
-            <input className  = "form-check-input" type="radio" name="radioDefault" id="radioDefault3"  />
+            <input className  = "form-check-input bg-transparent focus:outline-none" type="radio" name="radioDefault" id="radioDefault3"  />
             <label className  = "form-check-label" htmlFor="radioDefault3">
                 อื่นๆ
             </label>
             </div>
             <div className    = "form-check form-check-inline">
-            <input className  = "form-check-input" type="radio" name="radioDefault" id="radioDefault4" />
+            <input className  = "form-check-input bg-transparent focus:outline-none" type="radio" name="radioDefault" id="radioDefault4" />
             <label className  = "form-check-label" htmlFor="radioDefault4">
                 ไม่ระบุ
             </label>
@@ -146,7 +147,7 @@ export default function RegisterPage() {
           </label>
           <input 
           type                = "date"
-          className           = "form-control"
+          className           = "form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none"
           id                  = "exampleInputdate1"
           placeholder         = "โปรดใส่วันเกิดของคุณ"
           />
@@ -157,7 +158,7 @@ export default function RegisterPage() {
         <div className        = "mb-3 form-check">
           <input 
           type                = "checkbox"
-          className           = "form-check-input"
+          className           = "form-check-input bg-transparent focus:outline-none"
           id                  = "exampleCheck1" />
           <label 
           className           = "form-check-label"
