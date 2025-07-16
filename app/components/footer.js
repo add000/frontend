@@ -114,7 +114,7 @@ export default function Footer() {
                 <input
                   id="newsletter1"
                   type="email"
-                  className="form-control"
+                  className="form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none"
                   placeholder="Email address"
                 />
                 <button className="btn btn-primary" type="button">
