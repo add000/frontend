@@ -26,19 +26,44 @@ export default function RootLayout({ children }) {
     <html lang="en">
     <head>
       <title>Frontend</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="viewport saturate-200" content="width=device-width, initial-scale=1" />
+      <style jsx global>{`
+        /* ซ่อน scrollbar สำหรับ Webkit browsers (Chrome, Safari, Edge) */
+        ::-webkit-scrollbar {
+          display: none;
+        }
+        
+        /* ซ่อน scrollbar สำหรับ Firefox */
+        html {
+          scrollbar-width: none;
+        }
+        
+        /* ซ่อน scrollbar แต่ยังสามารถเลื่อนได้ */
+        body {
+          -ms-overflow-style: none;  /* Internet Explorer 10+ */
+          scrollbar-width: none;  /* Firefox */
+        }
+        
+        body::-webkit-scrollbar { 
+          display: none;  /* Safari and Chrome */
+        }
+      `}</style>
     </head>
-      <body className={prompt.className} style={{ backgroundImage: 'url(/bg1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        {!shouldHide && <Navigation />}
-
+      <body className={prompt.className} style={{ backgroundImage: 'url(/bg1.jpg)', backgroundSize: 'fit', backgroundPosition: 'center' }}>
+        {!shouldHide && (
+          <div>
+            <Navigation />
+          </div>
+        )}
+        
           {children}
 
-          <br />
-          <br />
-          <br />
-        {!shouldHide && <Footer />}
+        {!shouldHide && (
+          <div>
+            <Footer />
+          </div>
+        )}
       </body>
     </html>
   );
 }
-
