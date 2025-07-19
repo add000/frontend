@@ -25,6 +25,16 @@ export default function LiquidNavbar() {
     });
   }, [pathname]);
 
+  useEffect(() => {
+    const loadBootstrap = async () => {
+      if (typeof window !== 'undefined') {
+        await import('bootstrap/dist/js/bootstrap.bundle.min.js');
+      }
+    };
+    
+    loadBootstrap();
+  }, []);
+
   const getNavLinkStyle = (path) => ({
     color: 'white',
     padding: '8px 16px',
