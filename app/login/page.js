@@ -1,7 +1,7 @@
 export default function LoginPage() {
   return (
-
-    <div className            = "container" style={{ maxWidth: '400px', marginTop: '50px' }}>
+    
+    <div className            = "container" style={{ maxWidth: '400px', padding: '20px', margin: '0 auto', marginTop: '100px' }}>
       <form className         = "border-none p-5 rounded-5" style={{backdropFilter: 'blur(16px)', backgroundColor: 'rgba(0, 0, 0, 0)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'}}>
         <div className        = "mb-3">
 
