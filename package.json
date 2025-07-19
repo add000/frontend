@@ -10,12 +10,17 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
+    "@react-three/drei": "^10.5.1",
+    "@react-three/fiber": "^9.2.0",
     "@tailwindcss/vite": "^4.1.11",
     "bootstrap": "^5.3.7",
     "bootstrap-icons": "^1.13.1",
+    "liquid-web": "^1.1.1",
+    "maath": "^0.10.8",
     "next": "15.3.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "three": "^0.178.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
