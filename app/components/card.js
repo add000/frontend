@@ -5,13 +5,14 @@ export default function Card() {
     <div className="container-fluid text-light" style={{          
             background: `
             linear-gradient(180deg, 
-              rgba(0, 0, 0, ) 0%, 
+              rgba(0, 0, 0, 1) 0%, 
               rgba(0, 0, 0, 0.80) 50%, 
               rgba(0, 0, 0, 0.0) 100%
             )
           `,
             padding: '20px' ,
             objectFit: 'cover',
+          
           }}>
         <div className="row" style={{ margin: '100px'}}>
             <div className="col-md-12 text-center mb-4" style={{ textShadow: '0 0 52px rgba(255, 255, 255, 1)',}}>
