@@ -51,17 +51,13 @@ export default function RootLayout({ children }) {
     </head>
       <body className={prompt.className} style={{ backgroundImage: 'url(/bg1.jpg)', backgroundSize: 'fit', backgroundPosition: 'center' }}>
         {!shouldHide && (
-          <div>
             <Navigation />
-          </div>
         )}
         
           {children}
 
         {!shouldHide && (
-          <div>
-            <Footer />
-          </div>
+          <Footer />
         )}
       </body>
     </html>
