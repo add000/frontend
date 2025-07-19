@@ -10,8 +10,6 @@ export default function Footer() {
         borderTopRightRadius: '40px',
         marginTop: '2rem',
         boxShadow: '0 -4px 20px rgba(0,0,0,0.05)',
-        height: '85vh', 
-        width: '100vw' 
       }}
     >
       <footer className="py-5">
