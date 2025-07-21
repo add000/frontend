@@ -1,4 +1,6 @@
 //import ใน /app/layout.js
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 export default function Footer() {
   return (
@@ -26,7 +28,7 @@ export default function Footer() {
                   พร้อมประสบการณ์ที่น่าประทับใจสำหรับผู้ใช้งาน
                 </p>
                 <div className="d-flex gap-3">
-                  <a href="https://github.com/yourusername" 
+                  <a href="https://github.com" 
                      target="_blank"
                      rel="noopener noreferrer"
                      style={{ 
@@ -43,19 +45,10 @@ export default function Footer() {
                        justifyContent: 'center',
                        textDecoration: 'none'
                      }}
-                     onMouseOver={(e) => {
-                       e.target.style.backgroundColor = '#333';
-                       e.target.style.color = '#fff';
-                       e.target.style.transform = 'translateY(-2px)';
-                     }}
-                     onMouseOut={(e) => {
-                       e.target.style.backgroundColor = '#e2e8f0';
-                       e.target.style.color = '#4a5568';
-                       e.target.style.transform = 'translateY(0)';
-                     }}>
+>
                     <i className="fab fa-github"></i>
                   </a>
-                  <a href="https://linkedin.com/in/yourusername" 
+                  <a href="https://linkedin.com" 
                      target="_blank"
                      rel="noopener noreferrer"
                      style={{ 
@@ -72,16 +65,7 @@ export default function Footer() {
                        justifyContent: 'center',
                        textDecoration: 'none'
                      }}
-                     onMouseOver={(e) => {
-                       e.target.style.backgroundColor = '#0077b5';
-                       e.target.style.color = '#fff';
-                       e.target.style.transform = 'translateY(-2px)';
-                     }}
-                     onMouseOut={(e) => {
-                       e.target.style.backgroundColor = '#e2e8f0';
-                       e.target.style.color = '#4a5568';
-                       e.target.style.transform = 'translateY(0)';
-                     }}>
+>
                     <i className="fab fa-linkedin"></i>
                   </a>
                   <a href="mailto:your.email@example.com" 
@@ -99,19 +83,10 @@ export default function Footer() {
                        justifyContent: 'center',
                        textDecoration: 'none'
                      }}
-                     onMouseOver={(e) => {
-                       e.target.style.backgroundColor = '#ea4335';
-                       e.target.style.color = '#fff';
-                       e.target.style.transform = 'translateY(-2px)';
-                     }}
-                     onMouseOut={(e) => {
-                       e.target.style.backgroundColor = '#e2e8f0';
-                       e.target.style.color = '#4a5568';
-                       e.target.style.transform = 'translateY(0)';
-                     }}>
+>
                     <i className="fas fa-envelope"></i>
                   </a>
-                  <a href="https://twitter.com/yourusername" 
+                  <a href="https://twitter.com" 
                      target="_blank"
                      rel="noopener noreferrer"
                      style={{ 
@@ -128,16 +103,7 @@ export default function Footer() {
                        justifyContent: 'center',
                        textDecoration: 'none'
                      }}
-                     onMouseOver={(e) => {
-                       e.target.style.backgroundColor = '#1da1f2';
-                       e.target.style.color = '#fff';
-                       e.target.style.transform = 'translateY(-2px)';
-                     }}
-                     onMouseOut={(e) => {
-                       e.target.style.backgroundColor = '#e2e8f0';
-                       e.target.style.color = '#4a5568';
-                       e.target.style.transform = 'translateY(0)';
-                     }}>
+>
                     <i className="fab fa-twitter"></i>
                   </a>
                 </div>
