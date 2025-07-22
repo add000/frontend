@@ -294,7 +294,7 @@ export default function LiquidNavbar() {
 
             {/* Desktop Login Button */}
             <div className="d-none d-lg-block">
-              <a className="btn btn-outline-light" href="/login" role="button" style={{
+              <Link className="btn btn-outline-light" href="/login" role='button' style={{
                 borderRadius: '25px',
                 padding: '10px 25px',
                 fontWeight: '500',
@@ -317,7 +317,7 @@ export default function LiquidNavbar() {
                 e.target.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
               }}>
                 เข้าสู่ระบบ
-              </a>
+              </Link>
             </div>
           </div>
         </div>

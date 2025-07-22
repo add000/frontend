@@ -1,5 +1,6 @@
 'use client';
 import { useState } from "react";
+import Link from "next/link";
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({
@@ -43,7 +44,7 @@ export default function LoginPage() {
       maxWidth: '400px',
       padding: '20px',
       margin: '0 auto',
-      marginTop: '100px'
+      marginTop: '68px'
     }}>
 
       <form 
@@ -179,10 +180,10 @@ export default function LoginPage() {
             justifyContent: 'center',
           }}>
 
-          <a href="/forgot-password"
-          className="text-decoration-none link-body-emphasis link-offset-2">ลืมรหัสผ่าน?</a>
-          <a href="/register"
-          className="text-decoration-none link-body-emphasis link-offset-2">สมัครสมาชิก</a>
+          <Link href="/forgot-password"
+          className="text-decoration-none link-body-emphasis link-offset-2">ลืมรหัสผ่าน?</Link>
+          <Link href="/register"
+          className="text-decoration-none link-body-emphasis link-offset-2">สมัครสมาชิก</Link>
           </div>
         </div>
 

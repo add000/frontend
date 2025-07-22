@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -334,7 +335,7 @@ export default function RegisterPage() {
             สมัครสมาชิก
           </button>
 
-          <a 
+          <Link 
             role="button"
             className="btn btn-outline-light w-100"
             href="/login"
@@ -353,7 +354,7 @@ export default function RegisterPage() {
               textAlign: 'center',
             }}>
             ย้อนกลับ
-          </a>
+          </Link>
         </div>
 
       </form>
