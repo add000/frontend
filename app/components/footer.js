@@ -4,13 +4,56 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function Footer() {
   return (
+    <div>
+<section className="py-2 bg-dark" style={{ objectFit: 'cover' }}>
+  <div className="container px-4 px-md-5" style={{ objectFit: 'cover' }}>
+    <div 
+      className="d-flex flex-wrap justify-content-center gap-4" 
+      style={{ textAlign: 'center' }}
+    >
+      {[
+        { href: '#', icon: 'fab fa-steam' },
+        { href: 'https://xbox.com', icon: 'fab fa-xbox' },
+        { href: 'https://youtube.com', icon: 'fab fa-youtube' },
+        { href: '#', icon: 'fab fa-mastodon' },
+        { href: '#', icon: 'fab fa-telegram' },
+        { href: 'https://discord.com', icon: 'fab fa-discord' },
+        { href: 'https://github.com', icon: 'fab fa-github' },
+        { href: 'https://linkedin.com', icon: 'fab fa-linkedin' },
+        { href: 'mailto:your.email@example.com', icon: 'fas fa-envelope' },
+        { href: 'https://twitter.com', icon: 'fab fa-x-twitter' }
+      ].map((item, index) => (
+        <a
+          key={index}
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontSize: '2rem',
+            transition: 'all 0.3s ease',
+            color: '#4a5568',
+            width: '45px',
+            height: '45px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textDecoration: 'none'
+          }}
+        >
+          <i className={item.icon}></i>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
     <div 
       className="w-100" 
       style={{ 
-        backgroundColor: '#f8f9fa',
-        borderTopLeftRadius: '40px',
-        borderTopRightRadius: '40px',
-        marginTop: '2rem',
+        backgroundColor: 'rgba(0, 0, 0, 1)',
+        borderTopLeftRadius: '0px',
+        borderTopRightRadius: '0px',
+        marginTop: '0rem',
         boxShadow: '0 -4px 20px rgba(0,0,0,0.05)',
       }}
     >
@@ -27,86 +70,6 @@ export default function Footer() {
                   สร้างสรรค์เว็บไซต์และแอปพลิเคชันที่สวยงามและใช้งานง่าย
                   พร้อมประสบการณ์ที่น่าประทับใจสำหรับผู้ใช้งาน
                 </p>
-                <div className="d-flex gap-3">
-                  <a href="https://github.com" 
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     style={{ 
-                       fontSize: '1.2rem', 
-                       transition: 'all 0.3s ease',
-                       backgroundColor: '#e2e8f0',
-                       color: '#4a5568',
-                       padding: '12px',
-                       borderRadius: '12px',
-                       width: '45px',
-                       height: '45px',
-                       display: 'flex',
-                       alignItems: 'center',
-                       justifyContent: 'center',
-                       textDecoration: 'none'
-                     }}
->
-                    <i className="fab fa-github"></i>
-                  </a>
-                  <a href="https://linkedin.com" 
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     style={{ 
-                       fontSize: '1.2rem', 
-                       transition: 'all 0.3s ease',
-                       backgroundColor: '#e2e8f0',
-                       color: '#4a5568',
-                       padding: '12px',
-                       borderRadius: '12px',
-                       width: '45px',
-                       height: '45px',
-                       display: 'flex',
-                       alignItems: 'center',
-                       justifyContent: 'center',
-                       textDecoration: 'none'
-                     }}
->
-                    <i className="fab fa-linkedin"></i>
-                  </a>
-                  <a href="mailto:your.email@example.com" 
-                     style={{ 
-                       fontSize: '1.2rem', 
-                       transition: 'all 0.3s ease',
-                       backgroundColor: '#e2e8f0',
-                       color: '#4a5568',
-                       padding: '12px',
-                       borderRadius: '12px',
-                       width: '45px',
-                       height: '45px',
-                       display: 'flex',
-                       alignItems: 'center',
-                       justifyContent: 'center',
-                       textDecoration: 'none'
-                     }}
->
-                    <i className="fas fa-envelope"></i>
-                  </a>
-                  <a href="https://twitter.com" 
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     style={{ 
-                       fontSize: '1.2rem', 
-                       transition: 'all 0.3s ease',
-                       backgroundColor: '#e2e8f0',
-                       color: '#4a5568',
-                       padding: '12px',
-                       borderRadius: '12px',
-                       width: '45px',
-                       height: '45px',
-                       display: 'flex',
-                       alignItems: 'center',
-                       justifyContent: 'center',
-                       textDecoration: 'none'
-                     }}
->
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                </div>
               </div>
             </div>
 
@@ -332,6 +295,7 @@ export default function Footer() {
           </div>
         </div>
       </footer>
+    </div>
     </div>
   );
 }

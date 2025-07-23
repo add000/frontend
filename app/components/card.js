@@ -1,51 +1,80 @@
-//import ใน /app/page.js
+import React from 'react';
 
-export default function Card() {
-    return (
-    <div className="container-fluid text-light" style={{          
-            background: `
-            linear-gradient(180deg, 
-              rgba(0, 0, 0, 1) 0%, 
-              rgba(0, 0, 0, 0.80) 50%, 
-              rgba(0, 0, 0, 0.0) 100%
-            )
-          `,
-            padding: '20px' ,
-            objectFit: 'cover',
-          
-          }}>
-        <div className="row" style={{ margin: '100px'}}>
-            <div className="col-md-12 text-center mb-4" style={{ textShadow: '0 0 52px rgba(255, 255, 255, 1)',}}>
-                <h3 className="fw-bold fs-1 mb-auto ">Our Project</h3>
-            </div>
+function SlideCardSingle({ imageSrc, title, description }) {
+  return (
+    <div>
+      <div
+        className="card overflow-hidden rounded-0"
+        style={{
+          width: '100vw',
+          height: '50vh',
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          backdropFilter: 'blur(10px)',
+          border: 'none',
+          position: 'relative',
+        }}
+      >
+        {/* ภาพ */}
+        <div
+          className="image-wrapper"
+          style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}
+        >
+          <img
+            src={imageSrc}
+            alt="Preview"
+            className="slide-image"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.6s ease',
+              zIndex: 1,
+            }}
+          />
         </div>
-        <div className="row">
-            <div className="col-md-4 mb-4">
-                <div className="card text-light rounded-5" style={{backdropFilter: 'blur(16px)', backgroundColor: 'rgba(0, 0, 0, 0)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'}}>
-                <img src="/bg0.jpeg" className="card-img-top img-responsive rounded-5" alt="..." />
-                <div className="card-body">
-                    <p className="card-text" style={{ textShadow: '0 0 20px rgba(255, 255, 255, 1)', }}>Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-                </div>
-                </div>
-            </div>
 
-            <div className="col-md-4 mb-4">
-            <div className="card text-light rounded-5" style={{backdropFilter: 'blur(16px)', backgroundColor: 'rgba(0, 0, 0, 0)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'}}>
-                <img src="/bg0.jpeg" className="card-img-top rounded-5" alt="..." />
-                <div className="card-body">
-                    <p className="card-text" style={{ textShadow: '0 0 20px rgba(255, 255, 255, 1)', }}>Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-                </div>
-                </div>
-            </div>
-            <div className="col-md-4 mb-4">
-            <div className="card text-light rounded-5" style={{backdropFilter: 'blur(16px)', backgroundColor: 'rgba(0, 0, 0, 0)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'}}>
-                <img src="/bg0.jpeg" className="card-img-top rounded-5" alt="..." />
-                <div className="card-body">
-                    <p className="card-text" style={{ textShadow: '0 0 20px rgba(255, 255, 255, 1)', }}>Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-                </div>
-                </div>
-            </div>
+        {/* ข้อความด้านหลังภาพ */}
+        <div
+          className="text-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-start px-4"
+          style={{
+            zIndex: 0,
+            opacity: 1,
+            color: '#fff',
+          }}
+        >
+          <h4 className="fw-bold mb-2">{title}</h4>
+          <p className="mb-0">{description}</p>
+        </div>
       </div>
+
+      <style jsx>{`
+        .card:hover .slide-image {
+          transform: translateY(-100%);
+        }
+      `}</style>
     </div>
-    );
-  }
+  );
+}
+
+export default function SlideCard() {
+  return (
+    <div className="card-container">
+      {[
+        { title: "Project One", description: "This card reveals text after sliding the image upward." },
+        { title: "Project Two", description: "Another card with its own animation and timing." },
+        { title: "Project Three", description: "Another card with its own animation and timing." },
+        { title: "Project Four", description: "Another card with its own animation and timing." },
+      ].map((card, index) => (
+        <SlideCardSingle
+          key={index}
+          imageSrc="/i1.png"
+          title={card.title}
+          description={card.description}
+        />
+      ))}
+    </div>
+  );
+}

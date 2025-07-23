@@ -1,3 +1,4 @@
+'use client';
 import Carousel from './components/carousel';
 import Card from './components/card';
 
