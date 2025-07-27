@@ -144,10 +144,10 @@ export default function LiquidNavbar() {
             textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
           }}>
             <img
-              src="/bootstrap-logo.svg"
-              alt="Logo"
-              width={30}
-              height={24}
+              src="/flower.svg"
+              alt="Flower"
+              width={32}
+              height={32}
               className="d-inline-block align-text-top"
               style={{
                 filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))'
