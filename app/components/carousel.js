@@ -33,6 +33,18 @@ export default function Carousel() {
       />
       
     </div>
+    
+    <div
+      className="position-absolute w-100 h-100"
+      style={{top: 0,
+        left: 0,
+        background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,1))",
+        zIndex: 1,
+        marginTop: "6em",
+        pandingBottom: "6em"
+      }}>
+      </div>
+
   </div>
   <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
     <span className="carousel-control-prev-icon" aria-hidden="true" />

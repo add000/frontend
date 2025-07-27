@@ -71,7 +71,7 @@ export default function RegisterPage() {
           </label>
           <input 
             type="text"
-            className="form-control bg-transparent rounded px-3 py-2 text-gray-800 focus:outline-none"
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             style={{
               border: errors.username ? '2px solid #dc3545' : '1px solid #6b7280'
             }}
@@ -93,7 +93,7 @@ export default function RegisterPage() {
           </label>
           <input 
             type="password"
-            className="form-control bg-transparent rounded px-3 py-2 text-gray-800 focus:outline-none"
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             style={{
               border: errors.password ? '2px solid #dc3545' : '1px solid #6b7280'
             }}
@@ -114,7 +114,7 @@ export default function RegisterPage() {
             คำนำหน้าชื่อ
           </label>
           <select 
-            className="form-select bg-transparent rounded px-3 py-2 text-gray-800 focus:outline-none"
+            className="form-select bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             style={{
               border: errors.prefix ? '2px solid #dc3545' : '1px solid #6b7280'
             }}
@@ -140,7 +140,7 @@ export default function RegisterPage() {
           </label>
           <input 
             type="text"
-            className="form-control bg-transparent rounded px-3 py-2 text-gray-800 focus:outline-none"
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             style={{
               border: errors.firstName ? '2px solid #dc3545' : '1px solid #6b7280'
             }}
@@ -162,7 +162,7 @@ export default function RegisterPage() {
           </label>
           <input 
             type="text"
-            className="form-control bg-transparent rounded px-3 py-2 text-gray-800 focus:outline-none"
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             style={{
               border: errors.lastName ? '2px solid #dc3545' : '1px solid #6b7280'
             }}
@@ -183,7 +183,7 @@ export default function RegisterPage() {
             ที่อยู่ของคุณ
           </label>
           <textarea 
-            className="form-control bg-transparent rounded px-3 py-2 text-gray-800 focus:outline-none"
+            className="form-control bg-transparent rounded-4 px-3 py-2 text-gray-800 focus:outline-none"
             style={{
               border: errors.address ? '2px solid #dc3545' : '1px solid #6b7280'
             }}
@@ -273,7 +273,7 @@ export default function RegisterPage() {
           </label>
           <input 
             type="date"
-            className="form-control bg-transparent rounded px-3 py-2 text-gray-800 focus:outline-none"
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             style={{
               border: errors.birthDate ? '2px solid #dc3545' : '1px solid #6b7280'
             }}
@@ -288,7 +288,7 @@ export default function RegisterPage() {
         <div className="mb-3 form-check">
           <input 
             type="checkbox"
-            className="form-check-input bg-transparent focus:outline-none"
+            className="form-check-input bg-transparent focus:outline-none rounded-2"
             style={{
               accentColor: errors.acceptTerms ? '#dc3545' : undefined
             }}

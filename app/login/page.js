@@ -66,7 +66,7 @@ export default function LoginPage() {
 
           <input 
           type="text"
-          className={`form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none ${errors.username ? 'border-danger' : ''}`}
+          className={`form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none ${errors.username ? 'border-danger' : ''}`}
           id="formGroupExampleInput1"
           aria-describedby="TextHelp"
           placeholder="โปรดใส่ชื่อของคุณ"
@@ -96,7 +96,7 @@ export default function LoginPage() {
 
           <input 
           type="password"
-          className={`form-control bg-transparent border border-gray-400 rounded px-3 py-2 text-gray-800 focus:outline-none ${errors.password ? 'border-danger' : ''}`}
+          className={`form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none ${errors.password ? 'border-danger' : ''}`}
           id="formGroupExampleInput2"
           placeholder="อย่าลืมใส่รหัสผ่านของคุณด้วยละ"
           name="password"
@@ -112,7 +112,7 @@ export default function LoginPage() {
         <div className="mb-3 form-check">
           <input 
           type="checkbox"
-          className="form-check-input bg-transparent focus:outline-none"
+          className="form-check-input bg-transparent focus:outline-none rounded-2"
           id="exampleCheck1" />
           <label 
           className="form-check-label"
