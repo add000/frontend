@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
     <head>
       <title>Frontend</title>
+      <link rel="icon" href="/flower.svg" type="image/x-icon" />
       <meta name="viewport saturate-200" content="width=device-width, initial-scale=1" />
       <style jsx global>{`
         /* ซ่อน scrollbar สำหรับ Webkit browsers (Chrome, Safari, Edge) */
