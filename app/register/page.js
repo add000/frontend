@@ -1,18 +1,22 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Swal from 'sweetalert2';
 
 export default function RegisterPage() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    prefix: '',
-    firstName: '',
-    lastName: '',
+    firstname: '',
+    fullname: '',
+    lastname: '',
     address: '',
-    gender: '',
-    birthDate: '',
-    acceptTerms: false
+    sex: '',
+    birthday: '',
+    acceptTerms: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -27,336 +31,254 @@ export default function RegisterPage() {
 
   const validate = () => {
     const newErrors = {};
-    
     if (!formData.username) newErrors.username = 'กรุณากรอกชื่อผู้ใช้';
     if (!formData.password) newErrors.password = 'กรุณากรอกรหัสผ่าน';
-    if (!formData.prefix) newErrors.prefix = 'กรุณาเลือกคำนำหน้าชื่อ';
-    if (!formData.firstName) newErrors.firstName = 'กรุณากรอกชื่อ';
-    if (!formData.lastName) newErrors.lastName = 'กรุณากรอกนามสกุล';
+    if (!formData.firstname) newErrors.firstname = 'กรุณาเลือกคำนำหน้าชื่อ';
+    if (!formData.fullname) newErrors.fullname = 'กรุณากรอกชื่อ';
+    if (!formData.lastname) newErrors.lastname = 'กรุณากรอกนามสกุล';
     if (!formData.address) newErrors.address = 'กรุณากรอกที่อยู่';
-    if (!formData.gender) newErrors.gender = '';
-    if (!formData.birthDate) newErrors.birthDate = 'กรุณาเลือกวันเกิด';
+    if (!formData.sex) newErrors.sex = 'กรุณาเลือกเพศ';
+    if (!formData.birthday) newErrors.birthday = 'กรุณาเลือกวันเกิด';
     if (!formData.acceptTerms) newErrors.acceptTerms = 'กรุณายอมรับข้อตกลง';
-    
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      setErrors({});
-      alert('สมัครสมาชิกสำเร็จ!');
-      console.log('Registration data:', formData);
-      // ที่นี่คุณสามารถส่งข้อมูลไปยัง API ได้
+
+    const foundErrors = validate();
+    if (Object.keys(foundErrors).length > 0) {
+      setErrors(foundErrors);
+      return;
+    }
+
+    try {
+      const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        Swal.fire({
+          title: 'สำเร็จ!',
+          text: 'สมัครสมาชิกสำเร็จ!',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          router.push('/register');
+        });
+        setFormData({
+          username: '',
+          password: '',
+          firstname: '',
+          fullname: '',
+          lastname: '',
+          address: '',
+          sex: '',
+          birthday: '',
+          acceptTerms: false,
+        });
+        setErrors({});
+      } else {
+        Swal.fire({
+          title: 'เกิดข้อผิดพลาด!',
+          text: result?.message || 'สมัครสมาชิกไม่สำเร็จ!',
+          icon: 'error',
+          confirmButtonText: 'ตกลง',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: 'เกิดข้อผิดพลาด!',
+        text: 'ข้อผิดพลาดเครือข่าย',
+        icon: 'error',
+      });
     }
   };
 
   return (
     <div className="container" style={{ maxWidth: '400px', padding: '20px', margin: '0 auto', marginTop: '100px', marginBottom: '100px' }}>
-      <form 
-        className="border-none rounded-5 p-5" 
-        style={{backdropFilter: 'blur(16px)', backgroundColor: 'rgba(0, 0, 0, 0)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'}} 
+      <form
+        className="border-none rounded-5 p-5"
+        style={{
+          backdropFilter: 'blur(16px)',
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+        }}
         noValidate
         onSubmit={handleSubmit}
       >
-        
+        {/* Username */}
         <div className="mb-3">
-          <label 
-            htmlFor="username"
-            className="form-label">
-            Username
-          </label>
-          <input 
+          <label htmlFor="username" className="form-label">Username</label>
+          <input
             type="text"
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-            style={{
-              border: errors.username ? '2px solid #dc3545' : '1px solid #6b7280'
-            }}
             id="username"
             name="username"
             value={formData.username}
             onChange={handleChange}
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             placeholder="โปรดตั้งชื่อผู้ใช้ของคุณ"
-            required
+            style={{
+              border: errors.username ? '2px solid #dc3545' : '1px solid #6b7280',
+            }}
           />
-          {errors.username && <div style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.username}</div>}
+          {errors.username && <div style={{ color: '#dc3545' }}>{errors.username}</div>}
         </div>
 
+        {/* Password */}
         <div className="mb-3">
-          <label 
-            htmlFor="password"
-            className="form-label">
-            Password
-          </label>
-          <input 
+          <label htmlFor="password" className="form-label">Password</label>
+          <input
             type="password"
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-            style={{
-              border: errors.password ? '2px solid #dc3545' : '1px solid #6b7280'
-            }}
             id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             placeholder="สร้างรหัสผ่าน"
-            required
-          />
-          {errors.password && <div style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.password}</div>}
-        </div>
-        
-        <div className="mb-3">
-          <label 
-            htmlFor="prefix"
-            className="form-label">
-            คำนำหน้าชื่อ
-          </label>
-          <select 
-            className="form-select bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             style={{
-              border: errors.prefix ? '2px solid #dc3545' : '1px solid #6b7280'
+              border: errors.password ? '2px solid #dc3545' : '1px solid #6b7280',
             }}
-            id="prefix"
-            name="prefix"
-            value={formData.prefix}
+          />
+          {errors.password && <div style={{ color: '#dc3545' }}>{errors.password}</div>}
+        </div>
+
+        {/* firstname */}
+        <div className="mb-3">
+          <label htmlFor="firstname" className="form-label">คำนำหน้าชื่อ</label>
+          <select
+            id="firstname"
+            name="firstname"
+            value={formData.firstname}
             onChange={handleChange}
-            required
+            className="form-select bg-transparent rounded-5 px-3 py-2 text-gray-800"
+            style={{ border: errors.firstname ? '2px solid #dc3545' : '1px solid #6b7280' }}
           >
             <option value="">โปรดเลือกคำนำหน้าชื่อ</option>
             <option value="นาย">นาย</option>
             <option value="นาง">นาง</option>
             <option value="นางสาว">นางสาว</option>
           </select>
-          {errors.prefix && <div style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.prefix}</div>}
+          {errors.firstname && <div style={{ color: '#dc3545' }}>{errors.firstname}</div>}
         </div>
 
+        {/* First Name */}
         <div className="mb-3">
-          <label 
-            htmlFor="firstName"
-            className="form-label">
-            ชื่อของคุณ
-          </label>
-          <input 
+          <label htmlFor="fullname" className="form-label">ชื่อของคุณ</label>
+          <input
             type="text"
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-            style={{
-              border: errors.firstName ? '2px solid #dc3545' : '1px solid #6b7280'
-            }}
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
+            id="fullname"
+            name="fullname"
+            value={formData.fullname}
             onChange={handleChange}
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800"
             placeholder="ใส่ชื่อของคุณที่นี่ซะ"
-            required
+            style={{ border: errors.fullname ? '2px solid #dc3545' : '1px solid #6b7280' }}
           />
-          {errors.firstName && <div style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.firstName}</div>}
+          {errors.fullname && <div style={{ color: '#dc3545' }}>{errors.fullname}</div>}
         </div>
 
+        {/* Last Name */}
         <div className="mb-3">
-          <label 
-            htmlFor="lastName"
-            className="form-label">
-            นามสกุล
-          </label>
-          <input 
+          <label htmlFor="lastname" className="form-label">นามสกุล</label>
+          <input
             type="text"
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-            style={{
-              border: errors.lastName ? '2px solid #dc3545' : '1px solid #6b7280'
-            }}
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
+            id="lastname"
+            name="lastname"
+            value={formData.lastname}
             onChange={handleChange}
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800"
             placeholder="ใส่นามสกุลของคุณด้วย"
-            required
+            style={{ border: errors.lastname ? '2px solid #dc3545' : '1px solid #6b7280' }}
           />
-          {errors.lastName && <div style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.lastName}</div>}
+          {errors.lastname && <div style={{ color: '#dc3545' }}>{errors.lastname}</div>}
         </div>
 
+        {/* Address */}
         <div className="mb-3">
-          <label 
-            htmlFor="address"
-            className="form-label">
-            ที่อยู่ของคุณ
-          </label>
-          <textarea 
-            className="form-control bg-transparent rounded-4 px-3 py-2 text-gray-800 focus:outline-none"
-            style={{
-              border: errors.address ? '2px solid #dc3545' : '1px solid #6b7280'
-            }}
+          <label htmlFor="address" className="form-label">ที่อยู่ของคุณ</label>
+          <textarea
             id="address"
             name="address"
             value={formData.address}
             onChange={handleChange}
-            rows={3} 
+            rows={3}
+            className="form-control bg-transparent rounded-4 px-3 py-2 text-gray-800"
             placeholder="ใส่ที่อยู่ของคุณ"
-            required
+            style={{ border: errors.address ? '2px solid #dc3545' : '1px solid #6b7280' }}
           />
-          {errors.address && <div style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.address}</div>}
+          {errors.address && <div style={{ color: '#dc3545' }}>{errors.address}</div>}
         </div>
 
+        {/* sex */}
         <div className="mb-3">
           <label className="form-label">เพศ</label>
-          <div style={{
-            border: errors.gender ? '2px solid #dc3545' : 'none',
-            borderRadius: '0.375rem',
-            padding: errors.gender ? '0.5rem' : '0'
-          }}>
-            <div className="form-check form-check-inline">
-              <input 
-                className="form-check-input bg-transparent focus:outline-none" 
-                type="radio" 
-                name="gender" 
-                id="male"
-                value="ชาย"
-                checked={formData.gender === 'ชาย'}
-                onChange={handleChange}
-              />
-              <label className="form-check-label" htmlFor="male">
-                ชาย
-              </label>
-            </div>
-            <div className="form-check form-check-inline">
-              <input 
-                className="form-check-input bg-transparent focus:outline-none" 
-                type="radio" 
-                name="gender" 
-                id="female"
-                value="หญิง"
-                checked={formData.gender === 'หญิง'}
-                onChange={handleChange}
-              />
-              <label className="form-check-label" htmlFor="female">
-                หญิง
-              </label>
-            </div>
-            <div className="form-check form-check-inline">
-              <input 
-                className="form-check-input bg-transparent focus:outline-none" 
-                type="radio" 
-                name="gender" 
-                id="other"
-                value="อื่นๆ"
-                checked={formData.gender === 'อื่นๆ'}
-                onChange={handleChange}
-              />
-              <label className="form-check-label" htmlFor="other">
-                อื่นๆ
-              </label>
-            </div>
-            <div className="form-check form-check-inline">
-              <input 
-                className="form-check-input bg-transparent focus:outline-none" 
-                type="radio" 
-                name="gender" 
-                id="notSpecified"
-                value="ไม่ระบุ"
-                checked={formData.gender === 'ไม่ระบุ'}
-                onChange={handleChange}
-              />
-              <label className="form-check-label" htmlFor="notSpecified">
-                ไม่ระบุ
-              </label>
-            </div>
+          <div>
+            {['ชาย', 'หญิง', 'อื่นๆ', 'ไม่ระบุ'].map((option) => (
+              <div className="form-check form-check-inline" key={option}>
+                <input
+                  type="radio"
+                  name="sex"
+                  id={option}
+                  value={option}
+                  checked={formData.sex === option}
+                  onChange={handleChange}
+                  className="form-check-input bg-transparent"
+                />
+                <label className="form-check-label" htmlFor={option}>{option}</label>
+              </div>
+            ))}
           </div>
-          {errors.gender && <div style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.gender}</div>}
-        </div>
-        
-        <div className="mb-3">
-          <label 
-            htmlFor="birthDate"
-            className="form-label">
-            วันเกิดของท่าน
-          </label>
-          <input 
-            type="date"
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-            style={{
-              border: errors.birthDate ? '2px solid #dc3545' : '1px solid #6b7280'
-            }}
-            id="birthDate"
-            name="birthDate"
-            value={formData.birthDate}
-            onChange={handleChange}
-          />
-          {errors.birthDate && <div style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.birthDate}</div>}
+          {errors.sex && <div style={{ color: '#dc3545' }}>{errors.sex}</div>}
         </div>
 
+        {/* Birth Date */}
+        <div className="mb-3">
+          <label htmlFor="birthday" className="form-label">วันเกิดของท่าน</label>
+          <input
+            type="date"
+            id="birthday"
+            name="birthday"
+            value={formData.birthday}
+            onChange={handleChange}
+            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800"
+            style={{ border: errors.birthday ? '2px solid #dc3545' : '1px solid #6b7280' }}
+          />
+          {errors.birthday && <div style={{ color: '#dc3545' }}>{errors.birthday}</div>}
+        </div>
+
+        {/* Accept Terms */}
         <div className="mb-3 form-check">
-          <input 
+          <input
             type="checkbox"
-            className="form-check-input bg-transparent focus:outline-none rounded-2"
-            style={{
-              accentColor: errors.acceptTerms ? '#dc3545' : undefined
-            }}
             id="acceptTerms"
             name="acceptTerms"
             checked={formData.acceptTerms}
             onChange={handleChange}
+            className="form-check-input"
           />
-          <label 
-            className="form-check-label"
-            htmlFor="acceptTerms"
-            style={{
-              color: errors.acceptTerms ? '#dc3545' : undefined
-            }}>
+          <label className="form-check-label" htmlFor="acceptTerms">
             ฉันยอมรับข้อกำหนดและเงื่อนไขของเว็บไซต์นี้
           </label>
-          {errors.acceptTerms && <div style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.acceptTerms}</div>}
+          {errors.acceptTerms && <div style={{ color: '#dc3545' }}>{errors.acceptTerms}</div>}
         </div>
 
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '10px'
-        }}>
-
-          <button 
-            type="submit"
-            className="btn btn-outline-light w-100"
-            style={{                    
-              borderRadius: '25px',
-              padding: '12px 25px',
-              fontWeight: '500',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
-              color: 'white',
-              textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
-              transition: 'all 0.3s ease',
-              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-              width: '300px',
-              textAlign: 'center',
-            }}>
+        {/* Submit + Back */}
+        <div className="d-flex flex-column align-items-center gap-2">
+          <button type="submit" className="btn btn-outline-light w-100" style={{ borderRadius: '25px' }}>
             สมัครสมาชิก
           </button>
-
-          <Link 
-            role="button"
-            className="btn btn-outline-light w-100"
-            href="/login"
-            style={{                    
-              borderRadius: '25px',
-              padding: '12px 25px',
-              fontWeight: '500',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
-              color: 'white',
-              textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
-              transition: 'all 0.3s ease',
-              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-              width: '300px',
-              textAlign: 'center',
-            }}>
+          <Link href="/login" className="btn btn-outline-light w-100" style={{ borderRadius: '25px' }}>
             ย้อนกลับ
           </Link>
         </div>
-
       </form>
     </div>
   );
