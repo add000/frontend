@@ -1,29 +1,20 @@
-'use client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
-export default function Page() {
-  const [items, setItems] = useState([]);
+// ใช้ SSR ใน App Router แบบนี้ (ฟังก์ชัน async Page)
+export default async function Page() {
+  let items = [];
 
-  useEffect(() => {
-    async function getUsers() {
-      try {
-        const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users');
-        if (!res.ok) {
-          console.error('Failed to fetch data');
-          return;
-        }
-        const data = await res.json();
-        setItems(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+  try {
+    const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users', {
+      cache: 'no-store', // ต้องใส่เพื่อให้ fetch ทุกครั้ง (SSR จริง ๆ)
+    });
+
+    if (res.ok) {
+      items = await res.json();
     }
-
-    getUsers();
-    const interval = setInterval(getUsers, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  } catch (err) {
+    console.error('Fetch failed:', err);
+  }
 
   return (
     <div className="container-fluid bg-dark min-vh-100 py-5 text-light">
