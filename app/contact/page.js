@@ -17,15 +17,15 @@ export default function ContactPage() {
             <form>
               <div className="mb-3">
                 <label className="form-label">ชื่อ-นามสกุล</label>
-                <input type="text" className="form-control rounded-5 border-secondary bg-transparent" placeholder="กรอกชื่อของคุณ" />
+                <input type="text" className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none" placeholder="กรอกชื่อของคุณ" />
               </div>
               <div className="mb-3">
                 <label className="form-label">อีเมล</label>
-                <input type="email" className="form-control rounded-5 border-secondary bg-transparent" placeholder="you@example.com" />
+                <input type="email" className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none" placeholder="you@example.com" />
               </div>
               <div className="mb-4">
                 <label className="form-label">ข้อความ</label>
-                <textarea className="form-control rounded-4 border-secondary bg-transparent" rows="4" placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
+                <textarea className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none" rows="4" placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
               </div>
               <button type="submit" className="btn btn-dark w-100 rounded-5">
                 ส่งข้อความ <i className="fas fa-paper-plane ms-2"></i>
