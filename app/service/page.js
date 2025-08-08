@@ -34,8 +34,10 @@ export default function ServicesPage() {
 
   return (
     <div className="container-fluid min-vh-100 d-flex align-items-center py-5" style={{ backgroundColor: "#111111",}}>
-      <div className="container" style={{ paddingTop: "100px",}}>
+      <div className="box" style={{ paddingTop: "100px", height: "auto", width: "100vw", }}>
         <h1 className="text-center mb-5 fw-bold" style={{ color: "#ffffff",}}>บริการของเรา</h1>
+        <br/>
+        <br/>
         {services.map((service, index) => (
           <div
             key={index}
