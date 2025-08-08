@@ -123,7 +123,7 @@ export default function RegisterPage() {
             name="username"
             value={formData.username}
             onChange={handleChange}
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
+            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             placeholder="โปรดตั้งชื่อผู้ใช้ของคุณ"
             style={{
               border: errors.username ? '2px solid #dc3545' : '1px solid #6b7280',
@@ -141,7 +141,7 @@ export default function RegisterPage() {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
+            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             placeholder="สร้างรหัสผ่าน"
             style={{
               border: errors.password ? '2px solid #dc3545' : '1px solid #6b7280',
@@ -158,7 +158,7 @@ export default function RegisterPage() {
             name="firstname"
             value={formData.firstname}
             onChange={handleChange}
-            className="form-select bg-transparent rounded-5 px-3 py-2 text-gray-800"
+            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             style={{ border: errors.firstname ? '2px solid #dc3545' : '1px solid #6b7280' }}
           >
             <option value="">โปรดเลือกคำนำหน้าชื่อ</option>
@@ -178,7 +178,7 @@ export default function RegisterPage() {
             name="fullname"
             value={formData.fullname}
             onChange={handleChange}
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800"
+            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             placeholder="ใส่ชื่อของคุณที่นี่ซะ"
             style={{ border: errors.fullname ? '2px solid #dc3545' : '1px solid #6b7280' }}
           />
@@ -194,7 +194,7 @@ export default function RegisterPage() {
             name="lastname"
             value={formData.lastname}
             onChange={handleChange}
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800"
+            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             placeholder="ใส่นามสกุลของคุณด้วย"
             style={{ border: errors.lastname ? '2px solid #dc3545' : '1px solid #6b7280' }}
           />
@@ -210,7 +210,7 @@ export default function RegisterPage() {
             value={formData.address}
             onChange={handleChange}
             rows={3}
-            className="form-control bg-transparent rounded-4 px-3 py-2 text-gray-800"
+            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             placeholder="ใส่ที่อยู่ของคุณ"
             style={{ border: errors.address ? '2px solid #dc3545' : '1px solid #6b7280' }}
           />
@@ -230,7 +230,7 @@ export default function RegisterPage() {
                   value={option}
                   checked={formData.sex === option}
                   onChange={handleChange}
-                  className="form-check-input bg-transparent"
+                  className="form-check-input bg-transparent rounded-3"
                 />
                 <label className="form-check-label" htmlFor={option}>{option}</label>
               </div>
@@ -248,7 +248,7 @@ export default function RegisterPage() {
             name="birthday"
             value={formData.birthday}
             onChange={handleChange}
-            className="form-control bg-transparent rounded-5 px-3 py-2 text-gray-800"
+            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
             style={{ border: errors.birthday ? '2px solid #dc3545' : '1px solid #6b7280' }}
           />
           {errors.birthday && <div style={{ color: '#dc3545' }}>{errors.birthday}</div>}
@@ -262,7 +262,7 @@ export default function RegisterPage() {
             name="acceptTerms"
             checked={formData.acceptTerms}
             onChange={handleChange}
-            className="form-check-input"
+            className="form-check-input bg-transparent rounded-3"
           />
           <label className="form-check-label" htmlFor="acceptTerms">
             ฉันยอมรับข้อกำหนดและเงื่อนไขของเว็บไซต์นี้

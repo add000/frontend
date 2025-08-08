@@ -74,12 +74,12 @@ export default function LoginPage() {
           value={formData.username}
           onChange={handleChange}
           />
-           {errors.username && 
-           <div 
+           {errors.username &&
+           <div
            className="text-danger">{errors.username}
            </div>}
 
-          <div 
+          <div
           id="TextHelp"
           className="form-text">
             ข้าพเจ้าอยากจะทราบชื่อของคุน
@@ -87,14 +87,14 @@ export default function LoginPage() {
 
         </div>
         <div className="mb-3">
-          
-          <label 
+
+          <label
           htmlFor="formGroupExampleInput2"
           className="form-label">
             Password
           </label>
 
-          <input 
+          <input
           type="password"
           className={`form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none ${errors.password ? 'border-danger' : ''}`}
           id="formGroupExampleInput2"
@@ -112,7 +112,7 @@ export default function LoginPage() {
         <div className="mb-3 form-check">
           <input 
           type="checkbox"
-          className="form-check-input bg-transparent focus:outline-none rounded-2"
+          className="form-check-input bg-transparent rounded-3"
           id="exampleCheck1" />
           <label 
           className="form-check-label"
@@ -121,60 +121,18 @@ export default function LoginPage() {
           </label>
         </div>
 
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '10px'
-          }}>
-
-          <button 
-            type="submit"
-            className="btn btn-outline-light w-100"
-            style={{                    
-              borderRadius: '25px',
-              padding: '12px 25px',
-              fontWeight: '500',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
-              color: 'white',
-              textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
-              transition: 'all 0.3s ease',
-              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-              width: '300px',
-              textAlign: 'center'
-            }}>
+        <div className="d-flex flex-column align-items-center gap-2">
+          <button type="submit" className="btn btn-outline-light w-100" style={{ borderRadius: '25px' }}>
             เข้าสู่ระบบ
           </button>
-
-          <a 
-            role="button"
-            className="btn btn-outline-light w-100"
-            href="/"
-            style={{                    
-                        borderRadius: '25px',
-                        padding: '12px 25px',
-                        fontWeight: '500',
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                        textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
-                        transition: 'all 0.3s ease',
-                        boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-                        width: '300px',
-                        textAlign: 'center'
-            }}>
+          <Link href="/" className="btn btn-outline-light w-100" style={{ borderRadius: '25px' }}>
             ย้อนกลับ
-          </a>
+          </Link>
         </div>
 
-        <br />
-        <br />
-
         <div>
-          <div style={{ 
+          <div style={{
+            marginTop: '2rem',
             gap: '5rem',
             display: 'flex',
             justifyContent: 'center',
