@@ -1,24 +1,75 @@
+'use client';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
-// ใช้ SSR ใน App Router แบบนี้ (ฟังก์ชัน async Page)
-export default async function Page() {
-  let items = [];
+export default function Page() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true); // <-- เพิ่ม state loading
+  const router = useRouter();
 
-  try {
-    const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users', {
-      cache: 'no-store', // ต้องใส่เพื่อให้ fetch ทุกครั้ง (SSR จริง ๆ)
-    });
-
-    if (res.ok) {
-      items = await res.json();
+  // โหลดข้อมูลผู้ใช้
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users', {
+        cache: 'no-store',
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setItems(data);
+        setLoading(false); // ปิด loading เมื่อโหลดข้อมูลเสร็จ
+      }
+    } catch (err) {
+      console.error('Fetch failed:', err);
+      setLoading(false);
     }
-  } catch (err) {
-    console.error('Fetch failed:', err);
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('กรุณาเข้าสู่ระบบก่อน');
+      router.push('/login');
+      return;
+    }
+
+    fetchUsers();
+  }, []);
+
+  // ฟังก์ชันลบผู้ใช้
+  const handleDelete = async (id) => {
+    if (!confirm('คุณแน่ใจว่าต้องการลบผู้ใช้นี้?')) return;
+
+    try {
+      const res = await fetch(`http://itdev.cmtc.ac.th:3000/api/users/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+
+      if (!res.ok) throw new Error('Delete failed');
+
+      const result = await res.json();
+      console.log(result);
+
+      // รีเฟรช list หลังจากลบ
+      setItems(items.filter(item => item.id !== id));
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  if (loading) {
+    return <div className='text-center'><h1>Loading...</h1></div>; // หรือ return null เพื่อไม่ให้ render อะไร
   }
 
+
   return (
-    <div className="container-fluid bg-dark min-vh-100 py-5 text-light">
-      <h2 className="text-center mb-5 fw-bold" style={{ marginTop: '100px' }}>รายชื่อผู้ใช้งาน</h2>
+    <div className="container-fluid min-vh-100 py-5" style={{ backgroundColor: '#0f0f0f' }}>
+      <h2 className="text-center mb-5 fw-bold text-light" style={{ marginTop: '100px' }}>
+        รายชื่อผู้ใช้งาน
+      </h2>
 
       <div className="row g-4">
         {items.length === 0 && (
@@ -27,27 +78,37 @@ export default async function Page() {
 
         {items.map((item) => (
           <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={item.id}>
-            <div className="card h-100 bg-gradient bg-secondary text-light border-0 shadow-sm rounded-4 p-2">
+            <div
+              className="card h-100 border-0 shadow-lg rounded-4 p-3 text-light"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              }}
+            >
               <div className="card-body d-flex flex-column justify-content-between">
                 <div className="mb-3">
-                  <h5 className="card-title fw-bold mb-2">
+                  <h5 className="card-title fw-bold mb-2 text-info">
                     <i className="fa fa-user-circle me-2"></i>
                     {item.fullname}
                   </h5>
-                  <ul className="list-unstyled small mb-0">
-                    <li><i className="fa fa-user me-2"></i>Username: {item.username}</li>
-                    <li><i className="fa fa-address-card me-2"></i>Firstname: {item.firstname}</li>
-                    <li><i className="fa fa-user-tag me-2"></i>Lastname: {item.lastname}</li>
-                    <li><i className="fa fa-map-marker-alt me-2"></i>Address: {item.address}</li>
-                    <li><i className="fa fa-venus-mars me-2"></i>Sex: {item.sex}</li>
-                    <li><i className="fa fa-birthday-cake me-2"></i>Birthday: {item.birthday}</li>
+                  <ul className="list-unstyled small mb-0 text-light">
+                    <li><i className="fa fa-user me-2 text-secondary"></i>Username: {item.username}</li>
+                    <li><i className="fa fa-address-card me-2 text-secondary"></i>Firstname: {item.firstname}</li>
+                    <li><i className="fa fa-user-tag me-2 text-secondary"></i>Lastname: {item.lastname}</li>
+                    <li><i className="fa fa-map-marker-alt me-2 text-secondary"></i>Address: {item.address}</li>
+                    <li><i className="fa fa-venus-mars me-2 text-secondary"></i>Sex: {item.sex}</li>
+                    <li><i className="fa fa-birthday-cake me-2 text-secondary"></i>Birthday: {item.birthday}</li>
                   </ul>
                 </div>
                 <div className="d-flex justify-content-between gap-2">
-                  <Link href="#" className="btn btn-sm btn-outline-warning w-100">
+                  <Link href={`/admin/users/edit/${item.id}`} className="btn btn-sm btn-outline-info w-100 rounded-5">
                     <i className="fa fa-edit me-1"></i> แก้ไข
                   </Link>
-                  <button className="btn btn-sm btn-outline-danger w-100">
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="btn btn-sm btn-outline-danger w-100 rounded-5"
+                  >
                     <i className="fa fa-trash me-1"></i> ลบ
                   </button>
                 </div>

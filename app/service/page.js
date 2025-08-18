@@ -33,16 +33,16 @@ export default function ServicesPage() {
   ];
 
   return (
-    <div className="container-fluid min-vh-100 d-flex align-items-center py-5" style={{ backgroundColor: "#111111",}}>
+    <div className="container-fluid min-vh-100 d-flex align-items-center py-5" style={{ backgroundColor: "#111111", }}>
       <div className="grid-container" style={{ paddingTop: "100px", height: "auto", width: "100vw", }}>
-        <h1 className="text-center mb-5 fw-bold" style={{ color: "#ffffff",}}>บริการของเรา</h1>
-        <br/>
-        <br/>
+        <h1 className="text-center mb-5 fw-bold" style={{ color: "#ffffff", }}>บริการของเรา</h1>
+        <br />
+        <br />
         {services.map((service, index) => (
           <div
             key={index}
             className="container-fluid d-flex align-items-center"
-            style={{ height: "50vh", backgroundColor: index % 2 === 0 ? "#000000" : "#111111",}}
+            style={{ height: "50vh", backgroundColor: index % 2 === 0 ? "#000000" : "#111111", }}
           >
             <div className="container">
               <div className="row align-items-center">

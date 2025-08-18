@@ -20,42 +20,42 @@ export default function RootLayout({ children }) {
 
   const hiddenPaths = ['/login', '/register', '/dashboard/admin'];
   const shouldHide = hiddenPaths.includes(pathname);
-  
+
 
   return (
     <html lang="en">
-    <head>
-      <title>Frontend</title>
-      <link rel="icon" href="/flower.svg" type="image/x-icon" />
-      <meta name="viewport saturate-200" content="width=device-width, initial-scale=1" />
-      <style jsx global>{`
+      <head>
+        <title>Frontend</title>
+        <link rel="icon" href="/flower.svg" type="image/x-icon" />
+        <meta name="viewport saturate-200" content="width=device-width, initial-scale=1" />
+        <style jsx global>{`
         /* ซ่อน scrollbar สำหรับ Webkit browsers (Chrome, Safari, Edge) */
         ::-webkit-scrollbar {
           display: none;
         }
-        
+
         /* ซ่อน scrollbar สำหรับ Firefox */
         html {
           scrollbar-width: none;
         }
-        
+
         /* ซ่อน scrollbar แต่ยังสามารถเลื่อนได้ */
         body {
           -ms-overflow-style: none;  /* Internet Explorer 10+ */
           scrollbar-width: none;  /* Firefox */
         }
-        
-        body::-webkit-scrollbar { 
+
+        body::-webkit-scrollbar {
           display: none;  /* Safari and Chrome */
         }
       `}</style>
-    </head>
+      </head>
       <body className={prompt.className} style={{ backgroundImage: 'url(/bg1.jpg)', backgroundSize: 'fit', backgroundPosition: 'center' }}>
         {!shouldHide && (
-            <Navigation />
+          <Navigation />
         )}
-        
-          {children}
+
+        {children}
 
         {!shouldHide && (
           <Footer />
