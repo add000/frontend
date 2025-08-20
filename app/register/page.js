@@ -53,7 +53,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users', {
+      const res = await fetch('https://backend-nextjs-virid.vercel.app/api/users', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -71,7 +71,7 @@ export default function RegisterPage() {
           timer: 2000,
           showConfirmButton: false,
         }).then(() => {
-          router.push('/register');
+          router.push('/login');
         });
         setFormData({
           username: '',

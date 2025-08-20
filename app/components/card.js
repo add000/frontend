@@ -70,7 +70,7 @@ export default function SlideCard() {
       ].map((card, index) => (
         <SlideCardSingle
           key={index}
-          imageSrc="/i1.png"
+          imageSrc={`/p/${index + 1}.jpg`} // Assuming images are named 1.jpg, 2.jpg, etc.
           title={card.title}
           description={card.description}
         />

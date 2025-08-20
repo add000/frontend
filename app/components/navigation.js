@@ -1,22 +1,26 @@
 'use client';
-// components/LiquidNavbar.tsx
 import { LiquidWeb } from 'liquid-web/react';
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState, useRef } from 'react';
 
 export default function LiquidNavbar() {
+  const collapseRef = useRef(null);
+  const router = useRouter();
   const pathname = usePathname();
+  const [tokenState, setToken] = useState(null);
 
   const isActive = (path) => pathname === path;
 
-  // Reset inline styles เมื่อ pathname เปลี่ยน
+  // อ่าน token และรีเซ็ต style link
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    setToken(token);
+
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
       if (href && !isActive(href)) {
-        // Reset inline styles สำหรับปุ่มที่ไม่ active
         link.style.background = '';
         link.style.backdropFilter = '';
         link.style.transform = '';
@@ -25,20 +29,28 @@ export default function LiquidNavbar() {
     });
   }, [pathname]);
 
+  // โหลด Bootstrap JS
   useEffect(() => {
     const loadBootstrap = async () => {
       if (typeof window !== 'undefined') {
         await import('bootstrap/dist/js/bootstrap.bundle.min.js');
       }
     };
-
     loadBootstrap();
   }, []);
 
+  // Logout
+  const handlelogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    router.push("/login");
+  };
+
+  // Style สำหรับ Desktop
   const getNavLinkStyle = (path) => ({
     color: 'white',
-    padding: '8px 16px',
-    borderRadius: '20px',
+    padding: '10px 16px',
+    borderRadius: '30px',
     transition: 'all 0.3s ease',
     textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
     position: 'relative',
@@ -46,14 +58,15 @@ export default function LiquidNavbar() {
     backdropFilter: isActive(path) ? 'blur(10px)' : 'none',
     border: isActive(path) ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent',
     margin: '0 3px',
+    display: 'block',
     boxShadow: isActive(path) ? '0 4px 12px rgba(0, 0, 0, 0.2)' : 'none',
     fontSize: '14px',
     fontWeight: '400',
-    minWidth: '80px',
+    width: '115px',
     textAlign: 'center'
   });
 
-  // สำหรับหน้าจอเล็ก
+  // Style สำหรับ Mobile
   const getMobileNavLinkStyle = (path) => ({
     color: 'white',
     padding: '10px 16px',
@@ -70,24 +83,24 @@ export default function LiquidNavbar() {
     boxShadow: isActive(path) ? '0 4px 12px rgba(0, 0, 0, 0.2)' : 'none',
     fontSize: '14px',
     fontWeight: '400',
-    width: '160px'
+    width: '250px'
   });
 
   const handleMouseEnter = (e, path) => {
     if (!isActive(path)) {
-      e.target.style.background = 'rgba(255, 255, 255, 0.15)';
-      e.target.style.backdropFilter = 'blur(10px)';
-      e.target.style.transform = 'translateY(-2px)';
-      e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+      e.currentTarget.style.backdropFilter = 'blur(10px)';
+      e.currentTarget.style.transform = 'translateY(-2px)';
+      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
     }
   };
 
   const handleMouseLeave = (e, path) => {
     if (!isActive(path)) {
-      e.target.style.background = '';
-      e.target.style.backdropFilter = '';
-      e.target.style.transform = '';
-      e.target.style.boxShadow = '';
+      e.currentTarget.style.background = '';
+      e.currentTarget.style.backdropFilter = '';
+      e.currentTarget.style.transform = '';
+      e.currentTarget.style.boxShadow = '';
     }
   };
 
@@ -119,7 +132,6 @@ export default function LiquidNavbar() {
           position: 'relative',
           overflow: 'hidden'
         }}>
-          {/* Fluid Glass Overlay */}
           <div style={{
             position: 'absolute',
             top: 0.1,
@@ -146,8 +158,8 @@ export default function LiquidNavbar() {
               <img
                 src="/flower.svg"
                 alt="Flower"
-                width={32}
-                height={32}
+                width={42}
+                height={42}
                 className="d-inline-block align-text-top"
                 style={{
                   filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))'
@@ -155,8 +167,7 @@ export default function LiquidNavbar() {
               />
               FrontEnd
             </Link>
-            <br />
-            <br />
+
             <button
               className="navbar-toggler"
               type="button"
@@ -166,10 +177,26 @@ export default function LiquidNavbar() {
               aria-expanded="false"
               aria-label="Toggle navigation"
               style={{
+                borderRadius: '50px',
+                padding: '8px ',
+                fontWeight: '500',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: '25px',
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 backdropFilter: 'blur(10px)',
+                color: 'white',
+                textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
+                transition: 'all 0.3s ease',
+                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
               }}
             >
               <span className="navbar-toggler-icon" style={{
@@ -177,53 +204,107 @@ export default function LiquidNavbar() {
               }} />
             </button>
 
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            {/* ใช้ collapseRef เพื่อ Bootstrap collapse */}
+            <div className="collapse navbar-collapse" id="navbarSupportedContent" ref={collapseRef}>
               {/* Desktop Navigation */}
               <ul className="navbar-nav me-auto mb-2 mb-lg-0 d-none d-lg-flex">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <li className="nav-item">
-                    <Link
-                      className={`nav-link ${isActive('/') ? 'active' : ''}`}
-                      aria-current={isActive('/') ? 'page' : undefined}
-                      href="/"
-                      style={getNavLinkStyle('/')}
+                    <Link className="nav-link" href="/" style={getNavLinkStyle('/')}
                       onMouseEnter={(e) => handleMouseEnter(e, '/')}
-                      onMouseLeave={(e) => handleMouseLeave(e, '/')}>
-                      หน้าแรก
-                    </Link>
+                      onMouseLeave={(e) => handleMouseLeave(e, '/')}
+                    >หน้าแรก</Link>
                   </li>
                   <li className="nav-item">
-                    <Link
-                      className={`nav-link ${isActive('/about') ? 'active' : ''}`}
-                      href="/about"
-                      style={getNavLinkStyle('/about')}
+                    <Link className="nav-link" href="/about" style={getNavLinkStyle('/about')}
                       onMouseEnter={(e) => handleMouseEnter(e, '/about')}
-                      onMouseLeave={(e) => handleMouseLeave(e, '/about')}>
-                      เกี่ยวกับเรา
-                    </Link>
+                      onMouseLeave={(e) => handleMouseLeave(e, '/about')}
+                    >เกี่ยวกับเรา</Link>
                   </li>
                   <li className="nav-item">
-                    <Link
-                      className={`nav-link ${isActive('/service') ? 'active' : ''}`}
-                      href="/service"
-                      style={getNavLinkStyle('/service')}
+                    <Link className="nav-link" href="/service" style={getNavLinkStyle('/service')}
                       onMouseEnter={(e) => handleMouseEnter(e, '/service')}
-                      onMouseLeave={(e) => handleMouseLeave(e, '/service')}>
-                      บริการของเรา
-                    </Link>
+                      onMouseLeave={(e) => handleMouseLeave(e, '/service')}
+                    >บริการของเรา</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" href="/contact" style={getNavLinkStyle('/contact')}
+                      onMouseEnter={(e) => handleMouseEnter(e, '/contact')}
+                      onMouseLeave={(e) => handleMouseLeave(e, '/contact')}
+                    >ติดต่อเรา</Link>
                   </li>
                   <li className="nav-item">
                     <Link
-                      href="/contact"
-                      className={`nav-link ${isActive('/contact') ? 'active' : ''}`}
-                      style={getNavLinkStyle('/contact')}
-                      onMouseEnter={(e) => handleMouseEnter(e, '/contact')}
-                      onMouseLeave={(e) => handleMouseLeave(e, '/contact')}>
-                      ติดต่อเรา
+                      href="/admin/users"
+                      className="nav-link"
+                      style={getNavLinkStyle('/admin/users')}
+                      onMouseEnter={(e) => handleMouseEnter(e, '/admin/users')}
+                      onMouseLeave={(e) => handleMouseLeave(e, '/admin/users')}
+                    >
+                      บัญชีผู้ใช้
                     </Link>
                   </li>
                 </div>
               </ul>
+
+              {/* Desktop Login Button */}
+              <div className="d-none d-lg-block">
+                {tokenState ? (
+                  <button type="button"
+                    onClick={handlelogout}
+                    className="btn btn-outline-danger w-100"
+                    style={{
+                      borderRadius: '25px',
+                      padding: '12px 25px',
+                      fontWeight: '500',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(10px)',
+                      color: 'white',
+                      textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
+                      transition: 'all 0.3s ease',
+                      boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                    }}>
+                    <i className=""></i> ออกจากระบบ
+                  </button>
+                ) : (
+                  <Link className="btn btn-outline-light w-100"
+                    href="/login"
+                    role="button"
+                    style={{
+                      borderRadius: '25px',
+                      padding: '12px 25px',
+                      fontWeight: '500',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(10px)',
+                      color: 'white',
+                      textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
+                      transition: 'all 0.3s ease',
+                      boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                    }}>เข้าสู่ระบบ</Link>
+                )}
+              </div>
 
               {/* Mobile Navigation */}
               <div className="d-lg-none w-100">
@@ -234,90 +315,116 @@ export default function LiquidNavbar() {
                     href="/"
                     style={getMobileNavLinkStyle('/')}
                     onMouseEnter={(e) => handleMouseEnter(e, '/')}
-                    onMouseLeave={(e) => handleMouseLeave(e, '/')}>
+                    onMouseLeave={(e) => handleMouseLeave(e, '/')}
+                  >
                     หน้าแรก
                   </Link>
+
                   <Link
                     className={`nav-link ${isActive('/about') ? 'active' : ''}`}
                     href="/about"
                     style={getMobileNavLinkStyle('/about')}
                     onMouseEnter={(e) => handleMouseEnter(e, '/about')}
-                    onMouseLeave={(e) => handleMouseLeave(e, '/about')}>
+                    onMouseLeave={(e) => handleMouseLeave(e, '/about')}
+                  >
                     เกี่ยวกับเรา
                   </Link>
+
                   <Link
                     className={`nav-link ${isActive('/service') ? 'active' : ''}`}
                     href="/service"
                     style={getMobileNavLinkStyle('/service')}
                     onMouseEnter={(e) => handleMouseEnter(e, '/service')}
-                    onMouseLeave={(e) => handleMouseLeave(e, '/service')}>
+                    onMouseLeave={(e) => handleMouseLeave(e, '/service')}
+                  >
                     บริการของเรา
                   </Link>
+
                   <Link
                     href="/contact"
                     className={`nav-link ${isActive('/contact') ? 'active' : ''}`}
                     style={getMobileNavLinkStyle('/contact')}
                     onMouseEnter={(e) => handleMouseEnter(e, '/contact')}
-                    onMouseLeave={(e) => handleMouseLeave(e, '/contact')}>
+                    onMouseLeave={(e) => handleMouseLeave(e, '/contact')}
+                  >
                     ติดต่อเรา
+                  </Link>
+
+                  <Link
+                    href="/admin/users"
+                    className={`nav-link ${isActive('/admin/users') ? 'active' : ''}`}
+                    style={getMobileNavLinkStyle('/admin/users')}
+                    onMouseEnter={(e) => handleMouseEnter(e, '/admin/users')}
+                    onMouseLeave={(e) => handleMouseLeave(e, '/admin/users')}
+                  >
+                    บัญชีผู้ใช้
                   </Link>
 
                   {/* Mobile Login Button */}
                   <div style={{ marginTop: '15px', width: '100%', maxWidth: '200px' }}>
-                    <a className="btn btn-outline-light w-100" href="/login" role="button" style={{
-                      borderRadius: '25px',
-                      padding: '12px 25px',
-                      fontWeight: '500',
-                      border: '1px solid rgba(255, 255, 255, 0.3)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      backdropFilter: 'blur(10px)',
-                      color: 'white',
-                      textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
-                      transition: 'all 0.3s ease',
-                      boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)'
-                    }}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                        e.target.style.transform = 'translateY(-2px)';
-                        e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                        e.target.style.transform = 'translateY(0)';
-                        e.target.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-                      }}>
-                      เข้าสู่ระบบ
-                    </a>
+                    {tokenState ? (
+                      <button
+                        type="button"
+                        onClick={handlelogout}
+                        className="btn btn-outline-danger w-100"
+                        style={{
+                          borderRadius: '25px',
+                          padding: '12px 25px',
+                          fontWeight: '500',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          backdropFilter: 'blur(10px)',
+                          color: 'white',
+                          textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
+                          transition: 'all 0.3s ease',
+                          boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                        }}
+                      >
+                        ออกจากระบบ
+                      </button>
+                    ) : (
+                      <Link
+                        className="btn btn-outline-light w-100"
+                        href="/login"
+                        role="button"
+                        style={{
+                          borderRadius: '25px',
+                          padding: '12px 25px',
+                          fontWeight: '500',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          backdropFilter: 'blur(10px)',
+                          color: 'white',
+                          textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
+                          transition: 'all 0.3s ease',
+                          boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                        }}
+                      >
+                        เข้าสู่ระบบ
+                      </Link>
+                    )}
                   </div>
                 </div>
-              </div>
-
-              {/* Desktop Login Button */}
-              <div className="d-none d-lg-block">
-                <Link className="btn btn-outline-light" href="/login" role='button' style={{
-                  borderRadius: '25px',
-                  padding: '10px 25px',
-                  fontWeight: '500',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(10px)',
-                  color: 'white',
-                  textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
-                  transition: 'all 0.3s ease',
-                  boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)'
-                }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-                  }}>
-                  เข้าสู่ระบบ
-                </Link>
               </div>
             </div>
           </div>

@@ -12,21 +12,21 @@ export default function Carousel() {
     <div id="carouselExample" className="carousel slide carousel-fade" data-bs-ride="carousel">
       <div className="carousel-inner">
         <div className="carousel-item active">
-          <Image src="/bg0.jpeg"
+          <Image src="/p/c1.jpg"
             className="d-block w-100 object-fit-cover "
             alt="..." width={1920} height={690}
             style={{ height: '100vh', width: '100vw' }}
           />
         </div>
         <div className="carousel-item">
-          <Image src="/i1.png"
+          <Image src="/p/c2.jpg"
             className="d-block w-100 object-fit-cover"
             alt="..." width={1920} height={690}
             style={{ height: '100vh', width: '100vw' }}
           />
         </div>
         <div className="carousel-item">
-          <Image src="/16.jpg"
+          <Image src="/p/c3.jpg"
             className="d-block w-100 object-fit-cover"
             alt="..." width={1920} height={690}
             style={{ height: '100vh', width: '100vw' }}

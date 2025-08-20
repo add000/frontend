@@ -33,51 +33,94 @@ export default function ServicesPage() {
   ];
 
   return (
-    <div className="container-fluid min-vh-100 d-flex align-items-center py-5" style={{ backgroundColor: "#111111", }}>
-      <div className="grid-container" style={{ paddingTop: "100px", height: "auto", width: "100vw", }}>
-        <h1 className="text-center mb-5 fw-bold" style={{ color: "#ffffff", }}>บริการของเรา</h1>
-        <br />
-        <br />
-        {services.map((service, index) => (
-          <div
-            key={index}
-            className="container-fluid d-flex align-items-center"
-            style={{ height: "50vh", backgroundColor: index % 2 === 0 ? "#000000" : "#111111", }}
-          >
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-12 d-md-none text-center mb-3">
-                  {/* Icon for small screens */}
-                  <i className={`bi ${service.icon}`} style={{ fontSize: "3rem", color: "#ffffff" }}></i>
-                </div>
+    <>
+      <div className="position-relative bg-black">
+        <img
+          src="/p/p2.jpg"
+          className="img-fluid"
+          style={{ height: "100vh", width: "100vw", }}
+        />
+        <div
+          className="position-absolute text-start"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            color: "white",
+            fontSize: "2.5em",
+            fontWeight: "bold",
+            textShadow: "0px 0px 15px rgba(255, 255, 255, 1)",
+            padding: "0 20px",
+            zIndex: 2,
+          }}
+        >
+          บริการของเรา
+        </div>
+        <div
+          className="position-absolute w-100 h-100"
+          style={{
+            top: 0,
+            left: 0,
+            background: "linear-gradient(to bottom, #111111, rgba(0,0,0,0), rgba(0,0,0,0))",
+            zIndex: 1,
+            pandingBottom: "6em"
+          }}
+        ></div>
+        <div
+          className="position-absolute w-100 h-100"
+          style={{
+            top: 0,
+            left: 0,
+            background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0), #111111)",
+            zIndex: 1,
+            pandingBottom: "6em"
+          }}
+        ></div>
+      </div>
+      <div className="container-fluid min-vh-100 d-flex align-items-center py-5" style={{ backgroundColor: "#111111", }}>
+        <div className="grid-container" style={{ paddingTop: "100px", height: "auto", width: "100vw", }}>
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="container-fluid d-flex align-items-center"
+              style={{ height: "50vh", backgroundColor: index % 2 === 0 ? "#000000" : "#111111", }}
+            >
+              <div className="container">
+                <div className="row align-items-center">
+                  <div className="col-12 d-md-none text-center mb-3">
+                    {/* Icon for small screens */}
+                    <i className={`bi ${service.icon}`} style={{ fontSize: "3rem", color: "#ffffff" }}></i>
+                  </div>
 
-                {index % 2 === 0 ? (
-                  <>
-                    <div className="col-md-4 d-none d-md-block text-center">
-                      {/* Icon for medium+ screens */}
-                      <i className={`bi ${service.icon}`} style={{ fontSize: "4rem", color: "#ffffff" }}></i>
-                    </div>
-                    <div className="col-md-8 col-12 text-md-start text-center" style={{ color: "#ffffff" }}>
-                      <h3 className="fw-bold">{service.title}</h3>
-                      <p className="text-light">{service.description}</p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="col-md-8 col-12 text-md-end text-center" style={{ color: "#ffffff" }}>
-                      <h3 className="fw-bold">{service.title}</h3>
-                      <p className="text-light">{service.description}</p>
-                    </div>
-                    <div className="col-md-4 d-none d-md-block text-center">
-                      <i className={`bi ${service.icon}`} style={{ fontSize: "4rem", color: "#ffffff" }}></i>
-                    </div>
-                  </>
-                )}
+                  {index % 2 === 0 ? (
+                    <>
+                      <div className="col-md-4 d-none d-md-block text-center">
+                        {/* Icon for medium+ screens */}
+                        <i className={`bi ${service.icon}`} style={{ fontSize: "4rem", color: "#ffffff" }}></i>
+                      </div>
+                      <div className="col-md-8 col-12 text-md-start text-center" style={{ color: "#ffffff" }}>
+                        <h3 className="fw-bold">{service.title}</h3>
+                        <p className="text-light">{service.description}</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="col-md-8 col-12 text-md-end text-center" style={{ color: "#ffffff" }}>
+                        <h3 className="fw-bold">{service.title}</h3>
+                        <p className="text-light">{service.description}</p>
+                      </div>
+                      <div className="col-md-4 d-none d-md-block text-center">
+                        <i className={`bi ${service.icon}`} style={{ fontSize: "4rem", color: "#ffffff" }}></i>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

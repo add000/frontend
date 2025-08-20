@@ -4,21 +4,23 @@ export default function About() {
       <div className="d-flex">
         <div className="position-relative bg-black">
           <img
-            src="/nikki_p.jpeg"
+            src="/p/p3.jpg"
             className="img-fluid"
-            style={{ height: "50vh", width: "100vw", objectFit: "cover", marginTop: "6em" }}
+            style={{ height: "40vh", width: "100vw", objectFit: "cover", marginTop: "6em" }}
           />
           <div
             className="position-absolute text-start"
             style={{
-              marginTop: "-30vh",
-              marginLeft: "2.5em",
+              position: "absolute",
+              top: "50%",
+              left: "4em",
+              transform: "translate(-50%, -50%)",
               color: "white",
               fontSize: "2.5em",
               fontWeight: "bold",
-              fontSmooth: "antialiased",
-              textShadow: "0px 0px 20px rgba(255, 255, 255, 1)",
-              zIndex: 2
+              textShadow: "0px 0px 15px rgba(255, 255, 255, 1)",
+              padding: "0 20px",
+              zIndex: 2,
             }}
           >
             About Us

@@ -4,23 +4,23 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 export default function Page() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true); // <-- เพิ่ม state loading
+  const [items, setItems] = useState([]);   // ❌ ไม่มี <any[]>
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   // โหลดข้อมูลผู้ใช้
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users', {
+      const res = await fetch('https://backend-nextjs-virid.vercel.app/api/users', {
         cache: 'no-store',
       });
       if (res.ok) {
         const data = await res.json();
         setItems(data);
-        setLoading(false); // ปิด loading เมื่อโหลดข้อมูลเสร็จ
       }
     } catch (err) {
       console.error('Fetch failed:', err);
+    } finally {
       setLoading(false);
     }
   };
@@ -28,24 +28,36 @@ export default function Page() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('กรุณาเข้าสู่ระบบก่อน');
       router.push('/login');
       return;
     }
-
     fetchUsers();
   }, []);
 
+  // ✅ Loading Animation
+  if (loading) {
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-dark text-light">
+        <div
+          className="spinner-border text-info mb-3"
+          role="status"
+          style={{ width: '4rem', height: '4rem' }}
+        >
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <h5>กำลังโหลดข้อมูล...</h5>
+      </div>
+    );
+  }
+
   // ฟังก์ชันลบผู้ใช้
-  const handleDelete = async (id) => {
+  async function handleDelete(id) {
     if (!confirm('คุณแน่ใจว่าต้องการลบผู้ใช้นี้?')) return;
 
     try {
-      const res = await fetch(`http://itdev.cmtc.ac.th:3000/api/users/${id}`, {
+      const res = await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
         method: 'DELETE',
-        headers: {
-          Accept: 'application/json',
-        },
+        headers: { Accept: 'application/json' },
       });
 
       if (!res.ok) throw new Error('Delete failed');
@@ -53,17 +65,11 @@ export default function Page() {
       const result = await res.json();
       console.log(result);
 
-      // รีเฟรช list หลังจากลบ
       setItems(items.filter(item => item.id !== id));
     } catch (error) {
       console.error('Error deleting user:', error);
     }
-  };
-
-  if (loading) {
-    return <div className='text-center'><h1>Loading...</h1></div>; // หรือ return null เพื่อไม่ให้ render อะไร
   }
-
 
   return (
     <div className="container-fluid min-vh-100 py-5" style={{ backgroundColor: '#0f0f0f' }}>

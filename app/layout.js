@@ -50,7 +50,7 @@ export default function RootLayout({ children }) {
         }
       `}</style>
       </head>
-      <body className={prompt.className} style={{ backgroundImage: 'url(/bg1.jpg)', backgroundSize: 'fit', backgroundPosition: 'center' }}>
+      <body className={prompt.className} style={{ backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         {!shouldHide && (
           <Navigation />
         )}
