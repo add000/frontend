@@ -53,6 +53,7 @@ export default function ServicesPage() {
             textShadow: "0px 0px 15px rgba(255, 255, 255, 1)",
             padding: "0 20px",
             zIndex: 2,
+            textAlign: "center",
           }}
         >
           บริการของเรา
