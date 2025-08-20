@@ -108,7 +108,7 @@ export default function RegisterPage() {
         className="border-none rounded-5 p-5"
         style={{
           backdropFilter: 'blur(16px)',
-          backgroundColor: 'rgba(255, 200, 200, 0.2)',
+          backgroundColor: 'rgba(255, 200, 190, 0.36)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
         }}
         noValidate

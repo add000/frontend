@@ -2,7 +2,7 @@ export default function ContactPage() {
   return (
     <div className="d-flex align-items-center justify-content-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0)', height: '100vh', }}>
       <div className="container" style={{ maxWidth: '900px', marginTop: '6em', marginBottom: '6em', padding: '1em', }}>
-        <div className="row shadow rounded-5 overflow-hidden" style={{ backgroundColor: 'rgba(255, 200, 200, 0.2)', backdropFilter: 'blur(16px)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)', }}>
+        <div className="row shadow rounded-5 overflow-hidden" style={{ backgroundColor: 'rgba(255, 200, 190, 0.36)', backdropFilter: 'blur(16px)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)', }}>
           <div className="col-md-5 d-flex flex-column justify-content-center bg-dark text-white p-4">
             <h3 className="mb-4">ติดต่อเรา</h3>
             <p><i className="fas fa-map-marker-alt me-2"></i> 123 เชียงใหม่, ประเทศไทย 50200</p>
