@@ -41,19 +41,16 @@ export default function ServicesPage() {
           style={{ height: "100vh", width: "100vw", }}
         />
         <div
-          className="position-absolute text-start"
+          className="position-absolute text-center w-100"
           style={{
             position: "absolute",
             top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
             color: "white",
             fontSize: "2.5em",
             fontWeight: "bold",
             textShadow: "0px 0px 15px rgba(255, 255, 255, 1)",
             padding: "0 20px",
             zIndex: 2,
-            textAlign: "center",
           }}
         >
           บริการของเรา
