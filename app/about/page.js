@@ -43,14 +43,7 @@ export default function About() {
           <h1 style={{ fontSize: "2.5em", fontWeight: "bold", fontSmooth: "antialiased", }}>เกี่ยวกับเรา</h1>
           <br />
           <p style={{ fontSize: "1.5em", }}>
-            fontend fontend fontend fontend fontend fontend fontend fontend fontend fontend
-            fontend fontend fontend fontend fontend fontend fontend fontend fontend fontend
-            fontend fontend fontend fontend fontend fontend fontend fontend fontend fontend
-            fontend fontend fontend fontend fontend fontend fontend fontend fontend fontend
-            fontend fontend fontend fontend fontend fontend fontend fontend fontend fontend
-            fontend fontend fontend fontend fontend fontend fontend fontend fontend fontend
-            fontend fontend fontend fontend fontend fontend fontend fontend fontend fontend
-            fontend fontend fontend fontend fontend fontend fontend fontend fontend fontend
+            enerally, developers are well versed in at least one programming language and proficient in the art of structuring and developing software code or a program. Depending on the job role and type of software developed, there are numerous types of developers, such as software developers, application developers, mobile developers, web developers, etc.
           </p>
         </div>
       </div>
