@@ -16,7 +16,7 @@ export default function Home() {
           style={{ height: "50vh", width: "100vw", }}
         />
         <div
-          className="position-absolute text-start"
+          className="position-absolut text-center"
           style={{
             position: "absolute",
             top: "50%",
@@ -25,19 +25,24 @@ export default function Home() {
             color: "white",
             fontSize: "2.5em",
             fontWeight: "bold",
-            textShadow: "0px 0px 15px rgba(255, 255, 255, 1)",
+            textShadow: "0px 1px 0px rgba(255, 255, 255, 0)" +
+              ", 0px 3px 0px rgba(255, 255, 255, 0.8)" +
+              ", 0px 6px 0px rgba(255, 255, 255, 0.6)" +
+              ", 0px 9px 0px rgba(255, 255, 255, 0.4)" +
+              ", 0px 12px 0px rgba(255, 255, 255, 0.2)" ,
+
             padding: "0 20px",
             zIndex: 2,
           }}
         >
-          Sky
+          Font<span className="text" style={{ }}>End</span> Development
         </div>
         <div
           className="position-absolute w-100 h-100"
           style={{
             top: 0,
             left: 0,
-            background: "linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0), rgba(0,0,0,0))",
+            background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0))",
             zIndex: 1,
             pandingBottom: "6em"
           }}
@@ -47,7 +52,7 @@ export default function Home() {
           style={{
             top: 0,
             left: 0,
-            background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,1))",
+            background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5), rgba(0,0,0,1))",
             zIndex: 1,
             pandingBottom: "6em"
           }}

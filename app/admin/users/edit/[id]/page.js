@@ -109,6 +109,12 @@ export default function RegisterPage() {
                     icon: 'success',
                     timer: 2000,
                     showConfirmButton: false,
+                    background: '#1f1f1f',
+                    color: '#fff',
+                    iconColor: '#4ade80',
+                    padding: '6em',
+                    customClass: { popup: 'rounded-5' },
+                    backdrop: `rgba(0,0,0,0.7) left top no-repeat`
                 }).then(() => {
                     router.push('/admin/users');
                 });
@@ -129,17 +135,30 @@ export default function RegisterPage() {
                     title: 'เกิดข้อผิดพลาด!',
                     text: result?.message || 'ไม่สามารถส่งข้อมูลแก้ไขได้!',
                     icon: 'error',
-                    confirmButtonText: 'ตกลง',
+                    background: '#1f1f1f',
+                    color: '#fff',
+                    iconColor: '#f87171',
+                    padding: '6em',
+                    showConfirmButton: true,
+                    confirmButtonColor: '#374151',
+                    customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
                 });
             }
         } catch (error) {
             Swal.fire({
-                title: 'เกิดข้อผิดพลาด!',
-                text: 'ข้อผิดพลาดเครือข่าย',
                 icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: err.message,
+                background: '#1f1f1f',
+                color: '#fff',
+                iconColor: '#f87171',
+                padding: '6em',
+                confirmButtonColor: '#374151',
+                customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
             });
         }
     };
+
 
     return (
         <div className="container" style={{ maxWidth: '400px', padding: '20px', margin: '0 auto', marginTop: '100px', marginBottom: '100px' }}>

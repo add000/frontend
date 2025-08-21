@@ -7,6 +7,7 @@ import Footer from "./components/footer";
 import { usePathname } from 'next/navigation';
 
 
+
 const prompt = Prompt({
   subsets: ['thai', 'latin'], // รองรับภาษาไทย
   weight: ['300', '400', '500', '600', '700'],

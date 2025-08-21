@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 export default function Page() {
   const [items, setItems] = useState([]);   // ❌ ไม่มี <any[]>
@@ -50,27 +51,48 @@ export default function Page() {
     );
   }
 
-  // ฟังก์ชันลบผู้ใช้
   async function handleDelete(id) {
-    if (!confirm('คุณแน่ใจว่าต้องการลบผู้ใช้นี้?')) return;
+    const result = await Swal.fire({
+      title: 'คุณแน่ใจหรือไม่?',
+      text: "คุณจะไม่สามารถกู้คืนผู้ใช้นี้ได้!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ใช่, ลบเลย!',
+      cancelButtonText: 'ยกเลิก',
+      customClass: { popup: 'rounded-5', confirmButton: 'rounded-5', cancelButton: 'rounded-5' },
+      padding: '6em',
+      color: '#fff',
+      iconColor: '#f87171',
+      background: '#1f1f1f',
+    });
 
-    try {
-      const res = await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
-        method: 'DELETE',
-        headers: { Accept: 'application/json' },
-      });
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
+          method: 'DELETE',
+          headers: { Accept: 'application/json' },
+        });
 
-      if (!res.ok) throw new Error('Delete failed');
+        if (!res.ok) throw new Error('Delete failed');
 
-      const result = await res.json();
-      console.log(result);
+        const data = await res.json();
+        console.log(data);
 
-      setItems(items.filter(item => item.id !== id));
-    } catch (error) {
-      console.error('Error deleting user:', error);
+        setItems(items.filter(item => item.id !== id));
+
+        Swal.fire(
+          'ลบแล้ว!',
+          'ผู้ใช้ถูกลบเรียบร้อยแล้ว.',
+          'success'
+        );
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถลบผู้ใช้ได้', 'error');
+      }
     }
   }
-
   return (
     <div className="container-fluid min-vh-100 py-5" style={{ backgroundColor: '#0f0f0f' }}>
       <h2 className="text-center mb-5 fw-bold text-light" style={{ marginTop: '100px' }}>

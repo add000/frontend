@@ -60,7 +60,7 @@ export default function ServicesPage() {
           style={{
             top: 0,
             left: 0,
-            background: "linear-gradient(to bottom, #111111, rgba(0,0,0,0), rgba(0,0,0,0))",
+            background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0))",
             zIndex: 1,
             pandingBottom: "6em"
           }}
@@ -70,7 +70,7 @@ export default function ServicesPage() {
           style={{
             top: 0,
             left: 0,
-            background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0), #111111)",
+            background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0),rgba(0,0,0,0), #111111)",
             zIndex: 1,
             pandingBottom: "6em"
           }}
