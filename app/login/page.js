@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Swal from "sweetalert2";
@@ -10,7 +10,26 @@ export default function LoginPage() {
     password: '',
   });
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(true); // เพิ่ม loading state
   const router = useRouter();
+
+  // ✅ ตรวจสอบสถานะ login เมื่อ component mount
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem('token');
+      
+      if (token) {
+        // ถ้ามี token แล้ว redirect ไปหน้า admin
+        router.push('/admin/users');
+        return;
+      }
+      
+      // ถ้าไม่มี token ให้แสดง login form
+      setIsLoading(false);
+    };
+
+    checkAuthStatus();
+  }, [router]);
 
   // ✅ handle change สำหรับ input ทุกช่อง
   const handleChange = (e) => {
@@ -64,10 +83,9 @@ export default function LoginPage() {
         Swal.fire({
           icon: 'error',
           title: '<h3>เข้าสู่ระบบไม่สำเร็จ</h3>',
+          text: data.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
           showConfirmButton: false,
           timer: 2000,
-        }).then(() => {
-          router.push('/login');
         });
       }
     } catch (err) {
@@ -79,6 +97,17 @@ export default function LoginPage() {
       });
     }
   };
+
+  // แสดง loading หรือ blank page ขณะตรวจสอบสถานะ login
+  if (isLoading) {
+    return (
+      <main className="position-relative d-flex justify-content-center align-items-center" style={{ height: '100vh', backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="spinner-border text-light" role="status">
+          <span className="visually-hidden">กำลังตรวจสอบ...</span>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="position-relative" style={{ height: '100vh', backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
