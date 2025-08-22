@@ -38,13 +38,13 @@ export default function About() {
           ></div>
         </div>
       </div>
-      <div className="bg-black" style={{ width: "100vw", height: "auto", }}>
+      <div className="bg" style={{ width: "100vw", height: "auto", backgroundColor: "#15151a",}}>
         <div className="container px-4" style={{ paddingTop: "6em", paddingBottom: "6em", textAlign: "center", color: "white", textShadow: "0px 0px 15px rgba(255, 255, 255, 1)", }}>
-          <h1 style={{ fontSize: "2.5em", fontWeight: "bold", fontSmooth: "antialiased", }}>เกี่ยวกับเรา</h1>
+          <h1 style={{ fontSize: "", fontWeight: "bold", fontSmooth: "antialiased", }}>เกี่ยวกับเรา</h1>
           <br />
-          <p style={{ fontSize: "1.5em", }}>
-            enerally, developers are well versed in at least one programming language and proficient in the art of structuring and developing software code or a program. Depending on the job role and type of software developed, there are numerous types of developers, such as software developers, application developers, mobile developers, web developers, etc.
-          </p>
+          <h5 style={{ fontSize: "", }}>
+            มันคือศิลปะ
+          </h5>
         </div>
       </div>
     </>

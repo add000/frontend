@@ -1,7 +1,4 @@
-'use client';
-import Carousel from './components/carousel';
-import Card from './components/card';
-
+"use client";
 
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
@@ -167,64 +164,24 @@ const RotatingText = forwardRef((props, ref) => {
   );
 });
 
-export default function Home() {
+RotatingText.displayName = "RotatingText";
+
+// ตัวอย่างใช้งาน
+export default function RotatingTextExample() {
   return (
-    <main>
-      <Carousel />
-      <div className="position-relative bg-black">
-        <img
-          src="/p/p2.jpg"
-          className="img-fluid"
-          style={{ height: "50vh", width: "100vw", }}
-        />
-        <div
-          className="position-absolut text-center w-100"
-          style={{
-            position: "absolute",
-            top: "35%",
-            color: "white",
-            fontSize: "4em",
-            fontWeight: "bold",
-            textShadow: "0px 1px 0px rgba(255, 255, 255, 0)",
-            padding: "0 20px",
-            zIndex: 2,
-          }}
-        >
-          <RotatingText
-            texts={['FontEnd', 'UX', 'UI',]}
-            mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
-            staggerFrom="last"
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "-120%" }}
-            staggerDuration={0.025}
-            splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-            transition={{ type: "spring", damping: 30, stiffness: 400 }}
-            rotationInterval={2000}
-          />
-        </div>
-        <div
-          className="position-absolute w-100 h-100"
-          style={{
-            top: 0,
-            left: 0,
-            background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0))",
-            zIndex: 1,
-            pandingBottom: "6em"
-          }}
-        ></div>
-        <div
-          className="position-absolute w-100 h-100"
-          style={{
-            top: 0,
-            left: 0,
-            background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5), rgba(0,0,0,1))",
-            zIndex: 1,
-            pandingBottom: "6em"
-          }}
-        ></div>
-      </div>
-      <Card />
-    </main>
+    <div className="flex justify-center items-center h-screen">
+      <RotatingText
+        texts={['React', 'Bits', 'Is', 'Cool!']}
+        mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+        staggerFrom="last"
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "-120%" }}
+        staggerDuration={0.025}
+        splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+        transition={{ type: "spring", damping: 30, stiffness: 400 }}
+        rotationInterval={2000}
+      />
+    </div>
   );
 }

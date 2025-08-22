@@ -38,7 +38,7 @@ export default function ServicesPage() {
         <img
           src="/p/p2.jpg"
           className="img-fluid"
-          style={{ height: "100vh", width: "100vw", }}
+          style={{ height: "100vh", width: "100vw", objectFit: "cover" }}
         />
         <div
           className="position-absolute text-center w-100"
@@ -74,7 +74,8 @@ export default function ServicesPage() {
             zIndex: 1,
             pandingBottom: "6em"
           }}
-        ></div>
+        >
+      </div>
       </div>
       <div className="container-fluid min-vh-100 d-flex align-items-center py-5" style={{ backgroundColor: "#111111", }}>
         <div className="grid-container" style={{ paddingTop: "100px", height: "auto", width: "100vw", }}>
