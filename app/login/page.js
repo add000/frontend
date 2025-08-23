@@ -124,7 +124,7 @@ export default function LoginPage() {
   return (
     <main className="position-relative" style={{ height: '100vh', backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="container" style={{ maxWidth: '400px', padding: '20px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2 }}>
-        <form onSubmit={handleLogin} className="border-none p-5 rounded-5" style={{ backdropFilter: 'blur(16px)', backgroundColor: 'rgba(255, 200, 190, 0.36)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)' }}>
+        <form onSubmit={handleLogin} className="border-none p-5 rounded-5" style={{ backdropFilter: 'blur(16px)', backgroundColor: 'rgba(255, 200, 190, 0.36)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)', margin: '1%' }}>
 
           {/* Username */}
           <div className="mb-3">
@@ -160,7 +160,7 @@ export default function LoginPage() {
           <div className="mb-3">
             <label htmlFor="quickLogin" className="form-label">Quick Login</label>
             {/* Remember me */}
-            <div className="mb-3 form-check position-absolute" style={{ zIndex: 3, marginLeft: '14.2rem', marginTop: '0.05rem' }}>
+            <div className="mb-3 form-check position-absolute" style={{ zIndex: 3, marginLeft: '13.8rem', marginTop: '0.05rem' }}>
               <input
                 type="checkbox"
                 className="form-check-input rounded-5"
@@ -192,7 +192,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   className="btn btn-danger btn-sm rounded-5 position-absolute"
-                  style={{ zIndex: 4, marginLeft: '14.2rem', marginTop: '0.05rem', padding: '0.3rem 0.4rem', boxShadow: '0 0px 16px rgba(255, 10, 10, 8)', backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                  style={{ zIndex: 4, marginLeft: '13.8rem', marginTop: '0.05rem', padding: '0.3rem 0.4rem', boxShadow: '0 0px 16px rgba(255, 10, 10, 8)', backgroundColor: 'rgba(255, 0, 0, 1)' }}
                   onClick={() => handleDeleteAccount(formData.username)}
                 >
                   ลบ
