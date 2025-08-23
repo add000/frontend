@@ -159,40 +159,43 @@ export default function LoginPage() {
           {/* Quick Login Dropdown (แสดงตลอดเวลา) */}
           <div className="mb-3">
             <label htmlFor="quickLogin" className="form-label">Quick Login</label>
-            {/* Remember me */}
-            <div className="mb-3 form-check position-absolute" style={{ zIndex: 3, marginLeft: '61.5%', marginTop: '0.05rem', }}>
-              <input
-                type="checkbox"
-                className="form-check-input rounded-5"
-                id="rememberMe"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                style={{ width: '2em', height: '2em', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-              />
-            </div>
-            <div className="d-flex align-items-center gap-2">
-              <select
-                id="quickLogin"
-                className="form-control border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-                style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}
-                onChange={(e) => {
-                  const acc = savedAccounts.find(a => a.username === e.target.value);
-                  if (acc) setFormData(acc);
-                  else setFormData({ ...formData, username: e.target.value });
-                }}
-                value={formData.username}
-              >
-                <option value="">จำข้าไว้</option>
-                {savedAccounts.map((acc, idx) => (
-                  <option key={idx} value={acc.username}>{acc.username}</option>
-                ))}
-              </select>
+            <div className="d-flex align-items-center" style={{ position: 'relative' , marginBottom: '3rem', marginTop: '1rem' }}>
+              <div className="d-flex align-items-center">
+                <select
+                  id="quickLogin"
+                  className="form-control border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none position-absolute"
+                  style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', paddingRight: '2.5rem' }}
+                  onChange={(e) => {
+                    const acc = savedAccounts.find(a => a.username === e.target.value);
+                    if (acc) setFormData(acc);
+                    else setFormData({ ...formData, username: e.target.value });
+                  }}
+                  value={formData.username}
+                >
+
+                  <option value="">จำข้าไว้</option>
+                  {savedAccounts.map((acc, idx) => (
+                    <option key={idx} value={acc.username}>{acc.username}</option>
+                  ))}
+                </select>
+              </div>
+              {/* Remember me */}
+              <div className="mb-3 form-check position-absolute" style={{ zIndex: 3, alignSelf: 'flex-end', right: '0.29rem', top: '-1.27rem' }}>
+                <input
+                  type="checkbox"
+                  className="form-check-input rounded-5"
+                  id="rememberMe"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  style={{ width: '2em', height: '2em', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+                />
+              </div>
               {/* ปุ่มลบ */}
               {formData.username && savedAccounts.some(a => a.username === formData.username) && (
                 <button
                   type="button"
                   className="btn btn-danger btn-sm rounded-5 position-absolute"
-                  style={{ zIndex: 4, marginLeft: '61.5%', marginTop: '0.05rem', padding: '0.3rem 0.4rem', boxShadow: '0 0px 16px rgba(255, 10, 10, 8)', backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                  style={{ zIndex: 4, alignSelf: 'flex-end', right: '0.29rem', top: '-1rem', padding: '0.3rem 0.4rem', boxShadow: '0 0px 16px rgba(255, 10, 10, 8)', backgroundColor: 'rgba(255, 0, 0, 1)' }}
                   onClick={() => handleDeleteAccount(formData.username)}
                 >
                   ลบ
