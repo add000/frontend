@@ -180,7 +180,7 @@ export default function LoginPage() {
                 </select>
               </div>
               {/* Remember me */}
-              <div className="mb-3 form-check position-absolute" style={{ zIndex: 3, alignSelf: 'flex-end', right: '0.29rem', top: '-1.27rem' }}>
+              <div className="mb-3 form-check position-absolute" style={{ zIndex: 3, alignSelf: 'flex-end', right: '0.29rem', top: '-1.27rem', marginRight: '0.3%' }}>
                 <input
                   type="checkbox"
                   className="form-check-input rounded-5"
@@ -195,7 +195,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   className="btn btn-danger btn-sm rounded-5 position-absolute"
-                  style={{ zIndex: 4, alignSelf: 'flex-end', right: '0.29rem', top: '-1rem', padding: '0.3rem 0.4rem', boxShadow: '0 0px 16px rgba(255, 10, 10, 8)', backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                  style={{ zIndex: 4, alignSelf: 'flex-end', right: '0.29rem', top: '-1rem', marginRight: '0.3%', padding: '0.3rem 0.4rem', boxShadow: '0 0px 16px rgba(255, 10, 10, 8)', backgroundColor: 'rgba(255, 0, 0, 1)' }}
                   onClick={() => handleDeleteAccount(formData.username)}
                 >
                   ลบ
