@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import { apiFetch } from "../config/api";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -42,9 +43,8 @@ export default function LoginPage() {
     setErrors({});
 
     try {
-      const res = await fetch('https://backend-nextjs-virid.vercel.app/api/auth/login', {
+      const res = await apiFetch('/api/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
