@@ -13,7 +13,8 @@ const API_CONFIG = {
 };
 
 // เลือก config ตาม environment
-const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
+const isDevelopment = process.env.NODE_ENV === 'development' || 
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost');
 const config = isDevelopment ? API_CONFIG.development : API_CONFIG.production;
 
 // ฟังก์ชันสำหรับสร้าง URL สำหรับ API calls
@@ -28,8 +29,11 @@ export const createApiUrl = (endpoint) => {
 export const apiFetch = async (endpoint, options = {}) => {
   const url = createApiUrl(endpoint);
   
-  // ดึง token จาก localStorage ถ้ามี
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  // ดึง token จาก localStorage ถ้ามี (แค่บน client-side)
+  let token = null;
+  if (typeof window !== 'undefined') {
+    token = localStorage.getItem('token');
+  }
   
   const defaultOptions = {
     headers: {
