@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { apiFetch } from '../../config/api';
 
 export default function Page() {
   const [items, setItems] = useState([]);   // ❌ ไม่มี <any[]>
@@ -12,13 +13,11 @@ export default function Page() {
   // โหลดข้อมูลผู้ใช้
   const fetchUsers = async () => {
     try {
-      const res = await fetch('https://backend-nextjs-virid.vercel.app/api/users', {
+      const res = await apiFetch('/api/users', {
         cache: 'no-store',
       });
-      if (res.ok) {
-        const data = await res.json();
-        setItems(data);
-      }
+      const data = await res.json();
+      setItems(data);
     } catch (err) {
       console.error('Fetch failed:', err);
     } finally {
@@ -70,12 +69,9 @@ export default function Page() {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
+        const res = await apiFetch(`/api/users/${id}`, {
           method: 'DELETE',
-          headers: { Accept: 'application/json' },
         });
-
-        if (!res.ok) throw new Error('Delete failed');
 
         const data = await res.json();
         console.log(data);
