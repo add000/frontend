@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
+import { apiFetch } from '../config/api';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -13,9 +14,7 @@ export default function RegisterPage() {
     firstname: '',
     fullname: '',
     lastname: '',
-    address: '',
-    sex: '',
-    birthday: '',
+    status: 'inactive',
     acceptTerms: false,
   });
 
@@ -36,9 +35,6 @@ export default function RegisterPage() {
     if (!formData.firstname) newErrors.firstname = 'กรุณาเลือกคำนำหน้าชื่อ';
     if (!formData.fullname) newErrors.fullname = 'กรุณากรอกชื่อ';
     if (!formData.lastname) newErrors.lastname = 'กรุณากรอกนามสกุล';
-    if (!formData.address) newErrors.address = 'กรุณากรอกที่อยู่';
-    if (!formData.sex) newErrors.sex = 'กรุณาเลือกเพศ';
-    if (!formData.birthday) newErrors.birthday = 'กรุณาเลือกวันเกิด';
     if (!formData.acceptTerms) newErrors.acceptTerms = 'กรุณายอมรับข้อตกลง';
     return newErrors;
   };
@@ -53,12 +49,8 @@ export default function RegisterPage() {
     }
 
     try {
-      const res = await fetch('https://backend-nextjs-virid.vercel.app/api/users', {
+      const res = await apiFetch('/api/users', {
         method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(formData),
       });
 
@@ -79,9 +71,7 @@ export default function RegisterPage() {
           firstname: '',
           fullname: '',
           lastname: '',
-          address: '',
-          sex: '',
-          birthday: '',
+          status: 'inactive',
           acceptTerms: false,
         });
         setErrors({});
@@ -200,60 +190,6 @@ export default function RegisterPage() {
           />
           {errors.lastname && <div style={{ color: '#dc3545' }}>{errors.lastname}</div>}
         </div>
-
-        {/* Address */}
-        <div className="mb-3">
-          <label htmlFor="address" className="form-label">ที่อยู่ของคุณ</label>
-          <textarea
-            id="address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            rows={3}
-            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-            placeholder="ใส่ที่อยู่ของคุณ"
-            style={{ border: errors.address ? '2px solid #dc3545' : '1px solid #6b7280' }}
-          />
-          {errors.address && <div style={{ color: '#dc3545' }}>{errors.address}</div>}
-        </div>
-
-        {/* sex */}
-        <div className="mb-3">
-          <label className="form-label">เพศ</label>
-          <div>
-            {['ชาย', 'หญิง', 'อื่นๆ', 'ไม่ระบุ'].map((option) => (
-              <div className="form-check form-check-inline" key={option}>
-                <input
-                  type="radio"
-                  name="sex"
-                  id={option}
-                  value={option}
-                  checked={formData.sex === option}
-                  onChange={handleChange}
-                  className="form-check-input bg-transparent rounded-3"
-                />
-                <label className="form-check-label" htmlFor={option}>{option}</label>
-              </div>
-            ))}
-          </div>
-          {errors.sex && <div style={{ color: '#dc3545' }}>{errors.sex}</div>}
-        </div>
-
-        {/* Birth Date */}
-        <div className="mb-3">
-          <label htmlFor="birthday" className="form-label">วันเกิดของท่าน</label>
-          <input
-            type="date"
-            id="birthday"
-            name="birthday"
-            value={formData.birthday}
-            onChange={handleChange}
-            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-            style={{ border: errors.birthday ? '2px solid #dc3545' : '1px solid #6b7280' }}
-          />
-          {errors.birthday && <div style={{ color: '#dc3545' }}>{errors.birthday}</div>}
-        </div>
-
         {/* Accept Terms */}
         <div className="mb-3 form-check">
           <input
