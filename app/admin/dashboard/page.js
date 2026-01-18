@@ -44,7 +44,7 @@ export default function AdminDashboard() {
     };
 
     fetchStats();
-  }, [isAdmin, router]);
+  }, [isAdmin]); // เปลี่ยนจาก [isAdmin, router] เป็น [isAdmin] เท่านั้น
 
   if (!isAdmin) {
     return (
