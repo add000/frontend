@@ -15,12 +15,30 @@ export default function LoginPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) router.push('/admin/users');
-    else setIsLoading(false);
+    if (token) {
+      // ถ้ามี token ให้ไป dashboard ตามบทบาท
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user.role_name === 'admin') {
+        router.push('/admin/dashboard');
+      } else if (user.role_name === 'sales') {
+        router.push('/sales/dashboard');
+      } else if (user.role_name === 'warehouse') {
+        router.push('/warehouse/dashboard');
+      } else if (user.role_name === 'owner') {
+        router.push('/owner/dashboard');
+      } else {
+        router.push('/admin/dashboard'); // fallback
+      }
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
 
+  // โหลด saved accounts
+  useEffect(() => {
     const accounts = localStorage.getItem('savedAccounts');
     if (accounts) setSavedAccounts(JSON.parse(accounts));
-  }, [router]);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
