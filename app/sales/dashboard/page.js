@@ -17,7 +17,7 @@ export default function SalesDashboard() {
   useEffect(() => {
     // ตรวจสอบสิทธิ์
     if (!user || user.role_name !== 'sales') {
-      router.push('/login');
+      router.replace('/login');
       return;
     }
 

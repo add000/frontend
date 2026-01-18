@@ -17,7 +17,7 @@ export default function OwnerDashboard() {
   useEffect(() => {
     // ตรวจสอบสิทธิ์
     if (!user || user.role_name !== 'owner') {
-      router.push('/login');
+      router.replace('/login');
       return;
     }
 

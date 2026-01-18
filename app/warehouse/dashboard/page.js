@@ -17,7 +17,7 @@ export default function WarehouseDashboard() {
   useEffect(() => {
     // ตรวจสอบสิทธิ์
     if (!user || user.role_name !== 'warehouse') {
-      router.push('/login');
+      router.replace('/login');
       return;
     }
 
