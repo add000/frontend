@@ -34,7 +34,7 @@ export default function WarehouseDashboard() {
       <div className="row">
         <div className="col-12">
           <h2 className="mb-4">Warehouse Dashboard</h2>
-          <p className="text-muted">ยินดีต้อนรับคุณ {user?.firstname} {user?.lastname}</p>
+          <p className="text-muted">ยินดีต้อนรับคุณ {user?.firstname} {user?.lastname} (Warehouse)</p>
         </div>
       </div>
 

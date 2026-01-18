@@ -34,7 +34,7 @@ export default function OwnerDashboard() {
       <div className="row">
         <div className="col-12">
           <h2 className="mb-4">Owner Dashboard</h2>
-          <p className="text-muted">ยินดีต้อนรับคุณ {user?.firstname} {user?.lastname}</p>
+          <p className="text-muted">ยินดีต้อนรับคุณ {user?.firstname} {user?.lastname} (Owner)</p>
         </div>
       </div>
 
