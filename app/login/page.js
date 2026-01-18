@@ -78,19 +78,25 @@ export default function LoginPage() {
           // Debug: แสดงข้อมูล user
           console.log('Login Response:', data);
           console.log('User Role:', data.user?.role_name);
+          console.log('User ID:', data.user?.id);
+          console.log('Role ID:', data.user?.role_id);
           
           // Redirect ตามบทบาท
           if (data.user?.role_name === 'admin') {
+            console.log('Redirecting to admin dashboard');
             router.push('/admin/dashboard');
           } else if (data.user?.role_name === 'sales') {
+            console.log('Redirecting to sales dashboard');
             router.push('/sales/dashboard');
           } else if (data.user?.role_name === 'warehouse') {
+            console.log('Redirecting to warehouse dashboard');
             router.push('/warehouse/dashboard');
           } else if (data.user?.role_name === 'owner') {
+            console.log('Redirecting to owner dashboard');
             router.push('/owner/dashboard');
           } else {
-            console.log('Fallback to /admin/users');
-            router.push('/admin/users'); // fallback
+            console.log('No valid role found, fallback to admin dashboard');
+            router.push('/admin/dashboard'); // เปลี่ยน fallback ไป dashboard
           }
         });
 
