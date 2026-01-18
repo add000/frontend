@@ -2,8 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '../../../config/auth';
-import { usersAPI, rolesAPI } from '../../../config/api';
+import { usersAPI, rolesAPI } from '../../../../config/api';
+import { useAuth } from '../../../../config/auth';
 
 export default function AdminDashboard() {
   const { user, isAdmin } = useAuth();
