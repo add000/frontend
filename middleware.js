@@ -35,13 +35,14 @@ const roleBasedRoutes = {
   '/admin/roles': 'admin',
   '/owner/dashboard': 'owner',
   '/sales/dashboard': 'sales',
+  '/warehouse/dashboard': 'warehouse',
 };
 
 // Admin routes (all routes under /admin)
 const adminRoutes = ['/admin'];
 
 // Dashboard routes that need auth
-const dashboardRoutes = ['/admin/dashboard', '/owner/dashboard', '/sales/dashboard'];
+const dashboardRoutes = ['/admin/dashboard', '/owner/dashboard', '/sales/dashboard', '/warehouse/dashboard'];
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
