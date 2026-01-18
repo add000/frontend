@@ -3,36 +3,36 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { apiFetch } from '../../config/api';
+import { usersAPI } from '@/config/api';
+import { useAuth } from '@/config/auth';
 
 export default function Page() {
-  const [items, setItems] = useState([]);   // ❌ ไม่มี <any[]>
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { user, isAdmin } = useAuth();
 
   // โหลดข้อมูลผู้ใช้
   const fetchUsers = async () => {
     try {
-      const res = await apiFetch('/api/users', {
-        cache: 'no-store',
-      });
+      const res = await usersAPI.getAll();
       const data = await res.json();
       setItems(data);
     } catch (err) {
       console.error('Fetch failed:', err);
+      Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลผู้ใช้ได้', 'error');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (!isAdmin) {
       router.push('/login');
       return;
     }
     fetchUsers();
-  }, []);
+  }, [isAdmin, router]);
 
   // ✅ Loading Animation
   if (loading) {
@@ -69,10 +69,7 @@ export default function Page() {
 
     if (result.isConfirmed) {
       try {
-        const res = await apiFetch(`/api/users/${id}`, {
-          method: 'DELETE',
-        });
-
+        const res = await usersAPI.delete(id);
         const data = await res.json();
         console.log(data);
 
@@ -134,10 +131,24 @@ export default function Page() {
         >
       </div>
       </div>
-      <div className="container-fluid min-vh-100 py-5" style={{ backgroundColor: '#0f0f0f' }}>
+        <div className="container-fluid min-vh-100 py-5" style={{ backgroundColor: '#0f0f0f' }}>
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="d-flex justify-content-between align-items-center">
+              <h3 className="text-white mb-0">
+                <i className="fa fa-users me-2"></i>
+                จัดการผู้ใช้
+              </h3>
+              <Link href="/admin/users/create" className="btn btn-success rounded-5">
+                <i className="fa fa-plus me-2"></i>
+                สร้างผู้ใช้ใหม่
+              </Link>
+            </div>
+          </div>
+        </div>
         <div className="row g-4">
           {items.length === 0 && (
-            <div className="text-center text-muted">ไม่พบข้อมูลผู้ใช้</div>
+            <div className="col-12 text-center text-muted">ไม่พบข้อมูลผู้ใช้</div>
           )}
 
           {items.map((item) => (
@@ -160,10 +171,8 @@ export default function Page() {
                       <li><i className="fa fa-user me-2 text-secondary"></i>Username: {item.username}</li>
                       <li><i className="fa fa-address-card me-2 text-secondary"></i>Firstname: {item.firstname}</li>
                       <li><i className="fa fa-user-tag me-2 text-secondary"></i>Lastname: {item.lastname}</li>
-                      <li><i className="fa fa-shield-alt me-2 text-info"></i>บทบาท: {item.role_name || 'ยังไม่กำหนด'}</li>
-                      <li><i className="fa fa-map-marker-alt me-2 text-secondary"></i>Address: {item.address}</li>
-                      <li><i className="fa fa-venus-mars me-2 text-secondary"></i>Sex: {item.sex}</li>
-                      <li><i className="fa fa-birthday-cake me-2 text-secondary"></i>Birthday: {item.birthday}</li>
+                      <li><i className="fa fa-shield-alt me-2 text-info"></i>บทบาท: <span className="badge bg-info text-dark">{item.role_name || 'ยังไม่กำหนด'}</span></li>
+                      <li><i className="fa fa-toggle-on me-2 text-secondary"></i>สถานะ: <span className={`badge ${item.status === 'active' ? 'bg-success' : 'bg-warning'}`}>{item.status || 'ไม่ระบุ'}</span></li>
                     </ul>
                   </div>
                   <div className="d-flex justify-content-between gap-2">
@@ -173,6 +182,7 @@ export default function Page() {
                     <button
                       onClick={() => handleDelete(item.id)}
                       className="btn btn-sm btn-outline-danger w-100 rounded-5"
+                      disabled={item.username === 'admin'} // ป้องกันลบ admin
                     >
                       <i className="fa fa-trash me-1"></i> ลบ
                     </button>
