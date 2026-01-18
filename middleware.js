@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
 
 // Helper function to get user from token
 const getUserFromToken = (request) => {
