@@ -86,10 +86,12 @@ export default function RegisterPage() {
         });
       }
     } catch (error) {
+      console.error('Register Error:', error);
       Swal.fire({
         title: 'เกิดข้อผิดพลาด!',
-        text: 'ข้อผิดพลาดเครือข่าย',
+        text: error.message || 'ข้อผิดพลาดเครือข่าย กรุณาลองใหม่',
         icon: 'error',
+        confirmButtonText: 'ตกลง',
       });
     }
   };
