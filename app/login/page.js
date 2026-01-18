@@ -18,6 +18,9 @@ export default function LoginPage() {
     if (token) {
       // ถ้ามี token ให้ไป dashboard ตามบทบาท
       const user = JSON.parse(localStorage.getItem('user') || '{}');
+      console.log('Found token, redirecting user:', user);
+      console.log('User role:', user.role_name);
+      
       if (user.role_name === 'admin') {
         router.push('/admin/dashboard');
       } else if (user.role_name === 'sales') {
@@ -27,12 +30,13 @@ export default function LoginPage() {
       } else if (user.role_name === 'owner') {
         router.push('/owner/dashboard');
       } else {
+        console.log('No role found, fallback to admin dashboard');
         router.push('/admin/dashboard'); // fallback
       }
     } else {
       setIsLoading(false);
     }
-  }, [router]);
+  }, []); // เปลี่ยนจาก [router] เป็น []
 
   // โหลด saved accounts
   useEffect(() => {
