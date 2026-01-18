@@ -1,15 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usersAPI, rolesAPI } from '@/config/api';
 import { useAuth } from '@/config/auth';
+import { AdminGuard } from '../../components/AuthGuard';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
 export default function AdminDashboard() {
-  const { user, isAdmin, loading: authLoading } = useAuth();
-  const router = useRouter();
+  const { user } = useAuth();
 
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -20,19 +19,8 @@ export default function AdminDashboard() {
 
   const [statsLoading, setStatsLoading] = useState(false);
 
-  /* -------------------- Auth Guard -------------------- */
-  useEffect(() => {
-    if (authLoading) return;
-
-    if (!isAdmin) {
-      router.replace('/login');
-    }
-  }, [authLoading, isAdmin, router]);
-
   /* -------------------- Fetch Dashboard Stats -------------------- */
   useEffect(() => {
-    if (authLoading || !isAdmin) return;
-
     let isMounted = true;
 
     const fetchStats = async () => {
@@ -66,27 +54,13 @@ export default function AdminDashboard() {
     return () => {
       isMounted = false;
     };
-  }, [authLoading, isAdmin]);
-
-  /* -------------------- Auth Loading -------------------- */
-  if (authLoading) {
-    return (
-      <div className="container mt-5 text-center">
-        <div className="spinner-border text-primary" />
-        <p className="mt-2 text-muted">กำลังตรวจสอบสิทธิ์...</p>
-      </div>
-    );
-  }
-
-  /* -------------------- Block render while redirecting -------------------- */
-  if (!isAdmin) {
-    return null;
-  }
+  }, []);
 
   /* -------------------- UI -------------------- */
   return (
-    <ErrorBoundary>
-      <div className="container mt-4">
+    <AdminGuard>
+      <ErrorBoundary>
+        <div className="container mt-4">
         <h2 className="mb-2">Admin Dashboard</h2>
         <p className="text-muted">
           ยินดีต้อนรับคุณ {user?.firstname} {user?.lastname}
@@ -125,6 +99,7 @@ export default function AdminDashboard() {
         </div>
       </div>
     </ErrorBoundary>
+    </AdminGuard>
   );
 }
 

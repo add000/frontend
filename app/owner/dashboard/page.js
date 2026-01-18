@@ -1,12 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/config/auth';
+import { RoleGuard } from '../../components/AuthGuard';
 
 export default function OwnerDashboard() {
   const { user } = useAuth();
-  const router = useRouter();
   const [stats, setStats] = useState({
     totalRevenue: 0,
     monthlyRevenue: 0,
@@ -15,18 +14,13 @@ export default function OwnerDashboard() {
   });
 
   useEffect(() => {
-    // ตรวจสอบสิทธิ์
-    if (!user || user.role_name !== 'owner') {
-      router.replace('/login');
-      return;
-    }
-
     // TODO: ดึงข้อมูลสถิติจาก API
     // const fetchStats = async () => { ... };
-  }, []); // ใช้ [] แทน [user, router]
+  }, []);
 
   return (
-    <div className="container mt-4">
+    <RoleGuard role="owner">
+      <div className="container mt-4">
       <div className="row">
         <div className="col-12">
           <h2 className="mb-4">Owner Dashboard</h2>
@@ -122,6 +116,7 @@ export default function OwnerDashboard() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </RoleGuard>
   );
 }
