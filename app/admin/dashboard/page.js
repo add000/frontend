@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usersAPI, rolesAPI } from '@/config/api';
-import { useAuth } from '@/config/AuthProvider';
-import { AdminGuard } from '../../components/AuthGuard';
+import { useAuth } from './config/AuthProvider';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
 export default function AdminDashboard() {
@@ -58,9 +57,8 @@ export default function AdminDashboard() {
 
   /* -------------------- UI -------------------- */
   return (
-    <AdminGuard>
-      <ErrorBoundary>
-        <div className="container mt-4">
+    <ErrorBoundary>
+      <div className="container mt-4">
         <h2 className="mb-2">Admin Dashboard</h2>
         <p className="text-muted">
           ยินดีต้อนรับคุณ {user?.firstname} {user?.lastname}
@@ -99,7 +97,6 @@ export default function AdminDashboard() {
         </div>
       </div>
     </ErrorBoundary>
-    </AdminGuard>
   );
 }
 

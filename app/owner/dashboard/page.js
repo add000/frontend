@@ -1,8 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/config/AuthProvider';
-import { RoleGuard } from '../../components/AuthGuard';
+import { useAuth } from './config/AuthProvider';
 
 export default function OwnerDashboard() {
   const { user } = useAuth();
@@ -19,7 +18,6 @@ export default function OwnerDashboard() {
   }, []);
 
   return (
-    <RoleGuard role="owner">
       <div className="container mt-4">
       <div className="row">
         <div className="col-12">
@@ -117,6 +115,5 @@ export default function OwnerDashboard() {
         </div>
       </div>
       </div>
-    </RoleGuard>
   );
 }
