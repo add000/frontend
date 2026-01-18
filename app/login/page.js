@@ -176,8 +176,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="position-relative d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: '#0f0f0f' }}>
-      <div className="container" style={{ maxWidth: '400px', padding: '20px', zIndex: 2 }}>
+    <main className="position-relative" style={{ height: '100vh', backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <div className="container" style={{ maxWidth: '400px', padding: '20px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2 }}>
         <form onSubmit={handleLogin} className="border-none p-5 rounded-5" style={{ backdropFilter: 'blur(16px)', backgroundColor: 'rgba(255, 200, 190, 0.36)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)', margin: '2%' }}>
 
           {/* Username */}
