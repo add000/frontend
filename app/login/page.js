@@ -75,6 +75,10 @@ export default function LoginPage() {
           customClass: { popup: 'rounded-5' },
           backdrop: `rgba(0,0,0,0.7) left top no-repeat`
         }).then(() => {
+          // Debug: แสดงข้อมูล user
+          console.log('Login Response:', data);
+          console.log('User Role:', data.user?.role_name);
+          
           // Redirect ตามบทบาท
           if (data.user?.role_name === 'admin') {
             router.push('/admin/dashboard');
@@ -85,6 +89,7 @@ export default function LoginPage() {
           } else if (data.user?.role_name === 'owner') {
             router.push('/owner/dashboard');
           } else {
+            console.log('Fallback to /admin/users');
             router.push('/admin/users'); // fallback
           }
         });
