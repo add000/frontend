@@ -37,13 +37,13 @@ export default function LoginPage() {
         router.replace('/admin/dashboard'); // เปลี่ยน fallback ไป dashboard
       }
     }
-  }, []); // ใช้ [] แทน [router]
+  }, [router]);
 
   // โหลด saved accounts
   useEffect(() => {
     const accounts = localStorage.getItem('savedAccounts');
     if (accounts) setSavedAccounts(JSON.parse(accounts));
-  }, []); // ใช้ [] แทน [router]
+  }, [router]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -104,22 +104,31 @@ export default function LoginPage() {
           console.log('User ID:', data.user?.id);
           console.log('Role ID:', data.user?.role_id);
           
-          // Redirect ตามบทบาท
-          if (data.user?.role_name === 'admin') {
-            console.log('Redirecting to admin dashboard');
-            router.replace('/admin/dashboard');
-          } else if (data.user?.role_name === 'sales') {
-            console.log('Redirecting to sales dashboard');
-            router.replace('/sales/dashboard');
-          } else if (data.user?.role_name === 'warehouse') {
-            console.log('Redirecting to warehouse dashboard');
-            router.replace('/warehouse/dashboard');
-          } else if (data.user?.role_name === 'owner') {
-            console.log('Redirecting to owner dashboard');
-            router.replace('/owner/dashboard');
+          // ตรวจสอบว่ามี redirect parameter หรือไม่
+          const urlParams = new URLSearchParams(window.location.search);
+          const redirectPath = urlParams.get('redirect');
+          
+          if (redirectPath && redirectPath.startsWith('/')) {
+            console.log('Redirecting to original path:', redirectPath);
+            router.replace(redirectPath);
           } else {
-            console.log('No valid role found, fallback to admin dashboard');
-            router.replace('/admin/dashboard'); // เปลี่ยน fallback ไป dashboard
+            // Redirect ตามบทบาท
+            if (data.user?.role_name === 'admin') {
+              console.log('Redirecting to admin dashboard');
+              router.replace('/admin/dashboard');
+            } else if (data.user?.role_name === 'sales') {
+              console.log('Redirecting to sales dashboard');
+              router.replace('/sales/dashboard');
+            } else if (data.user?.role_name === 'warehouse') {
+              console.log('Redirecting to warehouse dashboard');
+              router.replace('/warehouse/dashboard');
+            } else if (data.user?.role_name === 'owner') {
+              console.log('Redirecting to owner dashboard');
+              router.replace('/owner/dashboard');
+            } else {
+              console.log('No valid role found, fallback to admin dashboard');
+              router.replace('/admin/dashboard'); // เปลี่ยน fallback ไป dashboard
+            }
           }
         });
 
