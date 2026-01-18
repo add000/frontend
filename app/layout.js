@@ -5,6 +5,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Prompt } from "next/font/google";
 import Footer from "./components/footer";
 import { usePathname } from 'next/navigation';
+import { AuthProvider } from './config/AuthProvider';
 
 
 
@@ -52,15 +53,17 @@ export default function RootLayout({ children }) {
       `}</style>
       </head>
       <body className={prompt.className} style={{ backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        {!shouldHide && (
-          <Navigation />
-        )}
+        <AuthProvider>
+          {!shouldHide && (
+            <Navigation />
+          )}
 
-        {children}
+          {children}
 
-        {!shouldHide && (
-          <Footer />
-        )}
+          {!shouldHide && (
+            <Footer />
+          )}
+        </AuthProvider>
       </body>
     </html>
   );

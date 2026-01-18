@@ -1,54 +1,13 @@
 // Authentication and Permission utilities
-import { useState, useEffect } from 'react';
-
-// ดึงข้อมูลผู้ใช้จาก token
-export const getUserFromToken = () => {
-  if (typeof window === 'undefined') return null;
-  
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
-    
-    // แยกข้อมูลจาก JWT token (ไม่ต้อง verify ใน production)
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload;
-  } catch (error) {
-    console.error('Error parsing token:', error);
-    return null;
-  }
-};
-
-// ตรวจสอบว่าผู้ใช้มีบทบาทที่กำหนดหรือไม่
-export const hasRole = (userRole, requiredRole) => {
-  if (!userRole) return false;
-  if (Array.isArray(requiredRole)) {
-    return requiredRole.includes(userRole);
-  }
-  return userRole === requiredRole;
-};
-
-// ตรวจสอบว่าเป็น admin หรือไม่
-export const isAdmin = (user) => {
-  return hasRole(user?.role_name, 'admin');
-};
-
-// ตรวจสอบสิทธิ์เฉพาะ (frontend version)
-export const hasPermission = (userPermissions, resource, action) => {
-  if (!userPermissions || !Array.isArray(userPermissions)) return false;
-  
-  return userPermissions.some(permission => 
-    permission.resource === resource && permission.action === action
-  );
-};
-
-// ตรวจสอบสิทธิ์หลายรายการ
-export const hasAnyPermission = (userPermissions, permissions) => {
-  if (!userPermissions || !Array.isArray(userPermissions)) return false;
-  
-  return permissions.some(({ resource, action }) => 
-    hasPermission(userPermissions, resource, action)
-  );
-};
+// Re-export utilities from AuthProvider for backward compatibility
+export { 
+  getUserFromToken, 
+  hasRole, 
+  isAdmin, 
+  hasPermission, 
+  hasAnyPermission,
+  useAuth 
+} from './AuthProvider';
 
 // ดึงข้อมูลสิทธิ์ของผู้ใช้จาก API
 export const getUserPermissions = async (userId) => {
@@ -114,60 +73,6 @@ export const requireAdmin = () => {
   };
 };
 
-// Hook สำหรับใช้ใน React components
-export const useAuth = () => {
-  const [user, setUser] = useState(null);
-  const [permissions, setPermissions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
-
-  useEffect(() => {
-    if (initialized) return; // ✅ ป้องกันการทำงานซ้ำ
-    
-    const initAuth = async () => {
-      try {
-        const userData = getUserFromToken();
-        if (userData) {
-          setUser(userData);
-          
-          // ดึงข้อมูลสิทธิ์ถ้าไม่ใช่ admin (admin มีสิทธิ์ทั้งหมด)
-          if (!isAdmin(userData)) {
-            const userPermissions = await getUserPermissions(userData.id);
-            setPermissions(userPermissions);
-          }
-        }
-      } catch (error) {
-        console.error('Auth initialization failed:', error);
-      } finally {
-        setLoading(false);
-        setInitialized(true);
-      }
-    };
-
-    initAuth();
-  }, [initialized]);
-
-  const checkPermission = (resource, action) => {
-    if (!user) return false;
-    if (isAdmin(user)) return true;
-    return hasPermission(permissions, resource, action);
-  };
-
-  const checkAnyPermission = (perms) => {
-    if (!user) return false;
-    if (isAdmin(user)) return true;
-    return hasAnyPermission(permissions, perms);
-  };
-
-  return {
-    user,
-    permissions,
-    loading,
-    isAdmin: isAdmin(user),
-    checkPermission,
-    checkAnyPermission
-  };
-};
 
 // Component สำหรับป้องกันการเข้าถึง (HOC)
 export const withPermission = (WrappedComponent, resource, action) => {

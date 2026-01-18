@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/config/auth';
+import { useAuth } from '../config/AuthProvider';
 
 export function AuthGuard({ children, requiredRole = null, fallbackPath = '/login' }) {
   const { user, loading, isAdmin } = useAuth();

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usersAPI, rolesAPI } from '@/config/api';
-import { useAuth } from '@/config/auth';
+import { useAuth } from '@/config/AuthProvider';
 import { AdminGuard } from '../../components/AuthGuard';
 import ErrorBoundary from '../../components/ErrorBoundary';
 

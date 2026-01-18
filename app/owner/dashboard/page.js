@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/config/auth';
+import { useAuth } from '@/config/AuthProvider';
 import { RoleGuard } from '../../components/AuthGuard';
 
 export default function OwnerDashboard() {
