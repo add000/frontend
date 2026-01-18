@@ -37,13 +37,13 @@ export default function LoginPage() {
         router.replace('/admin/dashboard'); // เปลี่ยน fallback ไป dashboard
       }
     }
-  }, []); // เปลี่ยนจาก [router] เป็น []
+  }, []); // ใช้ [] แทน [router]
 
   // โหลด saved accounts
   useEffect(() => {
     const accounts = localStorage.getItem('savedAccounts');
     if (accounts) setSavedAccounts(JSON.parse(accounts));
-  }, []);
+  }, []); // ใช้ [] แทน [router]
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

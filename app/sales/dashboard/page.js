@@ -23,7 +23,7 @@ export default function SalesDashboard() {
 
     // TODO: ดึงข้อมูลสถิติจาก API
     // const fetchStats = async () => { ... };
-  }, [user, router]);
+  }, []); // ใช้ [] แทน [user, router]
 
   return (
     <div className="container mt-4">
