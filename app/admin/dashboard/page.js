@@ -47,7 +47,20 @@ export default function AdminDashboard() {
   }, [isAdmin, router]);
 
   if (!isAdmin) {
-    return <div>Loading...</div>;
+    return (
+      <main className="d-flex flex-column justify-content-center align-items-center vh-100" style={{ backgroundColor: '#0f0f0f', backgroundImage: 'url(/p/p3.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+        <div className="text-center">
+          <div
+            className="spinner-border text-info mb-3"
+            role="status"
+            style={{ width: '4rem', height: '4rem' }}
+          >
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <h5 className="text-light">กำลังโหลดข้อมูล...</h5>
+        </div>
+      </main>
+    );
   }
 
   return (
