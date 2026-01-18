@@ -51,18 +51,18 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="container mt-4">
-      <div className="row">
+    <div className="container-fluid min-vh-100 py-5" style={{ backgroundColor: '#0f0f0f', backgroundImage: 'url(/p/p3.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+      <div className="row mb-4">
         <div className="col-12">
-          <h2 className="mb-4">Admin Dashboard</h2>
-          <p className="text-muted">ยินดีต้อนรับคุณ {user?.firstname} {user?.lastname}</p>
+          <h2 className="mb-4 text-white">Admin Dashboard</h2>
+          <p className="text-light">ยินดีต้อนรับคุณ {user?.firstname} {user?.lastname}</p>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="row mb-4">
         <div className="col-md-3 mb-3">
-          <div className="card border-primary">
+          <div className="card border-primary" style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <div className="card-body text-center">
               <h5 className="card-title text-primary">ผู้ใช้ทั้งหมด</h5>
               <h3 className="text-primary">{stats.totalUsers}</h3>
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="col-md-3 mb-3">
-          <div className="card border-success">
+          <div className="card border-success" style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <div className="card-body text-center">
               <h5 className="card-title text-success">ผู้ใช้ Active</h5>
               <h3 className="text-success">{stats.activeUsers}</h3>
@@ -78,7 +78,7 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="col-md-3 mb-3">
-          <div className="card border-warning">
+          <div className="card border-warning" style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <div className="card-body text-center">
               <h5 className="card-title text-warning">ผู้ใช้ Inactive</h5>
               <h3 className="text-warning">{stats.inactiveUsers}</h3>
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="col-md-3 mb-3">
-          <div className="card border-info">
+          <div className="card border-info" style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <div className="card-body text-center">
               <h5 className="card-title text-info">บทบาททั้งหมด</h5>
               <h3 className="text-info">{stats.totalRoles}</h3>
@@ -97,32 +97,27 @@ export default function AdminDashboard() {
 
       {/* Quick Actions */}
       <div className="row">
-        <div className="col-12">
-          <h4 className="mb-3">การจัดการด่วน</h4>
-          <div className="row">
-            <div className="col-md-3 mb-3">
-              <Link href="/admin/users" className="btn btn-primary btn-lg w-100">
-                <i className="fas fa-users me-2"></i>
+        <div className="col-md-6 mb-3">
+          <div className="card" style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <div className="card-body">
+              <h5 className="card-title text-info">การจัดการผู้ใช้</h5>
+              <p className="card-text text-light">จัดการข้อมูลผู้ใช้ในระบบ</p>
+              <Link href="/admin/users" className="btn btn-primary rounded-5">
+                <i className="fa fa-users me-2"></i>
                 จัดการผู้ใช้
               </Link>
             </div>
-            <div className="col-md-3 mb-3">
-              <Link href="/admin/roles" className="btn btn-success btn-lg w-100">
-                <i className="fas fa-user-shield me-2"></i>
+          </div>
+        </div>
+        <div className="col-md-6 mb-3">
+          <div className="card" style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <div className="card-body">
+              <h5 className="card-title text-warning">การจัดการบทบาท</h5>
+              <p className="card-text text-light">จัดการบทบาทและสิทธิ์ในระบบ</p>
+              <Link href="/admin/roles" className="btn btn-warning rounded-5">
+                <i className="fa fa-shield-alt me-2"></i>
                 จัดการบทบาท
               </Link>
-            </div>
-            <div className="col-md-3 mb-3">
-              <Link href="/admin/roles/1/permissions" className="btn btn-warning btn-lg w-100">
-                <i className="fas fa-key me-2"></i>
-                จัดการสิทธิ์
-              </Link>
-            </div>
-            <div className="col-md-3 mb-3">
-              <button className="btn btn-info btn-lg w-100" disabled>
-                <i className="fas fa-chart-bar me-2"></i>
-                รายงาน (เร็วๆ นี้)
-              </button>
             </div>
           </div>
         </div>
@@ -131,10 +126,10 @@ export default function AdminDashboard() {
       {/* Recent Activity */}
       <div className="row mt-4">
         <div className="col-12">
-          <h4 className="mb-3">กิจกรรมล่าสุด</h4>
-          <div className="card">
+          <h4 className="mb-3 text-white">กิจกรรมล่าสุด</h4>
+          <div className="card" style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <div className="card-body">
-              <p className="text-muted">ยังไม่มีข้อมูลกิจกรรมล่าสุด</p>
+              <p className="text-light">ยังไม่มีข้อมูลกิจกรรมล่าสุด</p>
             </div>
           </div>
         </div>
