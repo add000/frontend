@@ -22,16 +22,20 @@ export default function LoginPage() {
       console.log('User role:', user.role_name);
       
       if (user.role_name === 'admin') {
+        console.log('Redirecting to admin dashboard');
         router.push('/admin/dashboard');
       } else if (user.role_name === 'sales') {
+        console.log('Redirecting to sales dashboard');
         router.push('/sales/dashboard');
       } else if (user.role_name === 'warehouse') {
+        console.log('Redirecting to warehouse dashboard');
         router.push('/warehouse/dashboard');
       } else if (user.role_name === 'owner') {
+        console.log('Redirecting to owner dashboard');
         router.push('/owner/dashboard');
       } else {
-        console.log('No role found, fallback to admin dashboard');
-        router.push('/admin/dashboard'); // fallback
+        console.log('No valid role found, fallback to admin dashboard');
+        router.push('/admin/dashboard'); // เปลี่ยน fallback ไป dashboard
       }
     } else {
       setIsLoading(false);
@@ -161,19 +165,6 @@ export default function LoginPage() {
       setFormData({ username: '', password: '' });
     }
   };
-
-  if (isLoading) {
-    return (
-      <main className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: '#0f0f0f' }}>
-        <div className="text-center">
-          <div className="spinner-border text-info mb-3" role="status" style={{ width: '3rem', height: '3rem' }}>
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <h5 className="text-light">กำลังโหลด...</h5>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="position-relative" style={{ height: '100vh', backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
