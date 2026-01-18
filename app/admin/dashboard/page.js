@@ -48,7 +48,7 @@ export default function AdminDashboard() {
 
   if (!isAdmin) {
     return (
-      <main className="d-flex flex-column justify-content-center align-items-center vh-100" style={{ backgroundColor: '#0f0f0f', backgroundImage: 'url(/p/p3.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+      <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: '#0f0f0f' }}>
         <div className="text-center">
           <div
             className="spinner-border text-info mb-3"
@@ -59,7 +59,7 @@ export default function AdminDashboard() {
           </div>
           <h5 className="text-light">กำลังโหลดข้อมูล...</h5>
         </div>
-      </main>
+      </div>
     );
   }
 
