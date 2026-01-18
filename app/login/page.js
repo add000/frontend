@@ -77,9 +77,15 @@ export default function LoginPage() {
         }).then(() => {
           // Redirect ตามบทบาท
           if (data.user?.role_name === 'admin') {
-            router.push('/admin/users');
+            router.push('/admin/dashboard');
+          } else if (data.user?.role_name === 'sales') {
+            router.push('/sales/dashboard');
+          } else if (data.user?.role_name === 'warehouse') {
+            router.push('/warehouse/dashboard');
+          } else if (data.user?.role_name === 'owner') {
+            router.push('/owner/dashboard');
           } else {
-            router.push('/admin/users'); // ชั่วคราวไปที่เดิม ถ้ายังไม่มี dashboard
+            router.push('/admin/users'); // fallback
           }
         });
 
