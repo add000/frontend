@@ -164,9 +164,12 @@ export default function LoginPage() {
 
   if (isLoading) {
     return (
-      <main className="position-relative d-flex justify-content-center align-items-center" style={{ height: '100vh', backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="spinner-border text-light" role="status">
-          <span className="visually-hidden">กำลังตรวจสอบ...</span>
+      <main className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: '#0f0f0f' }}>
+        <div className="text-center">
+          <div className="spinner-border text-info mb-3" role="status" style={{ width: '3rem', height: '3rem' }}>
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <h5 className="text-light">กำลังโหลด...</h5>
         </div>
       </main>
     );
