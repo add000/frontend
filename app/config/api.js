@@ -60,6 +60,32 @@ export const apiFetch = async (endpoint, options = {}) => {
   }
 };
 
+// API functions สำหรับจัดการผู้ใช้
+export const usersAPI = {
+  // ดึงข้อมูลผู้ใช้ทั้งหมด
+  getAll: () => apiFetch('/api/users'),
+  
+  // ดึงข้อมูลผู้ใช้ตาม ID
+  getById: (id) => apiFetch(`/api/users/${id}`),
+  
+  // สร้างผู้ใช้ใหม่
+  create: (data) => apiFetch('/api/users', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }),
+  
+  // อัปเดตข้อมูลผู้ใช้
+  update: (id, data) => apiFetch(`/api/users/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  }),
+  
+  // ลบผู้ใช้
+  delete: (id) => apiFetch(`/api/users/${id}`, {
+    method: 'DELETE'
+  })
+};
+
 // API functions สำหรับจัดการบทบาทและสิทธิ์
 export const rolesAPI = {
   // ดึงข้อมูลบทบาททั้งหมด
