@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
 import { rolesAPI } from '../../config/api';
-import { useAuth } from '../../config/auth';
+import { useAuth } from '../../config/AuthProvider';
 
 export default function RolesPage() {
   const [roles, setRoles] = useState([]);

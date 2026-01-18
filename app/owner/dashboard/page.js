@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuth } from './config/AuthProvider';
+import { useAuth } from '@/config/AuthProvider';
 
 export default function OwnerDashboard() {
   const { user } = useAuth();
