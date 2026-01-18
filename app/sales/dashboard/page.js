@@ -25,21 +25,6 @@ export default function SalesDashboard() {
     // const fetchStats = async () => { ... };
   }, [user, router]);
 
-  if (!user || user.role_name !== 'sales') {
-    return (
-      <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-dark text-light">
-        <div
-          className="spinner-border text-info mb-3"
-          role="status"
-          style={{ width: '4rem', height: '4rem' }}
-        >
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        <h5>Loading data...</h5>
-      </div>
-    );
-  }
-
   return (
     <div className="container mt-4">
       <div className="row">
