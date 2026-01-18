@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
-import { rolesAPI, permissionsAPI } from '../../../config/api';
-import { useAuth } from '../../../config/auth';
+import { rolesAPI, permissionsAPI } from '../../../../config/api';
+import { useAuth } from '../../../../config/auth';
 
 export default function RolePermissionsPage() {
   const { id } = useParams();
