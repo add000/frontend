@@ -60,5 +60,68 @@ export const apiFetch = async (endpoint, options = {}) => {
   }
 };
 
+// API functions สำหรับจัดการบทบาทและสิทธิ์
+export const rolesAPI = {
+  // ดึงข้อมูลบทบาททั้งหมด
+  getAll: () => apiFetch('/api/roles'),
+  
+  // ดึงข้อมูลบทบาทตาม ID
+  getById: (id) => apiFetch(`/api/roles/${id}`),
+  
+  // สร้างบทบาทใหม่
+  create: (data) => apiFetch('/api/roles', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }),
+  
+  // อัปเดตบทบาท
+  update: (id, data) => apiFetch(`/api/roles/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  }),
+  
+  // ลบบทบาท
+  delete: (id) => apiFetch(`/api/roles/${id}`, {
+    method: 'DELETE'
+  }),
+  
+  // ดึงสิทธิ์ของบทบาท
+  getPermissions: (id) => apiFetch(`/api/roles/${id}/permissions`),
+  
+  // กำหนดสิทธิ์ให้บทบาท
+  assignPermissions: (id, permissionIds) => apiFetch(`/api/roles/${id}/permissions`, {
+    method: 'POST',
+    body: JSON.stringify({ permission_ids: permissionIds })
+  })
+};
+
+export const permissionsAPI = {
+  // ดึงข้อมูลสิทธิ์ทั้งหมด
+  getAll: () => apiFetch('/api/permissions'),
+  
+  // ดึงข้อมูลสิทธิ์แบบจัดกลุ่ม
+  getGrouped: () => apiFetch('/api/permissions/grouped'),
+  
+  // ดึงข้อมูลสิทธิ์ตาม ID
+  getById: (id) => apiFetch(`/api/permissions/${id}`),
+  
+  // สร้างสิทธิ์ใหม่
+  create: (data) => apiFetch('/api/permissions', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }),
+  
+  // อัปเดตสิทธิ์
+  update: (id, data) => apiFetch(`/api/permissions/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  }),
+  
+  // ลบสิทธิ์
+  delete: (id) => apiFetch(`/api/permissions/${id}`, {
+    method: 'DELETE'
+  })
+};
+
 // Export config สำหรับใช้งานอื่นๆ
 export default config;

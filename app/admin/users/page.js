@@ -160,6 +160,7 @@ export default function Page() {
                       <li><i className="fa fa-user me-2 text-secondary"></i>Username: {item.username}</li>
                       <li><i className="fa fa-address-card me-2 text-secondary"></i>Firstname: {item.firstname}</li>
                       <li><i className="fa fa-user-tag me-2 text-secondary"></i>Lastname: {item.lastname}</li>
+                      <li><i className="fa fa-shield-alt me-2 text-info"></i>บทบาท: {item.role_name || 'ยังไม่กำหนด'}</li>
                       <li><i className="fa fa-map-marker-alt me-2 text-secondary"></i>Address: {item.address}</li>
                       <li><i className="fa fa-venus-mars me-2 text-secondary"></i>Sex: {item.sex}</li>
                       <li><i className="fa fa-birthday-cake me-2 text-secondary"></i>Birthday: {item.birthday}</li>

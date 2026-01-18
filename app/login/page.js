@@ -51,6 +51,11 @@ export default function LoginPage() {
 
       if (data.token) {
         localStorage.setItem('token', data.token);
+        
+        // เก็บข้อมูลผู้ใช้และบทบาทไว้ใน localStorage
+        if (data.user) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
 
         if (rememberMe) {
           const updatedAccounts = [...savedAccounts.filter(a => a.username !== formData.username), formData];
@@ -69,7 +74,14 @@ export default function LoginPage() {
           padding: '6em',
           customClass: { popup: 'rounded-5' },
           backdrop: `rgba(0,0,0,0.7) left top no-repeat`
-        }).then(() => router.push('/admin/users'));
+        }).then(() => {
+          // Redirect ตามบทบาท
+          if (data.user?.role_name === 'admin') {
+            router.push('/admin/users');
+          } else {
+            router.push('/admin/users'); // ชั่วคราวไปที่เดิม ถ้ายังไม่มี dashboard
+          }
+        });
 
       } else {
         Swal.fire({

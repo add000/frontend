@@ -16,6 +16,7 @@ export default function RegisterPage() {
     lastname: '',
     status: 'inactive',
     acceptTerms: false,
+    role_id: '', // เพิ่ม role_id
   });
 
   const [errors, setErrors] = useState({});
@@ -73,6 +74,7 @@ export default function RegisterPage() {
           lastname: '',
           status: 'inactive',
           acceptTerms: false,
+          role_id: '', // เพิ่ม role_id
         });
         setErrors({});
       } else {

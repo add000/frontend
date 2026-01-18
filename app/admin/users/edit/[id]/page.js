@@ -18,9 +18,32 @@ export default function RegisterPage() {
         sex: '',
         birthday: '',
         acceptTerms: false,
+        role_id: '',
     });
 
+    const [roles, setRoles] = useState([]);
+
     const [errors, setErrors] = useState({});
+
+    // ดึงข้อมูลบทบาท
+    useEffect(() => {
+        async function fetchRoles() {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('https://backend-nextjs-virid.vercel.app/api/roles', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await res.json();
+                setRoles(data);
+            } catch (error) {
+                console.error('Error fetching roles:', error);
+            }
+        }
+        fetchRoles();
+    }, []);
 
     useEffect(() => {
         async function fetchUser() {
@@ -30,7 +53,7 @@ export default function RegisterPage() {
                 const user = Array.isArray(data) ? data[0] : data;
                 setFormData({
                     username: user.username || '',
-                    password: user.password || '',
+                    password: '', // ไม่แสดงรหัสผ่านเดิม
                     firstname: user.firstname || '',
                     fullname: user.fullname || '',
                     lastname: user.lastname || '',
@@ -38,6 +61,7 @@ export default function RegisterPage() {
                     sex: user.sex || '',
                     birthday: user.birthday || '',
                     acceptTerms: user.acceptTerms || false,
+                    role_id: user.role_id || '',
                 });
             } catch (error) {
                 console.error(error);
@@ -89,13 +113,15 @@ export default function RegisterPage() {
             sex: formData.sex,
             birthday: formData.birthday,
             acceptTerms: formData.acceptTerms,
+            role_id: formData.role_id || null,
         };
 
         try {
-            const res = await fetch('https://backend-nextjs-virid.vercel.app/api/users', {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
                 method: 'PUT',
                 headers: {
-                    Accept: 'application/json',
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(submitData),
@@ -128,6 +154,7 @@ export default function RegisterPage() {
                     sex: '',
                     birthday: '',
                     acceptTerms: false,
+                    role_id: '',
                 });
                 setErrors({});
             } else {
@@ -190,9 +217,30 @@ export default function RegisterPage() {
                     {errors.username && <div style={{ color: '#dc3545' }}>{errors.username}</div>}
                 </div>
 
+                {/* Role Selection */}
+                <div className="mb-3">
+                    <label htmlFor="role_id" className="form-label">บทบาท</label>
+                    <select
+                        id="role_id"
+                        name="role_id"
+                        value={formData.role_id}
+                        onChange={handleChange}
+                        className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
+                        style={{ border: errors.role_id ? '2px solid #dc3545' : '1px solid #6b7280' }}
+                    >
+                        <option value="">โปรดเลือกบทบาท</option>
+                        {roles.map((role) => (
+                            <option key={role.id} value={role.id}>
+                                {role.name} - {role.description}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.role_id && <div style={{ color: '#dc3545' }}>{errors.role_id}</div>}
+                </div>
+
                 {/* Password */}
                 <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
+                    <label htmlFor="password" className="form-label">รหัสผ่าน (ปล่อยว่างหากไม่เปลี่ยน)</label>
                     <input
                         type="password"
                         id="password"
@@ -200,7 +248,7 @@ export default function RegisterPage() {
                         value={formData.password}
                         onChange={handleChange}
                         className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-                        placeholder="สร้างรหัสผ่าน"
+                        placeholder="ใส่รหัสผ่านใหม่เท่านั้น"
                         style={{
                             border: errors.password ? '2px solid #dc3545' : '1px solid #6b7280',
                         }}
