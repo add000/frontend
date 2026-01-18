@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
 
 
   return (
-    <html lang="en">
+    <html>
       <head>
         <title>Frontend</title>
         <link rel="icon" href="/flower.svg" type="image/x-icon" />
