@@ -2,7 +2,8 @@
 import { LiquidWeb } from 'liquid-web/react';
 import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { debounce } from '../utils/performance';
 
 export default function LiquidNavbar() {
   const collapseRef = useRef(null);
@@ -12,11 +13,8 @@ export default function LiquidNavbar() {
 
   const isActive = (path) => pathname === path;
 
-  // อ่าน token และรีเซ็ต style link
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setToken(token);
-
+  // อ่าน token และรีเซ็ต style link (เพิ่ม performance optimization)
+  const resetLinks = useCallback(() => {
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
@@ -28,6 +26,14 @@ export default function LiquidNavbar() {
       }
     });
   }, [pathname]);
+
+  const debouncedResetLinks = debounce(resetLinks, 100);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setToken(token);
+    debouncedResetLinks();
+  }, [pathname, debouncedResetLinks]);
 
   // โหลด Bootstrap JS
   useEffect(() => {

@@ -119,8 +119,11 @@ export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
+    if (initialized) return; // ✅ ป้องกันการทำงานซ้ำ
+    
     const initAuth = async () => {
       try {
         const userData = getUserFromToken();
@@ -137,11 +140,12 @@ export const useAuth = () => {
         console.error('Auth initialization failed:', error);
       } finally {
         setLoading(false);
+        setInitialized(true);
       }
     };
 
     initAuth();
-  }, []);
+  }, [initialized]);
 
   const checkPermission = (resource, action) => {
     if (!user) return false;

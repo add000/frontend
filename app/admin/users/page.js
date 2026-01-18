@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
 import { apiFetch } from '../../config/api';
 
@@ -11,7 +11,7 @@ export default function Page() {
   const router = useRouter();
 
   // โหลดข้อมูลผู้ใช้
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const res = await apiFetch('/api/users', {
         cache: 'no-store',
@@ -23,7 +23,7 @@ export default function Page() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -32,7 +32,7 @@ export default function Page() {
       return;
     }
     fetchUsers();
-  }, []);
+  }, [fetchUsers, router]);
 
   // ✅ Loading Animation
   if (loading) {
