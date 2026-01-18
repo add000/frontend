@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usersAPI, rolesAPI } from '@/config/api';
 import { useAuth } from '@/config/auth';
-import ErrorBoundary from '../components/ErrorBoundary';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 export default function AdminDashboard() {
   const { user, isAdmin, loading: authLoading } = useAuth();
