@@ -22,6 +22,26 @@ export default function ProfilePage() {
     
     console.log('ProfilePage - User:', user);
     console.log('ProfilePage - User role:', user.role_name);
+    
+    // ✅ **Check if user should be redirected to their dashboard instead**
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectParam = urlParams.get('redirect');
+    
+    if (!redirectParam) {
+      // If no specific redirect, check if user should go to their dashboard instead
+      const defaultRoute = getDefaultRouteForRole(user.role_name);
+      console.log('No redirect parameter, checking if should redirect to dashboard:', defaultRoute);
+      
+      // Only redirect if user came from login or general paths
+      const referrer = document.referrer;
+      const shouldRedirectToDashboard = !referrer || referrer.includes('/login') || referrer.includes('/dashboard') || referrer.includes('/');
+      
+      if (shouldRedirectToDashboard && defaultRoute !== '/profile') {
+        console.log('Redirecting to role-specific dashboard:', defaultRoute);
+        router.replace(defaultRoute);
+        return;
+      }
+    }
   }, [user, router]);
 
   // ✅ **แสดง loading ถ้ายังไม่มี user**
