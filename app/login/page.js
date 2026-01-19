@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -14,60 +15,39 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  /* ================================
+   🔹 ตรวจว่า login อยู่แล้วหรือไม่
+   (แค่ปิด loading ไม่ redirect)
+  ================================= */
   useEffect(() => {
-    const checkAuthAndRedirect = () => {
-      const token = localStorage.getItem('token');
-      const userString = localStorage.getItem('user');
-      
-      if (token && userString) {
-        try {
-          const user = JSON.parse(userString);
-          console.log('Found user in localStorage:', user);
-          console.log('User role:', user.role_name);
-          
-          // ✅ **Check for redirect parameter first**
-          const urlParams = new URLSearchParams(window.location.search);
-          const redirectParam = urlParams.get('redirect');
-          
-          if (redirectParam) {
-            try {
-              const redirectPath = decodeURIComponent(redirectParam);
-              console.log('Redirecting to specified path:', redirectPath);
-              router.replace(redirectPath);
-              return;
-            } catch (error) {
-              console.error('Error decoding redirect path:', error);
-            }
-          }
-          
-          // ✅ **If no redirect parameter, go to home page**
-          console.log('No redirect parameter, going to home page');
-          router.replace('/');
-        } catch (error) {
-          console.error('Error parsing user data:', error);
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          setIsLoading(false);
-        }
-      } else {
-        setIsLoading(false);
-      }
-    };
-    
-    checkAuthAndRedirect();
-  }, [router]);
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
 
+    if (!token || !user) {
+      setIsLoading(false);
+    } else {
+      // login อยู่แล้ว → แค่ซ่อน loading
+      setIsLoading(false);
+    }
+  }, []);
+
+  /* ================================
+   🔹 โหลด Quick Login
+  ================================= */
   useEffect(() => {
     const accounts = localStorage.getItem('savedAccounts');
     if (accounts) {
       try {
         setSavedAccounts(JSON.parse(accounts));
-      } catch (error) {
-        console.error('Error parsing saved accounts:', error);
+      } catch {
+        console.error('Invalid savedAccounts');
       }
     }
   }, []);
 
+  /* ================================
+   🔹 Handlers
+  ================================= */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -79,112 +59,95 @@ export default function LoginPage() {
     return newErrors;
   };
 
+  /* ================================
+   🔹 LOGIN
+  ================================= */
   const handleLogin = async (e) => {
     e.preventDefault();
+
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
+
     setErrors({});
 
     try {
       const res = await apiFetch('/api/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
+
+      if (!res.ok) throw new Error('เข้าสู่ระบบไม่สำเร็จ');
+
       const data = await res.json();
-      console.log('Login API Response:', data);
 
-      if (data.token && data.user) {
-        // ✅ **เก็บใน localStorage**
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
-        console.log('Login successful, user:', data.user);
-        console.log('Role:', data.user.role_name);
-
-        // ✅ **ตั้ง cookies สำหรับ middleware (สำรอง)**
-        document.cookie = `token=${data.token}; path=/; max-age=86400`;
-        document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; path=/; max-age=86400`;
-
-        if (rememberMe) {
-          const updatedAccounts = [...savedAccounts.filter(a => a.username !== formData.username), formData];
-          localStorage.setItem('savedAccounts', JSON.stringify(updatedAccounts));
-          setSavedAccounts(updatedAccounts);
-        }
-
-        await Swal.fire({
-          icon: 'success',
-          title: 'เข้าสู่ระบบสำเร็จ',
-          timer: 1500,
-          showConfirmButton: false,
-          background: '#1f1f1f',
-          color: '#fff',
-          iconColor: '#4ade80',
-          padding: '3em',
-          customClass: { popup: 'rounded-5' },
-        });
-
-        // ✅ **FIX: อ่านและ decode redirect parameter**
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectParam = urlParams.get('redirect');
-        let redirectPath = '/';
-        
-        console.log('Raw redirect param:', redirectParam);
-        
-        if (redirectParam) {
-          try {
-            // ✅ **Decode URL parameter ที่ถูก encode มา**
-            redirectPath = decodeURIComponent(redirectParam);
-            console.log('Decoded redirect path:', redirectPath);
-            
-            // ✅ **ตรวจสอบความปลอดภัย**
-            const isSafeRedirect = (path) => {
-              return path && 
-                     path.startsWith('/') && 
-                     !path.includes('//') && 
-                     !path.includes('javascript:') &&
-                     !path.includes('data:');
-            };
-
-            if (!isSafeRedirect(redirectPath)) {
-              console.warn('Unsafe redirect path, using default');
-              redirectPath = '/';
-            }
-          } catch (error) {
-            console.error('Error decoding redirect path:', error);
-            redirectPath = '/';
-          }
-        }
-
-        // ✅ **ถ้ามี redirect path ที่ปลอดภัย ให้ใช้มัน**
-        if (redirectPath && redirectPath !== '/') {
-          console.log('Redirecting to specified path:', redirectPath);
-          router.replace(redirectPath);
-        } else {
-          // ✅ **ถ้าไม่มี ให้ redirect ไป home page**
-          console.log('Redirecting to home page');
-          router.replace('/');
-        }
-
-      } else {
-        throw new Error(data.message || 'เข้าสู่ระบบไม่สำเร็จ');
+      if (!data.token || !data.user) {
+        throw new Error('ข้อมูลจากเซิร์ฟเวอร์ไม่ถูกต้อง');
       }
+
+      /* 🔹 เก็บ auth */
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      document.cookie = `token=${data.token}; path=/; max-age=86400`;
+      document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; path=/; max-age=86400`;
+
+      /* 🔹 Remember Me */
+      if (rememberMe) {
+        const updated = [
+          ...savedAccounts.filter(a => a.username !== formData.username),
+          formData,
+        ];
+        localStorage.setItem('savedAccounts', JSON.stringify(updated));
+        setSavedAccounts(updated);
+      }
+
+      await Swal.fire({
+        icon: 'success',
+        title: 'เข้าสู่ระบบสำเร็จ',
+        timer: 1200,
+        showConfirmButton: false,
+        background: '#1f1f1f',
+        color: '#fff',
+        iconColor: '#4ade80',
+        padding: '3em',
+        customClass: { popup: 'rounded-5' },
+      });
+
+      /* ================================
+         🔹 Redirect (ตัวเดียว ไม่ซ้ำ)
+      ================================= */
+      const params = new URLSearchParams(window.location.search);
+      const redirectParam = params.get('redirect');
+
+      let redirectPath = '/';
+
+      if (redirectParam) {
+        try {
+          const decoded = decodeURIComponent(redirectParam);
+
+          const isSafe =
+            decoded.startsWith('/') &&
+            !decoded.includes('//') &&
+            !decoded.includes('javascript:') &&
+            !decoded.includes('data:');
+
+          redirectPath = isSafe ? decoded : '/';
+        } catch {
+          redirectPath = '/';
+        }
+      }
+
+      router.replace(redirectPath);
+
     } catch (err) {
-      console.error('Login error:', err);
       Swal.fire({
         icon: 'error',
         title: 'เข้าสู่ระบบไม่สำเร็จ',
-        text: err.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ',
+        text: err.message,
         background: '#1f1f1f',
         color: '#fff',
         iconColor: '#f87171',
@@ -195,10 +158,13 @@ export default function LoginPage() {
     }
   };
 
+  /* ================================
+   🔹 Quick Login delete
+  ================================= */
   const handleDeleteAccount = (username) => {
-    const updatedAccounts = savedAccounts.filter(acc => acc.username !== username);
-    setSavedAccounts(updatedAccounts);
-    localStorage.setItem('savedAccounts', JSON.stringify(updatedAccounts));
+    const updated = savedAccounts.filter(acc => acc.username !== username);
+    setSavedAccounts(updated);
+    localStorage.setItem('savedAccounts', JSON.stringify(updated));
 
     if (formData.username === username) {
       setFormData({ username: '', password: '' });
@@ -206,102 +172,103 @@ export default function LoginPage() {
   };
 
   if (isLoading) {
-    return <LoadingPage message="กำลังตรวจสอบสิทธิ์..." />;
+    return <LoadingPage message="กำลังโหลด..." />;
   }
 
+  /* ================================
+   🔹 UI
+  ================================= */
   return (
-    <main className="position-relative" style={{ height: '100vh', backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-      <div className="container" style={{ maxWidth: '400px', padding: '20px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2 }}>
-        <form onSubmit={handleLogin} className="border-none p-5 rounded-5" style={{ backdropFilter: 'blur(16px)', backgroundColor: 'rgba(255, 200, 190, 0.36)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)', margin: '2%' }}>
+    <main
+      className="position-relative"
+      style={{
+        height: '100vh',
+        backgroundImage: 'url(/p/g1.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      <div
+        className="container"
+        style={{
+          maxWidth: '400px',
+          padding: '20px',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 2
+        }}
+      >
+        <form
+          onSubmit={handleLogin}
+          className="p-5 rounded-5"
+          style={{
+            backdropFilter: 'blur(16px)',
+            backgroundColor: 'rgba(255, 200, 190, 0.36)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
+          }}
+        >
 
+          {/* Username */}
           <div className="mb-3">
-            <label htmlFor="username" className="form-label">Username</label>
+            <label className="form-label">Username</label>
             <input
-              type="text"
-              className={`form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none ${errors.username ? 'border-danger' : ''}`}
-              id="username"
               name="username"
-              placeholder="โปรดใส่ชื่อของคุณ"
               value={formData.username}
               onChange={handleChange}
-              autoComplete="username"
+              className={`form-control rounded-5 ${errors.username ? 'border-danger' : ''}`}
             />
             {errors.username && <div className="text-danger">{errors.username}</div>}
           </div>
 
+          {/* Password */}
           <div className="mb-3">
-            <label htmlFor="password" className="form-label">Password</label>
+            <label className="form-label">Password</label>
             <input
               type="password"
-              className={`form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none ${errors.password ? 'border-danger' : ''}`}
-              id="password"
               name="password"
-              placeholder="อย่าลืมใส่รหัสผ่านของคุณด้วยละ"
               value={formData.password}
               onChange={handleChange}
-              autoComplete="current-password"
+              className={`form-control rounded-5 ${errors.password ? 'border-danger' : ''}`}
             />
             {errors.password && <div className="text-danger">{errors.password}</div>}
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="quickLogin" className="form-label">Quick Login</label>
-            <div className="d-flex align-items-center position-relative mb-3">
-              <select
-                id="quickLogin"
-                className="form-control border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
-                style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', paddingRight: '3.5rem' }}
-                onChange={(e) => {
-                  const acc = savedAccounts.find(a => a.username === e.target.value);
-                  if (acc) setFormData(acc);
-                  else setFormData({ ...formData, username: e.target.value });
-                }}
-                value={formData.username}
-              >
-                <option value="">เลือกบัญชีที่จำไว้</option>
-                {savedAccounts.map((acc, idx) => (
-                  <option key={idx} value={acc.username}>{acc.username}</option>
-                ))}
-              </select>
-              
-              {formData.username && savedAccounts.some(a => a.username === formData.username) && (
-                <button
-                  type="button"
-                  className="btn btn-danger btn-sm rounded-5 position-absolute"
-                  style={{ right: '0.5rem', padding: '0.25rem 0.5rem' }}
-                  onClick={() => handleDeleteAccount(formData.username)}
-                >
-                  ลบ
-                </button>
-              )}
-            </div>
-
-            <div className="form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="rememberMe"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-              <label className="form-check-label" htmlFor="rememberMe">
-                จำฉันไว้
-              </label>
-            </div>
+          {/* Quick Login */}
+          <div className="mb-3">
+            <select
+              className="form-control rounded-5"
+              value={formData.username}
+              onChange={(e) => {
+                const acc = savedAccounts.find(a => a.username === e.target.value);
+                setFormData(acc || { username: e.target.value, password: '' });
+              }}
+            >
+              <option value="">Quick Login</option>
+              {savedAccounts.map((a, i) => (
+                <option key={i} value={a.username}>{a.username}</option>
+              ))}
+            </select>
           </div>
 
-          <div className="d-flex flex-column align-items-center gap-3">
-            <button type="submit" className="btn btn-outline-light w-100 py-2" style={{ borderRadius: '25px' }}>
-              เข้าสู่ระบบ
-            </button>
-            <Link href="/" className="btn btn-outline-light w-100 py-2" style={{ borderRadius: '25px' }}>
-              ย้อนกลับ
-            </Link>
+          <div className="form-check mb-3">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            <label className="form-check-label">จำฉันไว้</label>
           </div>
 
-          <div className="d-flex justify-content-center gap-4 mt-4">
-            <Link href="/forgot-password" className="text-decoration-none text-white">ลืมรหัสผ่าน?</Link>
-            <Link href="/register" className="text-decoration-none text-white">สมัครสมาชิก</Link>
+          <button className="btn btn-outline-light w-100 rounded-5">
+            เข้าสู่ระบบ
+          </button>
+
+          <div className="d-flex justify-content-center gap-3 mt-4">
+            <Link href="/forgot-password">ลืมรหัสผ่าน?</Link>
+            <Link href="/register">สมัครสมาชิก</Link>
           </div>
         </form>
       </div>
