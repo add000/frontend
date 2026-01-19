@@ -3,6 +3,7 @@ import { LiquidWeb } from 'liquid-web/react';
 import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, useRef, useCallback } from 'react';
+import { useAuth } from '@/config/AuthProvider';
 import { debounce } from '../utils/performance';
 
 export default function LiquidNavbar() {
@@ -10,6 +11,7 @@ export default function LiquidNavbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [tokenState, setToken] = useState(null);
+  const { user } = useAuth();
 
   const isActive = (path) => pathname === path;
 
@@ -33,7 +35,7 @@ export default function LiquidNavbar() {
     const token = localStorage.getItem("token");
     setToken(token);
     debouncedResetLinks();
-  }, [pathname, debouncedResetLinks]);
+  }, [pathname, debouncedResetLinks, user]);
 
   // โหลด Bootstrap JS
   useEffect(() => {
@@ -243,14 +245,55 @@ export default function LiquidNavbar() {
               </ul>
 
               {/* Desktop Login Button */}
-              <div className="d-none d-lg-block">
+              <div className="d-none d-lg-flex align-items-center gap-2">
+                {tokenState && user && (
+                  <>
+                    {/* User Status */}
+                    <div className="d-flex align-items-center gap-2">
+                      <div className="bg-success bg-opacity-10 rounded-2 px-2 py-1 d-flex align-items-center gap-1">
+                        <div className="bg-success rounded-circle" style={{ width: '8px', height: '8px' }}></div>
+                        <span className="text-success small fw-semibold">Online</span>
+                      </div>
+                      
+                      {/* Profile Icon */}
+                      <Link 
+                        href="/profile"
+                        className="btn btn-outline-light btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                        style={{
+                          width: '36px',
+                          height: '36px',
+                          padding: '0',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          backdropFilter: 'blur(10px)',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                        title="โปรไฟล์"
+                      >
+                        <i className="fas fa-user text-white" style={{ fontSize: '14px' }}></i>
+                      </Link>
+                    </div>
+                  </>
+                )}
+                
+                {/* Login/Logout Button */}
                 {tokenState ? (
                   <button type="button"
                     onClick={handlelogout}
-                    className="btn btn-outline-danger w-100"
+                    className="btn btn-outline-danger"
                     style={{
                       borderRadius: '25px',
-                      padding: '12px 25px',
+                      padding: '10px 20px',
                       fontWeight: '500',
                       border: '1px solid rgba(255, 255, 255, 0.3)',
                       backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -270,15 +313,15 @@ export default function LiquidNavbar() {
                       e.currentTarget.style.transform = 'translateY(0)';
                       e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
                     }}>
-                    <i className=""></i> ออกจากระบบ
+                    <i className="fas fa-sign-out-alt"></i> ออกจากระบบ
                   </button>
                 ) : (
-                  <Link className="btn btn-outline-light w-100"
+                  <Link className="btn btn-outline-light"
                     href="/login"
                     role="button"
                     style={{
                       borderRadius: '25px',
-                      padding: '12px 25px',
+                      padding: '10px 20px',
                       fontWeight: '500',
                       border: '1px solid rgba(255, 255, 255, 0.3)',
                       backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -345,8 +388,35 @@ export default function LiquidNavbar() {
                     ติดต่อเรา
                   </Link>
 
+                  {/* Mobile User Status and Profile */}
+                  {tokenState && user && (
+                    <div className="d-flex align-items-center justify-content-center gap-3 mb-3">
+                      <div className="bg-success bg-opacity-10 rounded-2 px-2 py-1 d-flex align-items-center gap-1">
+                        <div className="bg-success rounded-circle" style={{ width: '8px', height: '8px' }}></div>
+                        <span className="text-success small fw-semibold">Online</span>
+                      </div>
+                      
+                      <Link 
+                        href="/profile"
+                        className="btn btn-outline-light btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                        style={{
+                          width: '36px',
+                          height: '36px',
+                          padding: '0',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          backdropFilter: 'blur(10px)',
+                          transition: 'all 0.3s ease'
+                        }}
+                        title="โปรไฟล์"
+                      >
+                        <i className="fas fa-user text-white" style={{ fontSize: '14px' }}></i>
+                      </Link>
+                    </div>
+                  )}
+                  
                   {/* Mobile Login Button */}
-                  <div style={{ marginTop: '15px', width: '100%', maxWidth: '200px' }}>
+                  <div style={{ width: '100%', maxWidth: '200px' }}>
                     {tokenState ? (
                       <button
                         type="button"
