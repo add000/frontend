@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/config/AuthProvider';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import LoadingPage from '../../components/LoadingPage';
 
 export default function SalesDashboard() {
   const { user } = useAuth();
@@ -26,12 +27,6 @@ export default function SalesDashboard() {
     
     console.log('SalesDashboard - User:', user);
     console.log('SalesDashboard - User role:', user.role_name);
-    
-    if (user.role_name !== 'sales') {
-      console.log('Non-sales user, redirecting to home page');
-      router.replace('/');
-      return;
-    }
 
     // ดึงข้อมูลสถิติ
     let isMounted = true;
@@ -65,15 +60,7 @@ export default function SalesDashboard() {
 
   // แสดง loading ถ้ายังไม่มี user
   if (!user) {
-    return (
-      <div className="container mt-4">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">กำลังโหลด...</span>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingPage message="กำลังตรวจสอบสิทธิ์..." />;
   }
 
   /* -------------------- UI -------------------- */

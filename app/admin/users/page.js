@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
 import { apiFetch } from '../../config/api';
+import LoadingPage from '../../components/LoadingPage';
 
 export default function Page() {
   const [items, setItems] = useState([]);   // ❌ ไม่มี <any[]>
@@ -36,18 +37,7 @@ export default function Page() {
 
   // ✅ Loading Animation
   if (loading) {
-    return (
-      <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-dark text-light">
-        <div
-          className="spinner-border text-info mb-3"
-          role="status"
-          style={{ width: '4rem', height: '4rem' }}
-        >
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        <h5>กำลังโหลดข้อมูล...</h5>
-      </div>
-    );
+    return <LoadingPage message="กำลังโหลดข้อมูลผู้ใช้..." />;
   }
 
   async function handleDelete(id) {

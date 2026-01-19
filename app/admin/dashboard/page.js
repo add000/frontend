@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { usersAPI, rolesAPI } from '@/config/api';
 import { useAuth } from '@/config/AuthProvider';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import LoadingPage from '../../components/LoadingPage';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -27,10 +28,19 @@ export default function AdminDashboard() {
     
     console.log('AdminDashboard - User:', user);
     console.log('AdminDashboard - User role:', user.role_name);
-    
+
     if (user.role_name !== 'admin') {
-      console.log('Non-admin user, redirecting to home page');
-      router.replace('/');
+      console.log('Non-admin user, redirecting to appropriate dashboard');
+      const roleRoutes = {
+        'admin': '/admin/dashboard',
+        'sales': '/sales/dashboard',
+        'owner': '/owner/dashboard',
+        'warehouse': '/warehouse/dashboard'
+      };
+      
+      const targetRoute = roleRoutes[user.role_name] || '/';
+      console.log('Redirecting to:', targetRoute);
+      router.replace(targetRoute);
       return;
     }
 
@@ -71,15 +81,7 @@ export default function AdminDashboard() {
 
   // ✅ **แสดง loading ถ้ายังไม่มี user**
   if (!user) {
-    return (
-      <div className="container mt-4">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">กำลังโหลด...</span>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingPage message="กำลังตรวจสอบสิทธิ์..." />;
   }
 
   /* -------------------- UI -------------------- */
