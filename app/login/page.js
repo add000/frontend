@@ -10,40 +10,60 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [rememberMe, setRememberMe] = useState(false);
   const [savedAccounts, setSavedAccounts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // ถ้ามี token ให้ไป dashboard ตามบทบาท
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      console.log('Found token, redirecting user:', user);
-      console.log('User role:', user.role_name);
+    const checkAuthAndRedirect = () => {
+      const token = localStorage.getItem('token');
+      const userString = localStorage.getItem('user');
       
-      if (user.role_name === 'admin') {
-        console.log('Redirecting to admin dashboard');
-        router.replace('/admin/dashboard');
-      } else if (user.role_name === 'sales') {
-        console.log('Redirecting to sales dashboard');
-        router.replace('/sales/dashboard');
-      } else if (user.role_name === 'warehouse') {
-        console.log('Redirecting to warehouse dashboard');
-        router.replace('/warehouse/dashboard');
-      } else if (user.role_name === 'owner') {
-        console.log('Redirecting to owner dashboard');
-        router.replace('/owner/dashboard');
+      if (token && userString) {
+        try {
+          const user = JSON.parse(userString);
+          console.log('Found user:', user);
+          console.log('User role:', user.role_name);
+          
+          // สร้าง object สำหรับ mapping role กับ route
+          const roleRoutes = {
+            'admin': '/admin/dashboard',
+            'sales': '/sales/dashboard',
+            'warehouse': '/warehouse/dashboard',
+            'owner': '/owner/dashboard'
+          };
+          
+          const targetRoute = roleRoutes[user.role_name];
+          if (targetRoute) {
+            console.log(`Redirecting to ${targetRoute}`);
+            router.replace(targetRoute);
+          } else {
+            console.log('No valid role found, redirecting to default');
+            router.replace('/');
+          }
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setIsLoading(false);
+        }
       } else {
-        console.log('No valid role found, fallback to admin dashboard');
-        router.replace('/admin/dashboard'); // เปลี่ยน fallback ไป dashboard
+        setIsLoading(false);
       }
-    }
+    };
+    
+    checkAuthAndRedirect();
   }, [router]);
 
-  // โหลด saved accounts
   useEffect(() => {
     const accounts = localStorage.getItem('savedAccounts');
-    if (accounts) setSavedAccounts(JSON.parse(accounts));
-  }, [router]);
+    if (accounts) {
+      try {
+        setSavedAccounts(JSON.parse(accounts));
+      } catch (error) {
+        console.error('Error parsing saved accounts:', error);
+      }
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -57,7 +77,7 @@ export default function LoginPage() {
   };
 
   const handleLogin = async (e) => {
-    if (e.preventDefault) e.preventDefault();
+    e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -68,17 +88,24 @@ export default function LoginPage() {
     try {
       const res = await apiFetch('/api/auth/login', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(formData),
       });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      
       const data = await res.json();
 
-      if (data.token) {
+      if (data.token && data.user) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         
-        // เก็บข้อมูลผู้ใช้และบทบาทไว้ใน localStorage
-        if (data.user) {
-          localStorage.setItem('user', JSON.stringify(data.user));
-        }
+        console.log('Login successful, user:', data.user);
+        console.log('Role:', data.user.role_name);
 
         if (rememberMe) {
           const updatedAccounts = [...savedAccounts.filter(a => a.username !== formData.username), formData];
@@ -86,82 +113,64 @@ export default function LoginPage() {
           setSavedAccounts(updatedAccounts);
         }
 
-        Swal.fire({
+        await Swal.fire({
           icon: 'success',
           title: 'เข้าสู่ระบบสำเร็จ',
-          timer: 2000,
+          timer: 1500,
           showConfirmButton: false,
           background: '#1f1f1f',
           color: '#fff',
           iconColor: '#4ade80',
-          padding: '6em',
+          padding: '3em',
           customClass: { popup: 'rounded-5' },
-          backdrop: `rgba(0,0,0,0.7) left top no-repeat`
-        }).then(() => {
-          // Debug: แสดงข้อมูล user
-          console.log('Login Response:', data);
-          console.log('User Role:', data.user?.role_name);
-          console.log('User ID:', data.user?.id);
-          console.log('Role ID:', data.user?.role_id);
-          
-          // ตรวจสอบว่ามี redirect parameter หรือไม่
-          const urlParams = new URLSearchParams(window.location.search);
-          const redirectPath = urlParams.get('redirect');
-          
-          if (redirectPath && redirectPath.startsWith('/')) {
-            console.log('Redirecting to original path:', redirectPath);
-            router.replace(redirectPath);
-          } else {
-            // Redirect ตามบทบาท
-            if (data.user?.role_name === 'admin') {
-              console.log('Redirecting to admin dashboard');
-              router.replace('/admin/dashboard');
-            } else if (data.user?.role_name === 'sales') {
-              console.log('Redirecting to sales dashboard');
-              router.replace('/sales/dashboard');
-            } else if (data.user?.role_name === 'warehouse') {
-              console.log('Redirecting to warehouse dashboard');
-              router.replace('/warehouse/dashboard');
-            } else if (data.user?.role_name === 'owner') {
-              console.log('Redirecting to owner dashboard');
-              router.replace('/owner/dashboard');
-            } else {
-              console.log('No valid role found, fallback to admin dashboard');
-              router.replace('/admin/dashboard'); // เปลี่ยน fallback ไป dashboard
-            }
-          }
         });
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectPath = urlParams.get('redirect');
+        
+        const isSafeRedirect = (path) => {
+          return path && 
+                 path.startsWith('/') && 
+                 !path.includes('//') && 
+                 !path.includes('javascript:') &&
+                 !path.includes('data:');
+        };
+
+        if (isSafeRedirect(redirectPath)) {
+          console.log('Redirecting to original path:', redirectPath);
+          router.replace(redirectPath);
+        } else {
+          const roleRoutes = {
+            'admin': '/admin/dashboard',
+            'sales': '/sales/dashboard',
+            'warehouse': '/warehouse/dashboard',
+            'owner': '/owner/dashboard'
+          };
+          
+          const targetRoute = roleRoutes[data.user.role_name] || '/';
+          console.log(`Redirecting to ${targetRoute}`);
+          router.replace(targetRoute);
+        }
+
       } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'เข้าสู่ระบบไม่สำเร็จ',
-          text: data.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
-          background: '#1f1f1f',
-          color: '#fff',
-          iconColor: '#f87171',
-          padding: '6em',
-          showConfirmButton: true,
-          confirmButtonColor: '#374151',
-          customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
-        });
+        throw new Error(data.message || 'เข้าสู่ระบบไม่สำเร็จ');
       }
     } catch (err) {
+      console.error('Login error:', err);
       Swal.fire({
         icon: 'error',
-        title: 'เกิดข้อผิดพลาด',
-        text: err.message,
+        title: 'เข้าสู่ระบบไม่สำเร็จ',
+        text: err.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ',
         background: '#1f1f1f',
         color: '#fff',
         iconColor: '#f87171',
-        padding: '6em',
+        padding: '3em',
         confirmButtonColor: '#374151',
         customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
       });
     }
   };
 
-  // 🔥 ฟังก์ชันลบ account ที่จำไว้
   const handleDeleteAccount = (username) => {
     const updatedAccounts = savedAccounts.filter(acc => acc.username !== username);
     setSavedAccounts(updatedAccounts);
@@ -172,12 +181,21 @@ export default function LoginPage() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-light" role="status">
+          <span className="visually-hidden">กำลังโหลด...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <main className="position-relative" style={{ height: '100vh', backgroundImage: 'url(/p/g1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="container" style={{ maxWidth: '400px', padding: '20px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2 }}>
         <form onSubmit={handleLogin} className="border-none p-5 rounded-5" style={{ backdropFilter: 'blur(16px)', backgroundColor: 'rgba(255, 200, 190, 0.36)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)', margin: '2%' }}>
 
-          {/* Username */}
           <div className="mb-3">
             <label htmlFor="username" className="form-label">Username</label>
             <input
@@ -188,11 +206,11 @@ export default function LoginPage() {
               placeholder="โปรดใส่ชื่อของคุณ"
               value={formData.username}
               onChange={handleChange}
+              autoComplete="username"
             />
             {errors.username && <div className="text-danger">{errors.username}</div>}
           </div>
 
-          {/* Password */}
           <div className="mb-3">
             <label htmlFor="password" className="form-label">Password</label>
             <input
@@ -203,72 +221,69 @@ export default function LoginPage() {
               placeholder="อย่าลืมใส่รหัสผ่านของคุณด้วยละ"
               value={formData.password}
               onChange={handleChange}
+              autoComplete="current-password"
             />
             {errors.password && <div className="text-danger">{errors.password}</div>}
           </div>
 
-          {/* Quick Login Dropdown (แสดงตลอดเวลา) */}
-          <div className="mb-3">
+          <div className="mb-4">
             <label htmlFor="quickLogin" className="form-label">Quick Login</label>
-            <div className="d-flex align-items-center" style={{ position: 'relative' , marginBottom: '3rem', marginTop: '1rem' }}>
-              <div className="d-flex align-items-center">
-                <select
-                  id="quickLogin"
-                  className="form-control border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none position-absolute"
-                  style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', paddingRight: '2.5rem' }}
-                  onChange={(e) => {
-                    const acc = savedAccounts.find(a => a.username === e.target.value);
-                    if (acc) setFormData(acc);
-                    else setFormData({ ...formData, username: e.target.value });
-                  }}
-                  value={formData.username}
-                >
-
-                  <option value="">จำข้าไว้</option>
-                  {savedAccounts.map((acc, idx) => (
-                    <option key={idx} value={acc.username}>{acc.username}</option>
-                  ))}
-                </select>
-              </div>
-              {/* Remember me */}
-              <div className="mb-3 form-check position-absolute" style={{ zIndex: 3, alignSelf: 'flex-end', right: '0.29rem', top: '-1.27rem', marginRight: '0.3%' }}>
-                <input
-                  type="checkbox"
-                  className="form-check-input rounded-5"
-                  id="rememberMe"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  style={{ width: '2em', height: '2em', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-                />
-              </div>
-              {/* ปุ่มลบ */}
+            <div className="d-flex align-items-center position-relative mb-3">
+              <select
+                id="quickLogin"
+                className="form-control border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
+                style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', paddingRight: '3.5rem' }}
+                onChange={(e) => {
+                  const acc = savedAccounts.find(a => a.username === e.target.value);
+                  if (acc) setFormData(acc);
+                  else setFormData({ ...formData, username: e.target.value });
+                }}
+                value={formData.username}
+              >
+                <option value="">เลือกบัญชีที่จำไว้</option>
+                {savedAccounts.map((acc, idx) => (
+                  <option key={idx} value={acc.username}>{acc.username}</option>
+                ))}
+              </select>
+              
               {formData.username && savedAccounts.some(a => a.username === formData.username) && (
                 <button
                   type="button"
                   className="btn btn-danger btn-sm rounded-5 position-absolute"
-                  style={{ zIndex: 4, alignSelf: 'flex-end', right: '0.29rem', top: '-1rem', marginRight: '0.3%', padding: '0.3rem 0.4rem', boxShadow: '0 0px 16px rgba(255, 10, 10, 8)', backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                  style={{ right: '0.5rem', padding: '0.25rem 0.5rem' }}
                   onClick={() => handleDeleteAccount(formData.username)}
                 >
                   ลบ
                 </button>
               )}
             </div>
+
+            <div className="form-check">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="rememberMe"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <label className="form-check-label" htmlFor="rememberMe">
+                จำฉันไว้
+              </label>
+            </div>
           </div>
 
-          {/* Buttons */}
-          <div className="d-flex flex-column align-items-center gap-2">
-            <button type="submit" className="btn btn-outline-light w-100" style={{ borderRadius: '25px' }}>
+          <div className="d-flex flex-column align-items-center gap-3">
+            <button type="submit" className="btn btn-outline-light w-100 py-2" style={{ borderRadius: '25px' }}>
               เข้าสู่ระบบ
             </button>
-            <Link href="/" className="btn btn-outline-light w-100" style={{ borderRadius: '25px' }}>
+            <Link href="/" className="btn btn-outline-light w-100 py-2" style={{ borderRadius: '25px' }}>
               ย้อนกลับ
             </Link>
           </div>
 
-          {/* Links */}
-          <div style={{ marginTop: '2rem', gap: '5rem', display: 'flex', justifyContent: 'center' }}>
-            <Link href="/forgot-password" className="text-decoration-none link-body-emphasis link-offset-2">ลืมรหัสผ่าน?</Link>
-            <Link href="/register" className="text-decoration-none link-body-emphasis link-offset-2">สมัครสมาชิก</Link>
+          <div className="d-flex justify-content-center gap-4 mt-4">
+            <Link href="/forgot-password" className="text-decoration-none text-white">ลืมรหัสผ่าน?</Link>
+            <Link href="/register" className="text-decoration-none text-white">สมัครสมาชิก</Link>
           </div>
         </form>
       </div>
