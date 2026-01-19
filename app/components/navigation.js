@@ -251,6 +251,7 @@ export default function LiquidNavbar() {
                       type="button"
                       id="profileDropdown"
                       data-bs-toggle="dropdown"
+                      data-bs-auto-close="outside"
                       aria-expanded="false"
                       style={{
                         borderRadius: '25px',
@@ -287,7 +288,9 @@ export default function LiquidNavbar() {
                       backdropFilter: 'blur(10px)',
                       borderRadius: '12px',
                       padding: '8px',
-                      minWidth: '200px'
+                      minWidth: '200px',
+                      zIndex: 9999,
+                      position: 'absolute'
                     }}>
                       <li>
                         <Link className="dropdown-item d-flex align-items-center gap-3 text-white" href="/profile" style={{

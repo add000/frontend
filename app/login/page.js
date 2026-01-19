@@ -166,9 +166,9 @@ export default function LoginPage() {
           }
         }
 
-        // ✅ **Redirect to final path**
+        // ✅ **Redirect to final path with page reload**
         console.log('Redirecting to:', redirectPath);
-        router.replace(redirectPath);
+        window.location.href = redirectPath;
 
       } else {
         throw new Error(data.message || 'เข้าสู่ระบบไม่สำเร็จ');
