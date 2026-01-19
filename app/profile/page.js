@@ -33,13 +33,41 @@ export default function ProfilePage() {
 
   const handleGoToDashboard = () => {
     setIsLoading(true);
+    
+    // Get user role and determine appropriate dashboard
+    const userRole = user?.role_name;
+    let dashboardPath = '/dashboard'; // default fallback
+    
+    // Role-based dashboard routing (referencing Laravel permission patterns)
+    switch (userRole) {
+      case 'admin':
+        dashboardPath = '/admin/dashboard';
+        break;
+      case 'owner':
+        dashboardPath = '/owner/dashboard';
+        break;
+      case 'sales':
+        dashboardPath = '/sales/dashboard';
+        break;
+      case 'warehouse':
+        dashboardPath = '/warehouse/dashboard';
+        break;
+      default:
+        dashboardPath = '/dashboard';
+    }
+    
+    // Show loading feedback
+    console.log(`Redirecting ${userRole} to: ${dashboardPath}`);
+    
     setTimeout(() => {
-      router.replace(dashboardRoute);
-      // Add page reload after navigation
+      // Navigate to role-specific dashboard
+      router.replace(dashboardPath);
+      
+      // Add page reload after navigation to ensure fresh data
       setTimeout(() => {
         window.location.reload();
       }, 100);
-    }, 500);
+    }, 800); // Slightly longer delay for better UX
   };
 
   const handleLogout = () => {
@@ -198,12 +226,22 @@ export default function ProfilePage() {
                       >
                         <div className="position-absolute top-0 end-0 w-20 h-20 bg-primary bg-opacity-5 rounded-circle" style={{ marginTop: '-40px', marginRight: '-40px' }}></div>
                         {isLoading ? (
-                          <div className="spinner-border spinner-border-sm text-light mb-2"></div>
+                          <>
+                            <div className="spinner-border spinner-border-sm text-light mb-2"></div>
+                            <span className="fw-semibold">กำลังไปยังแดชบอร์ด...</span>
+                            <small className="text-white-50">กรุณารอสักครู่</small>
+                          </>
                         ) : (
-                          <i className="fas fa-tachometer-alt mb-2" style={{ fontSize: '2rem' }}></i>
+                          <>
+                            <i className="fas fa-tachometer-alt mb-2" style={{ fontSize: '2rem' }}></i>
+                            <span className="fw-semibold">Dashboard</span>
+                            <small className="text-white-50">{user?.role_name === 'admin' ? 'แดชบอร์ดผู้ดูแลระบบ' : 
+                              user?.role_name === 'owner' ? 'แดชบอร์ดเจ้าของ' :
+                              user?.role_name === 'sales' ? 'แดชบอร์ดการขาย' :
+                              user?.role_name === 'warehouse' ? 'แดชบอร์ดคลังสินค้า' :
+                              'เข้าถึงแดชบอร์ดของคุณ'}</small>
+                          </>
                         )}
-                        <span className="fw-semibold">Dashboard</span>
-                        <small className="text-white-50">เข้าถึงแดชบอร์ดของคุณ</small>
                       </button>
                     </div>
 
