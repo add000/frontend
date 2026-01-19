@@ -129,9 +129,22 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // ✅ **Check if route is public**
+  // ✅ **Check if route is public or needs loading**
   if (publicRoutes.includes(pathname)) {
     console.log('Public route, allowing access:', pathname);
+    return NextResponse.next();
+  }
+
+  // ✅ **Special handling for /profile - check auth but don't redirect**
+  if (pathname === '/profile') {
+    const user = getUserFromRequest(request);
+    if (!user) {
+      console.log('No user found for profile, redirecting to login');
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', encodeURIComponent('/profile'));
+      return NextResponse.redirect(loginUrl);
+    }
+    console.log('User authenticated for profile, allowing access');
     return NextResponse.next();
   }
 
