@@ -25,8 +25,23 @@ export default function LoginPage() {
           console.log('Found user in localStorage:', user);
           console.log('User role:', user.role_name);
           
-          // ✅ **Always redirect to home page**
-          console.log('Redirecting to home page');
+          // ✅ **Check for redirect parameter first**
+          const urlParams = new URLSearchParams(window.location.search);
+          const redirectParam = urlParams.get('redirect');
+          
+          if (redirectParam) {
+            try {
+              const redirectPath = decodeURIComponent(redirectParam);
+              console.log('Redirecting to specified path:', redirectPath);
+              router.replace(redirectPath);
+              return;
+            } catch (error) {
+              console.error('Error decoding redirect path:', error);
+            }
+          }
+          
+          // ✅ **If no redirect parameter, go to home page**
+          console.log('No redirect parameter, going to home page');
           router.replace('/');
         } catch (error) {
           console.error('Error parsing user data:', error);
