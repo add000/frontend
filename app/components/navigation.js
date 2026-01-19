@@ -239,17 +239,6 @@ export default function LiquidNavbar() {
                       onMouseLeave={(e) => handleMouseLeave(e, '/contact')}
                     >ติดต่อเรา</Link>
                   </li>
-                  <li className="nav-item">
-                    <Link
-                      href="/admin/users"
-                      className="nav-link"
-                      style={getNavLinkStyle('/admin/users')}
-                      onMouseEnter={(e) => handleMouseEnter(e, '/admin/users')}
-                      onMouseLeave={(e) => handleMouseLeave(e, '/admin/users')}
-                    >
-                      บัญชีผู้ใช้
-                    </Link>
-                  </li>
                 </div>
               </ul>
 
