@@ -29,17 +29,8 @@ export default function AdminDashboard() {
     console.log('AdminDashboard - User role:', user.role_name);
     
     if (user.role_name !== 'admin') {
-      console.log('Non-admin user, redirecting to appropriate dashboard');
-      const roleRoutes = {
-        'admin': '/admin/dashboard',
-        'sales': '/sales/dashboard',
-        'owner': '/owner/dashboard',
-        'warehouse': '/warehouse/dashboard'
-      };
-      
-      const targetRoute = roleRoutes[user.role_name] || '/';
-      console.log('Redirecting to:', targetRoute);
-      router.replace(targetRoute);
+      console.log('Non-admin user, redirecting to home page');
+      router.replace('/');
       return;
     }
 

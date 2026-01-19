@@ -28,17 +28,8 @@ export default function WarehouseDashboard() {
     console.log('WarehouseDashboard - User role:', user.role_name);
     
     if (user.role_name !== 'warehouse') {
-      console.log('Non-warehouse user, redirecting to appropriate dashboard');
-      const roleRoutes = {
-        'admin': '/admin/dashboard',
-        'sales': '/sales/dashboard',
-        'owner': '/owner/dashboard',
-        'warehouse': '/warehouse/dashboard'
-      };
-      
-      const targetRoute = roleRoutes[user.role_name] || '/';
-      console.log('Redirecting to:', targetRoute);
-      router.replace(targetRoute);
+      console.log('Non-warehouse user, redirecting to home page');
+      router.replace('/');
       return;
     }
 

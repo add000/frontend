@@ -28,17 +28,8 @@ export default function OwnerDashboard() {
     console.log('OwnerDashboard - User role:', user.role_name);
     
     if (user.role_name !== 'owner') {
-      console.log('Non-owner user, redirecting to appropriate dashboard');
-      const roleRoutes = {
-        'admin': '/admin/dashboard',
-        'sales': '/sales/dashboard',
-        'owner': '/owner/dashboard',
-        'warehouse': '/warehouse/dashboard'
-      };
-      
-      const targetRoute = roleRoutes[user.role_name] || '/';
-      console.log('Redirecting to:', targetRoute);
-      router.replace(targetRoute);
+      console.log('Non-owner user, redirecting to home page');
+      router.replace('/');
       return;
     }
 

@@ -28,17 +28,8 @@ export default function SalesDashboard() {
     console.log('SalesDashboard - User role:', user.role_name);
     
     if (user.role_name !== 'sales') {
-      console.log('Non-sales user, redirecting to appropriate dashboard');
-      const roleRoutes = {
-        'admin': '/admin/dashboard',
-        'sales': '/sales/dashboard',
-        'owner': '/owner/dashboard',
-        'warehouse': '/warehouse/dashboard'
-      };
-      
-      const targetRoute = roleRoutes[user.role_name] || '/';
-      console.log('Redirecting to:', targetRoute);
-      router.replace(targetRoute);
+      console.log('Non-sales user, redirecting to home page');
+      router.replace('/');
       return;
     }
 
