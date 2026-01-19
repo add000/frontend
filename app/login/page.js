@@ -172,18 +172,7 @@ export default function LoginPage() {
 
         // ✅ **Redirect to final path**
         console.log('Redirecting to:', redirectPath);
-        
-        // Add loading state and redirect with page reload
-        setIsLoading(true);
-        
-        setTimeout(() => {
-          router.replace(redirectPath);
-          
-          // Add page reload after navigation to ensure fresh data
-          setTimeout(() => {
-            window.location.reload();
-          }, 100);
-        }, 500); // Brief delay for better UX
+        router.replace(redirectPath);
 
       } else {
         throw new Error(data.message || 'เข้าสู่ระบบไม่สำเร็จ');
