@@ -75,7 +75,7 @@ const hasRole = (user, requiredRole) => {
 };
 
 // ✅ **Routes that don't require authentication**
-const publicRoutes = ['/login', '/register', '/', '/unauthorized'];
+const publicRoutes = ['/login', '/register', '/about', '/unauthorized'];
 
 // ✅ **Routes that require specific roles**
 const roleBasedRoutes = {

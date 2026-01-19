@@ -35,7 +35,7 @@ export default function ProfilePage() {
       'owner': '/owner/dashboard',
       'warehouse': '/warehouse/dashboard'
     };
-    return roleRoutes[role] || '/about';
+    return roleRoutes[role] || '/';
   };
 
   const dashboardRoute = getDashboardRoute(user.role_name);
