@@ -34,33 +34,20 @@ export default function ProfilePage() {
   const handleGoToDashboard = () => {
     setIsLoading(true);
     
-    // Get user role and determine appropriate dashboard
+    // Get user role and determine appropriate dashboard using the same logic as login
     const userRole = user?.role_name;
-    let dashboardPath = '/dashboard'; // default fallback
     
-    // Role-based dashboard routing (referencing Laravel permission patterns)
-    switch (userRole) {
-      case 'admin':
-        dashboardPath = '/admin/dashboard';
-        break;
-      case 'owner':
-        dashboardPath = '/owner/dashboard';
-        break;
-      case 'sales':
-        dashboardPath = '/sales/dashboard';
-        break;
-      case 'warehouse':
-        dashboardPath = '/warehouse/dashboard';
-        break;
-      default:
-        dashboardPath = '/dashboard';
-    }
+    // Use the same role-based routing as login page
+    const defaultRoute = getDefaultRouteForRole(userRole);
+    let dashboardPath = defaultRoute;
     
     // Show loading feedback
-    console.log(`Redirecting ${userRole} to: ${dashboardPath}`);
+    console.log(`User role: ${userRole}`);
+    console.log(`Default route for role: ${defaultRoute}`);
+    console.log(`Redirecting to: ${dashboardPath}`);
     
     setTimeout(() => {
-      // Navigate to role-specific dashboard
+      // Navigate to role-specific dashboard using the same logic as login
       router.replace(dashboardPath);
       
       // Add page reload after navigation to ensure fresh data
