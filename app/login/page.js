@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { apiFetch } from "../config/api";
+import LoadingPage from "../components/LoadingPage";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -24,21 +25,9 @@ export default function LoginPage() {
           console.log('Found user in localStorage:', user);
           console.log('User role:', user.role_name);
           
-          const roleRoutes = {
-            'admin': '/admin/dashboard',
-            'sales': '/sales/dashboard',
-            'warehouse': '/warehouse/dashboard',
-            'owner': '/owner/dashboard'
-          };
-          
-          const targetRoute = roleRoutes[user.role_name];
-          if (targetRoute) {
-            console.log(`Redirecting to ${targetRoute}`);
-            router.replace(targetRoute);
-          } else {
-            console.log('No valid role found, redirecting to default');
-            router.replace('/');
-          }
+          // ✅ **Always redirect to home page**
+          console.log('Redirecting to home page');
+          router.replace('/');
         } catch (error) {
           console.error('Error parsing user data:', error);
           localStorage.removeItem('token');
@@ -167,17 +156,9 @@ export default function LoginPage() {
           console.log('Redirecting to specified path:', redirectPath);
           router.replace(redirectPath);
         } else {
-          // ✅ **ถ้าไม่มี ให้ redirect ตามบทบาท**
-          const roleRoutes = {
-            'admin': '/admin/dashboard',
-            'sales': '/sales/dashboard',
-            'warehouse': '/warehouse/dashboard',
-            'owner': '/owner/dashboard'
-          };
-          
-          const targetRoute = roleRoutes[data.user.role_name] || '/';
-          console.log('Redirecting to role-based route:', targetRoute);
-          router.replace(targetRoute);
+          // ✅ **ถ้าไม่มี ให้ redirect ไป home page**
+          console.log('Redirecting to home page');
+          router.replace('/');
         }
 
       } else {
@@ -210,13 +191,7 @@ export default function LoginPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="spinner-border text-light" role="status">
-          <span className="visually-hidden">กำลังโหลด...</span>
-        </div>
-      </div>
-    );
+    return <LoadingPage message="กำลังตรวจสอบสิทธิ์..." />;
   }
 
   return (
