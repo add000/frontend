@@ -17,14 +17,19 @@ export default function AdminDashboard() {
   const [statsLoading, setStatsLoading] = useState(false);
 
   useEffect(() => {
-    // ตรวจสอบสิทธิ์
+    // ✅ **ตรวจสอบสิทธิ์**
     if (!user) {
       const currentPath = window.location.pathname;
+      console.log('No user, redirecting to login');
       router.replace(`/login?redirect=${encodeURIComponent(currentPath)}`);
       return;
     }
     
+    console.log('AdminDashboard - User:', user);
+    console.log('AdminDashboard - User role:', user.role_name);
+    
     if (user.role_name !== 'admin') {
+      console.log('Non-admin user, redirecting to appropriate dashboard');
       const roleRoutes = {
         'admin': '/admin/dashboard',
         'sales': '/sales/dashboard',
@@ -33,11 +38,12 @@ export default function AdminDashboard() {
       };
       
       const targetRoute = roleRoutes[user.role_name] || '/';
+      console.log('Redirecting to:', targetRoute);
       router.replace(targetRoute);
       return;
     }
 
-    // ดึงข้อมูลสถิติ
+    // ✅ **ดึงข้อมูลสถิติ**
     let isMounted = true;
     const fetchStats = async () => {
       setStatsLoading(true);
@@ -72,7 +78,7 @@ export default function AdminDashboard() {
     };
   }, [user, router]);
 
-  // แสดง loading ถ้ายังไม่มี user
+  // ✅ **แสดง loading ถ้ายังไม่มี user**
   if (!user) {
     return (
       <div className="container mt-4">

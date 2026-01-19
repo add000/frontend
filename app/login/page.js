@@ -21,10 +21,9 @@ export default function LoginPage() {
       if (token && userString) {
         try {
           const user = JSON.parse(userString);
-          console.log('Found user:', user);
+          console.log('Found user in localStorage:', user);
           console.log('User role:', user.role_name);
           
-          // สร้าง object สำหรับ mapping role กับ route
           const roleRoutes = {
             'admin': '/admin/dashboard',
             'sales': '/sales/dashboard',
@@ -99,13 +98,19 @@ export default function LoginPage() {
       }
       
       const data = await res.json();
+      console.log('Login API Response:', data);
 
       if (data.token && data.user) {
+        // ✅ **เก็บใน localStorage**
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         
         console.log('Login successful, user:', data.user);
         console.log('Role:', data.user.role_name);
+
+        // ✅ **ตั้ง cookies สำหรับ middleware (สำรอง)**
+        document.cookie = `token=${data.token}; path=/; max-age=86400`;
+        document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; path=/; max-age=86400`;
 
         if (rememberMe) {
           const updatedAccounts = [...savedAccounts.filter(a => a.username !== formData.username), formData];
@@ -125,21 +130,44 @@ export default function LoginPage() {
           customClass: { popup: 'rounded-5' },
         });
 
+        // ✅ **FIX: อ่านและ decode redirect parameter**
         const urlParams = new URLSearchParams(window.location.search);
-        const redirectPath = urlParams.get('redirect');
+        const redirectParam = urlParams.get('redirect');
+        let redirectPath = '/';
         
-        const isSafeRedirect = (path) => {
-          return path && 
-                 path.startsWith('/') && 
-                 !path.includes('//') && 
-                 !path.includes('javascript:') &&
-                 !path.includes('data:');
-        };
+        console.log('Raw redirect param:', redirectParam);
+        
+        if (redirectParam) {
+          try {
+            // ✅ **Decode URL parameter ที่ถูก encode มา**
+            redirectPath = decodeURIComponent(redirectParam);
+            console.log('Decoded redirect path:', redirectPath);
+            
+            // ✅ **ตรวจสอบความปลอดภัย**
+            const isSafeRedirect = (path) => {
+              return path && 
+                     path.startsWith('/') && 
+                     !path.includes('//') && 
+                     !path.includes('javascript:') &&
+                     !path.includes('data:');
+            };
 
-        if (isSafeRedirect(redirectPath)) {
-          console.log('Redirecting to original path:', redirectPath);
+            if (!isSafeRedirect(redirectPath)) {
+              console.warn('Unsafe redirect path, using default');
+              redirectPath = '/';
+            }
+          } catch (error) {
+            console.error('Error decoding redirect path:', error);
+            redirectPath = '/';
+          }
+        }
+
+        // ✅ **ถ้ามี redirect path ที่ปลอดภัย ให้ใช้มัน**
+        if (redirectPath && redirectPath !== '/') {
+          console.log('Redirecting to specified path:', redirectPath);
           router.replace(redirectPath);
         } else {
+          // ✅ **ถ้าไม่มี ให้ redirect ตามบทบาท**
           const roleRoutes = {
             'admin': '/admin/dashboard',
             'sales': '/sales/dashboard',
@@ -148,7 +176,7 @@ export default function LoginPage() {
           };
           
           const targetRoute = roleRoutes[data.user.role_name] || '/';
-          console.log(`Redirecting to ${targetRoute}`);
+          console.log('Redirecting to role-based route:', targetRoute);
           router.replace(targetRoute);
         }
 

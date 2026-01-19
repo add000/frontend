@@ -1,50 +1,83 @@
 import { NextResponse } from 'next/server';
 
-// Helper function to get user from token and cookies
+// ✅ **Debug function to get user from request**
 const getUserFromRequest = (request) => {
   try {
-    // ลองดึง user จาก cookies ก่อน (ข้อมูล user ที่เก็บไว้ตอน login)
+    // ตรวจสอบ cookies ทั้งหมด
+    console.log('=== MIDDLEWARE DEBUG ===');
+    console.log('Request URL:', request.url);
+    const allCookies = request.cookies.getAll();
+    console.log('All cookies in request:', allCookies);
+    
+    // ✅ **ลองดึง user จาก cookies ก่อน**
     const userCookie = request.cookies.get('user')?.value;
+    console.log('User cookie raw value:', userCookie);
+    
     if (userCookie) {
-      return JSON.parse(userCookie);
+      try {
+        const decodedUser = decodeURIComponent(userCookie);
+        const user = JSON.parse(decodedUser);
+        console.log('Parsed user from cookie:', user);
+        console.log('User role from cookie:', user.role_name);
+        return user;
+      } catch (parseError) {
+        console.error('Error parsing user cookie:', parseError);
+      }
     }
     
-    // ถ้าไม่มีใน cookie ลองดึงจาก token
+    // ✅ **ถ้าไม่มี user cookie ให้ลองดึงจาก token**
     const token = request.cookies.get('token')?.value;
-    if (!token) return null;
+    console.log('Token cookie exists:', !!token);
     
-    // สำหรับ JWT token (ถ้าใช้ JWT)
+    if (!token) {
+      console.log('No token found in cookies');
+      return null;
+    }
+    
+    // ✅ **สำหรับ JWT token**
     try {
       const parts = token.split('.');
       if (parts.length === 3) {
         const payload = JSON.parse(atob(parts[1]));
+        console.log('User from JWT payload:', payload);
         return payload;
       }
     } catch (tokenError) {
-      console.error('Error parsing token:', tokenError);
-      return null;
+      console.error('Error parsing JWT token:', tokenError);
     }
     
+    console.log('No user data found in cookies or token');
     return null;
   } catch (error) {
-    console.error('Error parsing user data:', error);
+    console.error('Error in getUserFromRequest:', error);
     return null;
   }
 };
 
-// Helper function to check if user has required role
+// ✅ **Helper function to check if user has required role**
 const hasRole = (user, requiredRole) => {
-  if (!user || !user.role_name) return false;
-  if (Array.isArray(requiredRole)) {
-    return requiredRole.includes(user.role_name);
+  if (!user || !user.role_name) {
+    console.log('No user or role_name in hasRole check');
+    return false;
   }
-  return user.role_name === requiredRole;
+  
+  console.log('Checking role:', user.role_name, 'against:', requiredRole);
+  
+  if (Array.isArray(requiredRole)) {
+    const result = requiredRole.includes(user.role_name);
+    console.log('Array check result:', result);
+    return result;
+  }
+  
+  const result = user.role_name === requiredRole;
+  console.log('Single role check result:', result);
+  return result;
 };
 
-// Routes that don't require authentication
+// ✅ **Routes that don't require authentication**
 const publicRoutes = ['/login', '/register', '/', '/unauthorized'];
 
-// Routes that require specific roles
+// ✅ **Routes that require specific roles**
 const roleBasedRoutes = {
   '/admin/dashboard': 'admin',
   '/admin/users': 'admin',
@@ -54,72 +87,76 @@ const roleBasedRoutes = {
   '/warehouse/dashboard': 'warehouse',
 };
 
-// Admin routes (all routes under /admin)
+// ✅ **Admin routes (all routes under /admin)**
 const adminRoutes = ['/admin'];
-
-// Dashboard routes that need auth
-const dashboardRoutes = ['/admin/dashboard', '/owner/dashboard', '/sales/dashboard', '/warehouse/dashboard'];
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
   
-  // Skip middleware for static files and API routes
+  console.log('\n=== MIDDLEWARE EXECUTION ===');
+  console.log('Pathname:', pathname);
+  
+  // ✅ **Skip middleware for static files and API routes**
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/static') ||
     pathname.includes('.')
   ) {
+    console.log('Skipping middleware for:', pathname);
     return NextResponse.next();
   }
 
-  // Check if route is public
+  // ✅ **Check if route is public**
   if (publicRoutes.includes(pathname)) {
+    console.log('Public route, allowing access:', pathname);
     return NextResponse.next();
   }
 
-  // Get user from request
+  // ✅ **Get user from request**
   const user = getUserFromRequest(request);
   
-  // If no user and route is not public, redirect to login
+  // ✅ **If no user and route is not public, redirect to login**
   if (!user) {
+    console.log('No user found, redirecting to login');
     const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
+    // ✅ **Encode pathname ก่อนส่งไปยัง login**
+    const encodedPath = encodeURIComponent(pathname);
+    loginUrl.searchParams.set('redirect', encodedPath);
+    console.log('Redirecting to login with redirect=', encodedPath);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Check admin routes
+  console.log('User authenticated:', user.username);
+  console.log('User role:', user.role_name);
+
+  // ✅ **Check admin routes**
   const isAdminRoute = adminRoutes.some(route => pathname.startsWith(route));
   if (isAdminRoute && user.role_name !== 'admin') {
+    console.log('Non-admin trying to access admin route, redirecting to unauthorized');
     const unauthorizedUrl = new URL('/unauthorized', request.url);
     return NextResponse.redirect(unauthorizedUrl);
   }
 
-  // Check role-based routes
+  // ✅ **Check role-based routes**
   const requiredRole = roleBasedRoutes[pathname];
   if (requiredRole && !hasRole(user, requiredRole)) {
+    console.log(`User doesn't have required role: ${requiredRole}, redirecting to unauthorized`);
     const unauthorizedUrl = new URL('/unauthorized', request.url);
     return NextResponse.redirect(unauthorizedUrl);
   }
 
-  // Add user info to headers for client-side use
+  // ✅ **Add user info to headers for client-side use**
   const response = NextResponse.next();
   response.headers.set('x-user-role', user.role_name || '');
   response.headers.set('x-user-id', user.id || '');
   
+  console.log('Access granted to:', pathname);
   return response;
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public (public files)
-     */
     '/((?!api|_next/static|_next/image|favicon.ico|public).*)',
   ],
 };
