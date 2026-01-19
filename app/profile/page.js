@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/config/AuthProvider';
+import { getDefaultRouteForRole } from '@/config/roleRoutes';
 import ErrorBoundary from '../components/ErrorBoundary';
 import LoadingPage from '../components/LoadingPage';
 
@@ -28,17 +29,7 @@ export default function ProfilePage() {
     return <LoadingPage message="กำลังตรวจสอบสิทธิ์..." />;
   }
 
-  const getDashboardRoute = (role) => {
-    const roleRoutes = {
-      'admin': '/admin/dashboard',
-      'sales': '/sales/dashboard',
-      'owner': '/owner/dashboard',
-      'warehouse': '/warehouse/dashboard'
-    };
-    return roleRoutes[role] || '/';
-  };
-
-  const dashboardRoute = getDashboardRoute(user.role_name);
+  const dashboardRoute = getDefaultRouteForRole(user.role_name);
 
   const handleGoToDashboard = () => {
     setIsLoading(true);

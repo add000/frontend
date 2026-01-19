@@ -1,5 +1,25 @@
 import { NextResponse } from 'next/server';
 
+// ✅ **Role-based Default Routes Configuration**
+const roleDefaultRoutes = {
+  'admin': '/admin/dashboard',
+  'sales': '/sales/dashboard',
+  'owner': '/owner/dashboard',
+  'warehouse': '/warehouse/dashboard'
+};
+
+// ✅ **Get default route for user role**
+const getDefaultRouteForRole = (role) => {
+  return roleDefaultRoutes[role] || '/profile';
+};
+
+// ✅ **Check if user should be redirected to default route**
+const shouldRedirectToDefault = (pathname, userRole) => {
+  // Only redirect from specific entry points (like Laravel discussion suggested)
+  const entryPoints = ['/', '/dashboard'];
+  return entryPoints.includes(pathname) && userRole;
+};
+
 // ✅ **Debug function to get user from request**
 const getUserFromRequest = (request) => {
   try {
@@ -129,6 +149,14 @@ export function middleware(request) {
 
   console.log('User authenticated:', user.username);
   console.log('User role:', user.role_name);
+
+  // ✅ **Role-based redirection from entry points (like Laravel discussion)**
+  if (shouldRedirectToDefault(pathname, user.role_name)) {
+    const defaultRoute = getDefaultRouteForRole(user.role_name);
+    console.log(`Redirecting from ${pathname} to default route: ${defaultRoute}`);
+    const redirectUrl = new URL(defaultRoute, request.url);
+    return NextResponse.redirect(redirectUrl);
+  }
 
   // ✅ **Check admin routes**
   const isAdminRoute = adminRoutes.some(route => pathname.startsWith(route));

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { apiFetch } from "../config/api";
+import { getDefaultRouteForRole } from "../config/roleRoutes";
 import LoadingPage from "../components/LoadingPage";
 
 export default function LoginPage() {
@@ -137,9 +138,12 @@ export default function LoginPage() {
         // ✅ **FIX: อ่านและ decode redirect parameter**
         const urlParams = new URLSearchParams(window.location.search);
         const redirectParam = urlParams.get('redirect');
-        let redirectPath = '/profile';
+        // ✅ **Use role-based default route if no redirect parameter**
+        const defaultRoute = getDefaultRouteForRole(data.user.role_name);
+        let redirectPath = redirectParam ? decodeURIComponent(redirectParam) : defaultRoute;
         
-        console.log('Raw redirect param:', redirectParam);
+        console.log('Default route for role:', defaultRoute);
+        console.log('Final redirect path:', redirectPath);
         
         if (redirectParam) {
           try {
@@ -157,24 +161,18 @@ export default function LoginPage() {
             };
 
             if (!isSafeRedirect(redirectPath)) {
-              console.warn('Unsafe redirect path, using default');
-              redirectPath = '/profile';
+              console.warn('Unsafe redirect path, using default route');
+              redirectPath = defaultRoute;
             }
           } catch (error) {
             console.error('Error decoding redirect path:', error);
-            redirectPath = '/profile';
+            redirectPath = defaultRoute;
           }
         }
 
-        // ✅ **ถ้ามี redirect path ที่ปลอดภัย ให้ใช้มัน**
-        if (redirectPath) {
-          console.log('Redirecting to specified path:', redirectPath);
-          router.replace(redirectPath);
-        } else {
-          // ✅ **ถ้าไม่มี ให้ redirect ไป profile page**
-          console.log('Redirecting to profile page');
-          router.replace('/profile');
-        }
+        // ✅ **Redirect to final path**
+        console.log('Redirecting to:', redirectPath);
+        router.replace(redirectPath);
 
       } else {
         throw new Error(data.message || 'เข้าสู่ระบบไม่สำเร็จ');
