@@ -17,7 +17,9 @@ const getDefaultRouteForRole = (role) => {
 const shouldRedirectToDefault = (pathname, userRole) => {
   // Only redirect from specific entry points (like Laravel discussion suggested)
   const entryPoints = ['/', '/dashboard'];
-  return entryPoints.includes(pathname) && userRole;
+  // Don't redirect if user is already going to a specific dashboard or profile
+  const exemptRoutes = ['/profile', '/admin/dashboard', '/owner/dashboard', '/sales/dashboard', '/warehouse/dashboard'];
+  return entryPoints.includes(pathname) && userRole && !exemptRoutes.includes(pathname);
 };
 
 // ✅ **Debug function to get user from request**
@@ -95,7 +97,7 @@ const hasRole = (user, requiredRole) => {
 };
 
 // ✅ **Routes that don't require authentication**
-const publicRoutes = ['/login', '/register', '/', '/unauthorized', '/profile'];
+const publicRoutes = ['/login', '/register', '/', '/unauthorized'];
 
 // ✅ **Routes that require specific roles**
 const roleBasedRoutes = {
