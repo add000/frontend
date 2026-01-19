@@ -40,9 +40,9 @@ export default function LoginPage() {
             }
           }
           
-          // ✅ **If no redirect parameter, go to home page**
-          console.log('No redirect parameter, going to home page');
-          router.replace('/');
+          // ✅ **If no redirect parameter, go to profile page**
+          console.log('No redirect parameter, going to profile page');
+          router.replace('/profile');
         } catch (error) {
           console.error('Error parsing user data:', error);
           localStorage.removeItem('token');
@@ -137,7 +137,7 @@ export default function LoginPage() {
         // ✅ **FIX: อ่านและ decode redirect parameter**
         const urlParams = new URLSearchParams(window.location.search);
         const redirectParam = urlParams.get('redirect');
-        let redirectPath = '/';
+        let redirectPath = '/profile';
         
         console.log('Raw redirect param:', redirectParam);
         
@@ -158,11 +158,11 @@ export default function LoginPage() {
 
             if (!isSafeRedirect(redirectPath)) {
               console.warn('Unsafe redirect path, using default');
-              redirectPath = '/';
+              redirectPath = '/profile';
             }
           } catch (error) {
             console.error('Error decoding redirect path:', error);
-            redirectPath = '/';
+            redirectPath = '/profile';
           }
         }
 
@@ -171,9 +171,9 @@ export default function LoginPage() {
           console.log('Redirecting to specified path:', redirectPath);
           router.replace(redirectPath);
         } else {
-          // ✅ **ถ้าไม่มี ให้ redirect ไป home page**
-          console.log('Redirecting to home page');
-          router.replace('/about');
+          // ✅ **ถ้าไม่มี ให้ redirect ไป profile page**
+          console.log('Redirecting to profile page');
+          router.replace('/profile');
         }
 
       } else {
