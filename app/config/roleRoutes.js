@@ -3,7 +3,8 @@ export const roleDefaultRoutes = {
   'admin': '/admin/dashboard',
   'sales': '/sales/dashboard', 
   'owner': '/owner/dashboard',
-  'warehouse': '/warehouse/dashboard'
+  'warehouse': '/warehouse/dashboard',
+  'profile': '/profile'
 };
 
 // ✅ **Get default route for user role**
