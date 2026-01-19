@@ -34,8 +34,37 @@ export default function ProfilePage() {
   const handleGoToDashboard = () => {
     setIsLoading(true);
     
-    // Get user role and determine appropriate dashboard using the same logic as login
-    const userRole = user?.role_name;
+    // Debug: Check user data from multiple sources
+    console.log('=== Dashboard Button Debug ===');
+    console.log('AuthProvider user object:', user);
+    console.log('AuthProvider user role_name:', user?.role_name);
+    console.log('AuthProvider user ID:', user?.id);
+    
+    // Also check localStorage as fallback
+    const localStorageUser = localStorage.getItem('user');
+    let parsedUser = null;
+    if (localStorageUser) {
+      try {
+        parsedUser = JSON.parse(localStorageUser);
+        console.log('LocalStorage user:', parsedUser);
+        console.log('LocalStorage user role_name:', parsedUser?.role_name);
+      } catch (error) {
+        console.error('Error parsing localStorage user:', error);
+      }
+    }
+    
+    // Get user role from AuthProvider first, then fallback to localStorage
+    const userRole = user?.role_name || parsedUser?.role_name;
+    console.log('Final user role:', userRole);
+    
+    if (!userRole) {
+      console.error('No user role found in AuthProvider or localStorage!');
+      console.error('Available data:', { authProvider: user, localStorage: parsedUser });
+      setIsLoading(false);
+      // Show error to user
+      alert('ไม่พบข้อมูลสิทธิ์ผู้ใช้ กรุณาเข้าสู่ระบบใหม่');
+      return;
+    }
     
     // Use the same role-based routing as login page
     const defaultRoute = getDefaultRouteForRole(userRole);
@@ -45,13 +74,25 @@ export default function ProfilePage() {
     console.log(`User role: ${userRole}`);
     console.log(`Default route for role: ${defaultRoute}`);
     console.log(`Redirecting to: ${dashboardPath}`);
+    console.log('===============================');
     
     setTimeout(() => {
       // Navigate to role-specific dashboard using the same logic as login
-      router.replace(dashboardPath);
+      console.log('Executing navigation to:', dashboardPath);
+      
+      // Try navigation
+      try {
+        router.replace(dashboardPath);
+        console.log('Navigation command sent successfully');
+      } catch (error) {
+        console.error('Navigation error:', error);
+        // Fallback to window.location
+        window.location.href = dashboardPath;
+      }
       
       // Add page reload after navigation to ensure fresh data
       setTimeout(() => {
+        console.log('Reloading page...');
         window.location.reload();
       }, 100);
     }, 800); // Slightly longer delay for better UX
