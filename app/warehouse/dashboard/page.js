@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useAuth } from '@/config/AuthProvider';
 
 export default function WarehouseDashboard() {
@@ -16,14 +15,59 @@ export default function WarehouseDashboard() {
 
   useEffect(() => {
     // ตรวจสอบสิทธิ์
-    if (!user || user.role_name !== 'warehouse') {
-      router.replace('/login');
+    if (!user) {
+      // ถ้าไม่มี user ให้ redirect ไป login พร้อมเก็บ path ปัจจุบัน
+      const currentPath = window.location.pathname;
+      router.replace(`/login?redirect=${encodeURIComponent(currentPath)}`);
+      return;
+    }
+    
+    if (user.role_name !== 'warehouse') {
+      // ถ้าบทบาทไม่ตรง ให้ redirect ไป dashboard ตามบทบาท
+      const roleRoutes = {
+        'admin': '/admin/dashboard',
+        'sales': '/sales/dashboard',
+        'owner': '/owner/dashboard',
+        'warehouse': '/warehouse/dashboard'
+      };
+      
+      const targetRoute = roleRoutes[user.role_name] || '/';
+      router.replace(targetRoute);
       return;
     }
 
-    // TODO: ดึงข้อมูลสถิติจาก API
-    // const fetchStats = async () => { ... };
-  }, []); // ใช้ [] แทน [user, router]
+    // ดึงข้อมูลสถิติจาก API
+    const fetchStats = async () => {
+      try {
+        // TODO: ดึงข้อมูลสถิติจาก API
+        console.log('Fetching warehouse stats...');
+        // ตัวอย่างข้อมูล mock
+        setStats({
+          totalProducts: 150,
+          lowStock: 12,
+          outOfStock: 3,
+          todayMovements: 25
+        });
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
+    
+    fetchStats();
+  }, [user, router]); // ต้องมี user และ router เป็น dependency
+
+  // แสดง loading ถ้ายังไม่มี user
+  if (!user) {
+    return (
+      <div className="container mt-4">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">กำลังโหลด...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-4">

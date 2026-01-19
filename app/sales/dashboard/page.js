@@ -1,10 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/config/AuthProvider';
 
 export default function SalesDashboard() {
   const { user } = useAuth();
+  const router = useRouter();
   const [stats, setStats] = useState({
     todaySales: 0,
     monthlySales: 0,
@@ -13,12 +14,61 @@ export default function SalesDashboard() {
   });
 
   useEffect(() => {
-    // TODO: ดึงข้อมูลสถิติจาก API
-    // const fetchStats = async () => { ... };
-  }, []);
+    // ตรวจสอบสิทธิ์
+    if (!user) {
+      const currentPath = window.location.pathname;
+      router.replace(`/login?redirect=${encodeURIComponent(currentPath)}`);
+      return;
+    }
+    
+    if (user.role_name !== 'sales') {
+      const roleRoutes = {
+        'admin': '/admin/dashboard',
+        'sales': '/sales/dashboard',
+        'owner': '/owner/dashboard',
+        'warehouse': '/warehouse/dashboard'
+      };
+      
+      const targetRoute = roleRoutes[user.role_name] || '/';
+      router.replace(targetRoute);
+      return;
+    }
+
+    // ดึงข้อมูลสถิติจาก API
+    const fetchStats = async () => {
+      try {
+        // TODO: ดึงข้อมูลสถิติจาก API
+        console.log('Fetching sales stats...');
+        // ตัวอย่างข้อมูล mock
+        setStats({
+          todaySales: 45200,
+          monthlySales: 1250000,
+          totalCustomers: 89,
+          pendingOrders: 7
+        });
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
+    
+    fetchStats();
+  }, [user, router]);
+
+  // แสดง loading ถ้ายังไม่มี user
+  if (!user) {
+    return (
+      <div className="container mt-4">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">กำลังโหลด...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-      <div className="container mt-4">
+    <div className="container mt-4">
       <div className="row">
         <div className="col-12">
           <h2 className="mb-4">Sales Dashboard</h2>
@@ -106,6 +156,6 @@ export default function SalesDashboard() {
           </div>
         </div>
       </div>
-      </div>
+    </div>
   );
 }

@@ -1,23 +1,40 @@
 import { NextResponse } from 'next/server';
 
-// Helper function to get user from token
-const getUserFromToken = (request) => {
-  const token = request.cookies.get('token')?.value;
-  if (!token) return null;
-  
+// Helper function to get user from token and cookies
+const getUserFromRequest = (request) => {
   try {
-    // แยกข้อมูลจาก JWT token
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload;
+    // ลองดึง user จาก cookies ก่อน (ข้อมูล user ที่เก็บไว้ตอน login)
+    const userCookie = request.cookies.get('user')?.value;
+    if (userCookie) {
+      return JSON.parse(userCookie);
+    }
+    
+    // ถ้าไม่มีใน cookie ลองดึงจาก token
+    const token = request.cookies.get('token')?.value;
+    if (!token) return null;
+    
+    // สำหรับ JWT token (ถ้าใช้ JWT)
+    try {
+      const parts = token.split('.');
+      if (parts.length === 3) {
+        const payload = JSON.parse(atob(parts[1]));
+        return payload;
+      }
+    } catch (tokenError) {
+      console.error('Error parsing token:', tokenError);
+      return null;
+    }
+    
+    return null;
   } catch (error) {
-    console.error('Error parsing token:', error);
+    console.error('Error parsing user data:', error);
     return null;
   }
 };
 
 // Helper function to check if user has required role
 const hasRole = (user, requiredRole) => {
-  if (!user) return false;
+  if (!user || !user.role_name) return false;
   if (Array.isArray(requiredRole)) {
     return requiredRole.includes(user.role_name);
   }
@@ -25,7 +42,7 @@ const hasRole = (user, requiredRole) => {
 };
 
 // Routes that don't require authentication
-const publicRoutes = ['/login', '/register', '/'];
+const publicRoutes = ['/login', '/register', '/', '/unauthorized'];
 
 // Routes that require specific roles
 const roleBasedRoutes = {
@@ -61,8 +78,8 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // Get user from token
-  const user = getUserFromToken(request);
+  // Get user from request
+  const user = getUserFromRequest(request);
   
   // If no user and route is not public, redirect to login
   if (!user) {

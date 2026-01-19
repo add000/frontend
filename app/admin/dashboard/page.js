@@ -1,27 +1,44 @@
 'use client';
-
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { usersAPI, rolesAPI } from '@/config/api';
 import { useAuth } from '@/config/AuthProvider';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
-
+  const router = useRouter();
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalRoles: 0,
     activeUsers: 0,
     inactiveUsers: 0,
   });
-
   const [statsLoading, setStatsLoading] = useState(false);
 
-  /* -------------------- Fetch Dashboard Stats -------------------- */
   useEffect(() => {
-    let isMounted = true;
+    // ตรวจสอบสิทธิ์
+    if (!user) {
+      const currentPath = window.location.pathname;
+      router.replace(`/login?redirect=${encodeURIComponent(currentPath)}`);
+      return;
+    }
+    
+    if (user.role_name !== 'admin') {
+      const roleRoutes = {
+        'admin': '/admin/dashboard',
+        'sales': '/sales/dashboard',
+        'owner': '/owner/dashboard',
+        'warehouse': '/warehouse/dashboard'
+      };
+      
+      const targetRoute = roleRoutes[user.role_name] || '/';
+      router.replace(targetRoute);
+      return;
+    }
 
+    // ดึงข้อมูลสถิติ
+    let isMounted = true;
     const fetchStats = async () => {
       setStatsLoading(true);
       try {
@@ -53,7 +70,20 @@ export default function AdminDashboard() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [user, router]);
+
+  // แสดง loading ถ้ายังไม่มี user
+  if (!user) {
+    return (
+      <div className="container mt-4">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">กำลังโหลด...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   /* -------------------- UI -------------------- */
   return (
@@ -101,7 +131,6 @@ export default function AdminDashboard() {
 }
 
 /* ====================== Components ====================== */
-
 function StatCard({ title, value, loading, color }) {
   return (
     <div className="col-md-3 mb-3">
@@ -122,10 +151,10 @@ function StatCard({ title, value, loading, color }) {
 function QuickLink({ href, label, icon, color }) {
   return (
     <div className="col-md-3 mb-3">
-      <Link href={href} className={`btn btn-${color} btn-lg w-100`}>
+      <a href={href} className={`btn btn-${color} btn-lg w-100`}>
         <i className={`fas fa-${icon} me-2`} />
         {label}
-      </Link>
+      </a>
     </div>
   );
 }
