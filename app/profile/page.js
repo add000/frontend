@@ -51,22 +51,30 @@ export default function ProfilePage() {
         {/* Hero Section */}
         <div className="position-relative">
           <div className="position-absolute top-0 start-0 w-100 h-100" style={{
-            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%)',
-            backdropFilter: 'blur(2px)'
+            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%)',
+            backdropFilter: 'blur(3px)'
           }}></div>
           <div className="container py-5 position-relative">
             <div className="row align-items-center">
               <div className="col-lg-8">
-                <h1 className="display-4 fw-bold mb-3">
-                  <span className="text-primary">Profile</span>
-                </h1>
-                <p className="lead text-muted mb-0">
+                <div className="d-flex align-items-center gap-3 mb-3">
+                  <div className="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
+                    <i className="fas fa-user text-primary" style={{ fontSize: '1.5rem' }}></i>
+                  </div>
+                  <div>
+                    <h1 className="display-4 fw-bold mb-0">
+                      <span className="text-primary">Profile</span>
+                    </h1>
+                    <p className="text-muted mb-0">จัดการข้อมูลส่วนตัวของคุณ</p>
+                  </div>
+                </div>
+                <p className="lead mb-0">
                   ยินดีต้อนรับคุณ <span className="text-info fw-semibold">{user?.firstname} {user?.lastname}</span>
                 </p>
-                <p className="text-muted">จัดการข้อมูลส่วนตัวและเข้าถึงแดชบอร์ดของคุณ</p>
+                <p className="text-muted">เข้าถึงแดชบอร์ดและจัดการข้อมูลของคุณ</p>
               </div>
               <div className="col-lg-4 text-lg-end">
-                <div className="d-inline-flex align-items-center bg-success bg-opacity-10 rounded-3 px-3 py-2">
+                <div className="d-inline-flex align-items-center bg-success bg-opacity-20 rounded-3 px-4 py-2">
                   <div className="bg-success rounded-circle me-2" style={{ width: '12px', height: '12px' }}></div>
                   <span className="text-success fw-semibold">Verified</span>
                 </div>

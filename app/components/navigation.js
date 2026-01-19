@@ -242,36 +242,90 @@ export default function LiquidNavbar() {
                 </div>
               </ul>
 
-              {/* Desktop Login Button */}
+              {/* Desktop Profile & Login Button */}
               <div className="d-none d-lg-block">
                 {tokenState ? (
-                  <button type="button"
-                    onClick={handlelogout}
-                    className="btn btn-outline-danger w-100"
-                    style={{
-                      borderRadius: '25px',
-                      padding: '12px 25px',
-                      fontWeight: '500',
-                      border: '1px solid rgba(255, 255, 255, 0.3)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-outline-light d-flex align-items-center gap-2"
+                      type="button"
+                      id="profileDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      style={{
+                        borderRadius: '25px',
+                        padding: '8px 16px',
+                        fontWeight: '500',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(10px)',
+                        color: 'white',
+                        textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
+                        transition: 'all 0.3s ease',
+                        boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                      }}
+                    >
+                      <div className="bg-primary bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center" style={{ width: '28px', height: '28px' }}>
+                        <i className="fas fa-user text-primary" style={{ fontSize: '14px' }}></i>
+                      </div>
+                      <span className="d-none d-xl-inline">โปรไฟล์</span>
+                      <i className="fas fa-chevron-down" style={{ fontSize: '12px' }}></i>
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end" style={{
+                      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
                       backdropFilter: 'blur(10px)',
-                      color: 'white',
-                      textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
-                      transition: 'all 0.3s ease',
-                      boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                      borderRadius: '12px',
+                      padding: '8px',
+                      minWidth: '200px'
                     }}>
-                    <i className=""></i> ออกจากระบบ
-                  </button>
+                      <li>
+                        <Link className="dropdown-item d-flex align-items-center gap-3 text-white" href="/profile" style={{
+                          padding: '10px 12px',
+                          borderRadius: '8px',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }}>
+                          <i className="fas fa-user-circle text-primary"></i>
+                          <span>โปรไฟล์ของฉัน</span>
+                        </Link>
+                      </li>
+                      <li><hr className="dropdown-divider" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} /></li>
+                      <li>
+                        <button className="dropdown-item d-flex align-items-center gap-3 text-white" onClick={handlelogout} style={{
+                          padding: '10px 12px',
+                          borderRadius: '8px',
+                          transition: 'all 0.2s ease',
+                          border: 'none',
+                          background: 'none'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(220, 53, 69, 0.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }}>
+                          <i className="fas fa-sign-out-alt text-danger"></i>
+                          <span>ออกจากระบบ</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 ) : (
                   <Link className="btn btn-outline-light w-100"
                     href="/login"
