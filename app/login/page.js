@@ -13,6 +13,8 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [savedAccounts, setSavedAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Prevent multiple requests
+  const [failedAttempts, setFailedAttempts] = useState(0); // Track failed attempts
   const router = useRouter();
 
   useEffect(() => {
@@ -82,12 +84,20 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    
+    // Prevent multiple requests
+    if (isSubmitting) {
+      console.log('Request already in progress, ignoring duplicate request');
+      return;
+    }
+    
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
     setErrors({});
+    setIsSubmitting(true); // Start request queue
 
     try {
       const res = await apiFetch('/api/auth/login', {
@@ -106,6 +116,9 @@ export default function LoginPage() {
       console.log('Login API Response:', data);
 
       if (data.token && data.user) {
+        // Reset failed attempts on success
+        setFailedAttempts(0);
+        
         // ✅ **เก็บใน localStorage**
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
@@ -183,17 +196,39 @@ export default function LoginPage() {
       }
     } catch (err) {
       console.error('Login error:', err);
-      Swal.fire({
-        icon: 'error',
-        title: 'เข้าสู่ระบบไม่สำเร็จ',
-        text: err.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ',
-        background: '#1f1f1f',
-        color: '#fff',
-        iconColor: '#f87171',
-        padding: '3em',
-        confirmButtonColor: '#374151',
-        customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
-      });
+      
+      // Increment failed attempts
+      const newFailedAttempts = failedAttempts + 1;
+      setFailedAttempts(newFailedAttempts);
+      
+      // Show warning after 3 failed attempts
+      if (newFailedAttempts >= 3) {
+        await Swal.fire({
+          icon: 'warning',
+          title: 'คำเตือน',
+          text: 'การเข้าสู่ระบบล้มเหลวหลายครั้ง กรุณาตรวจสอบข้อมูลและลองใหม่อีกครั้ง',
+          background: '#1f1f1f',
+          color: '#fff',
+          iconColor: '#f59e0b',
+          padding: '3em',
+          confirmButtonColor: '#374151',
+          customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'เข้าสู่ระบบไม่สำเร็จ',
+          text: `ความพยายามในการเข้าสู่ระบบ (ครั้งที่ ${newFailedAttempts})`,
+          background: '#1f1f1f',
+          color: '#fff',
+          iconColor: '#f87171',
+          padding: '3em',
+          confirmButtonColor: '#374151',
+          customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
+        });
+      }
+    } finally {
+      setIsSubmitting(false); // Reset request queue
     }
   };
 
@@ -293,8 +328,20 @@ export default function LoginPage() {
           </div>
 
           <div className="d-flex flex-column align-items-center gap-3">
-            <button type="submit" className="btn btn-outline-light w-100 py-2" style={{ borderRadius: '25px' }}>
-              เข้าสู่ระบบ
+            <button 
+              type="submit" 
+              className={`btn btn-outline-light w-100 py-2 ${isSubmitting ? 'disabled' : ''}`} 
+              style={{ borderRadius: '25px' }}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2"></span>
+                  กำลังเข้าสู่ระบบ...
+                </>
+              ) : (
+                'เข้าสู่ระบบ'
+              )}
             </button>
             <Link href="/" className="btn btn-outline-light w-100 py-2" style={{ borderRadius: '25px' }}>
               ย้อนกลับ

@@ -10,6 +10,7 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false); // Prevent multiple navigation requests
 
   useEffect(() => {
     // ✅ **ตรวจสอบสิทธิ์**
@@ -32,7 +33,14 @@ export default function ProfilePage() {
   const dashboardRoute = getDefaultRouteForRole(user.role_name);
 
   const handleGoToDashboard = () => {
+    // Prevent multiple navigation requests
+    if (isNavigating) {
+      console.log('Navigation already in progress, ignoring duplicate request');
+      return;
+    }
+    
     setIsLoading(true);
+    setIsNavigating(true); // Start navigation queue
     
     // Debug: Check user data from multiple sources
     console.log('=== Dashboard Button Debug ===');
@@ -61,6 +69,7 @@ export default function ProfilePage() {
       console.error('No user role found in AuthProvider or localStorage!');
       console.error('Available data:', { authProvider: user, localStorage: parsedUser });
       setIsLoading(false);
+      setIsNavigating(false);
       // Show error to user
       alert('ไม่พบข้อมูลสิทธิ์ผู้ใช้ กรุณาเข้าสู่ระบบใหม่');
       return;
@@ -237,7 +246,7 @@ export default function ProfilePage() {
                     <div className="col-md-6">
                       <button 
                         onClick={handleGoToDashboard}
-                        disabled={isLoading}
+                        disabled={isLoading || isNavigating}
                         className="btn btn-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center text-decoration-none p-4 position-relative overflow-hidden"
                         style={{
                           background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%)',
