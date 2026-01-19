@@ -194,7 +194,7 @@ function StatCard({ title, value, loading, color, icon, trend }) {
           </div>
           <h5 className="text-muted mb-2">{title}</h5>
           {loading ? (
-            <div className="spinner-border spinner-border-sm text-{color} me-2"></div>
+            <div className="spinner-border spinner-border-sm text-primary me-2"></div>
           ) : (
             <h2 className={`text-${color} fw-bold mb-0`}>{value.toLocaleString()}</h2>
           )}

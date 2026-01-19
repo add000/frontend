@@ -345,16 +345,6 @@ export default function LiquidNavbar() {
                     ติดต่อเรา
                   </Link>
 
-                  <Link
-                    href="/admin/users"
-                    className={`nav-link ${isActive('/admin/users') ? 'active' : ''}`}
-                    style={getMobileNavLinkStyle('/admin/users')}
-                    onMouseEnter={(e) => handleMouseEnter(e, '/admin/users')}
-                    onMouseLeave={(e) => handleMouseLeave(e, '/admin/users')}
-                  >
-                    บัญชีผู้ใช้
-                  </Link>
-
                   {/* Mobile Login Button */}
                   <div style={{ marginTop: '15px', width: '100%', maxWidth: '200px' }}>
                     {tokenState ? (

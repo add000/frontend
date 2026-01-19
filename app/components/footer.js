@@ -63,8 +63,8 @@ export default function Footer() {
               {/* Personal Info Section */}
               <div className="col-12 col-lg-4 mb-4">
                 <div className="pe-lg-4">
-                  <h3 className="fw-bold mb-3" style={{ color: '#2d3748' }}>John Doe</h3>
-                  <p className="mb-4 lh-lg" style={{ color: '#718096' }}>
+                  <h3 className="fw-bold mb-3" style={{ color: '#ffffff' }}>FrontEnd Developer</h3>
+                  <p className="mb-4 lh-lg" style={{ color: '#e2e8f0' }}>
                     Full Stack Developer & UI/UX Designer
                     <br />
                     สร้างสรรค์เว็บไซต์และแอปพลิเคชันที่สวยงามและใช้งานง่าย
@@ -75,21 +75,21 @@ export default function Footer() {
 
               {/* Portfolio Links */}
               <div className="col-6 col-md-4 col-lg-2 mb-4">
-                <h5 className="fw-semibold mb-3" style={{ color: '#2d3748' }}>ผลงาน</h5>
+                <h5 className="fw-semibold mb-3" style={{ color: '#ffffff' }}>ผลงาน</h5>
                 <ul className="nav flex-column gap-2">
                   <li className="nav-item">
                     <a href="#projects" className="nav-link p-0"
                       style={{
-                        color: '#718096',
+                        color: '#e2e8f0',
                         transition: 'all 0.3s ease',
                         textDecoration: 'none'
                       }}
                       onMouseOver={(e) => {
-                        e.target.style.color = '#4a5568';
+                        e.target.style.color = '#ffffff';
                         e.target.style.paddingLeft = '8px';
                       }}
                       onMouseOut={(e) => {
-                        e.target.style.color = '#718096';
+                        e.target.style.color = '#e2e8f0';
                         e.target.style.paddingLeft = '0';
                       }}>
                       โปรเจค
@@ -98,7 +98,7 @@ export default function Footer() {
                   <li className="nav-item">
                     <a href="#skills" className="nav-link p-0"
                       style={{
-                        color: '#718096',
+                        color: '#e2e8f0',
                         transition: 'all 0.3s ease',
                         textDecoration: 'none'
                       }}

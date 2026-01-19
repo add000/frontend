@@ -178,21 +178,21 @@ export default function Home() {
           style={{ height: "50vh", width: "100vw", }}
         />
         <div
-          className="position-absolut text-center w-100"
+          className="position-absolute text-center w-100"
           style={{
             position: "absolute",
             top: "35%",
             color: "white",
             fontSize: "4em",
             fontWeight: "bold",
-            textShadow: "0px 1px 0px rgba(255, 255, 255, 0)",
+            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8), 0px 1px 0px rgba(255, 255, 255, 0.3)",
             padding: "0 20px",
             zIndex: 2,
           }}
         >
           <RotatingText
-            texts={['FontEnd', 'UX', 'UI',]}
-            mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+            texts={['FrontEnd', 'UX', 'UI']}
+            mainClassName="px-2 sm:px-2 md:px-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-white overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg shadow-lg"
             staggerFrom="last"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
@@ -210,7 +210,7 @@ export default function Home() {
             left: 0,
             background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0))",
             zIndex: 1,
-            pandingBottom: "6em"
+            paddingBottom: "6em"
           }}
         ></div>
         <div
@@ -220,7 +220,7 @@ export default function Home() {
             left: 0,
             background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5), rgba(0,0,0,1))",
             zIndex: 1,
-            pandingBottom: "6em"
+            paddingBottom: "6em"
           }}
         ></div>
       </div>

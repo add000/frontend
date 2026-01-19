@@ -131,6 +131,20 @@ export default function ProfilePage() {
                       </button>
                     </div>
 
+                    {/* Admin Users - แสดงเฉพาะ admin */}
+                    {user?.role_name === 'admin' && (
+                      <div className="col-md-6">
+                        <Link 
+                          href="/admin/users"
+                          className="btn btn-outline-light w-100 h-100 d-flex flex-column align-items-center justify-content-center text-decoration-none p-4"
+                        >
+                          <i className="fas fa-users mb-2" style={{ fontSize: '2rem' }}></i>
+                          <span className="fw-semibold">จัดการผู้ใช้</span>
+                          <small className="text-white-50">จัดการข้อมูลผู้ใช้ทั้งหมด</small>
+                        </Link>
+                      </div>
+                    )}
+
                     {/* Edit Profile */}
                     <div className="col-md-6">
                       <button className="btn btn-outline-light w-100 h-100 d-flex flex-column align-items-center justify-content-center text-decoration-none p-4" disabled>
