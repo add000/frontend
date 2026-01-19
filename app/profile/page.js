@@ -76,6 +76,7 @@ export default function ProfilePage() {
     console.log(`Redirecting to: ${dashboardPath}`);
     console.log('===============================');
     
+    // Increased delay for smooth data retrieval and database processing
     setTimeout(() => {
       // Navigate to role-specific dashboard using the same logic as login
       console.log('Executing navigation to:', dashboardPath);
@@ -94,8 +95,8 @@ export default function ProfilePage() {
       setTimeout(() => {
         console.log('Reloading page...');
         window.location.reload();
-      }, 100);
-    }, 800); // Slightly longer delay for better UX
+      }, 500); // Increased delay for database processing
+    }, 1500); // Increased from 800ms to 1500ms for smoother experience
   };
 
   const handleLogout = () => {

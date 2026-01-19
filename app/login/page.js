@@ -170,9 +170,13 @@ export default function LoginPage() {
           }
         }
 
-        // ✅ **Redirect to final path**
+        // ✅ **Redirect to final path with increased delay for database processing**
         console.log('Redirecting to:', redirectPath);
-        router.replace(redirectPath);
+        
+        // Increased delay for smooth data retrieval and database processing
+        setTimeout(() => {
+          router.replace(redirectPath);
+        }, 1200); // Increased from immediate to 1200ms for smoother experience
 
       } else {
         throw new Error(data.message || 'เข้าสู่ระบบไม่สำเร็จ');
