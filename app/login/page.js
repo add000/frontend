@@ -173,7 +173,7 @@ export default function LoginPage() {
         } else {
           // ✅ **ถ้าไม่มี ให้ redirect ไป home page**
           console.log('Redirecting to home page');
-          router.replace('/');
+          router.replace('/about');
         }
 
       } else {
