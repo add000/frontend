@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/config/AuthProvider';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import LoadingPage from '../../components/LoadingPage';
+import ProfileSection from '../../components/ProfileSection';
 
 export default function OwnerDashboard() {
   const { user } = useAuth();
@@ -144,6 +145,17 @@ export default function OwnerDashboard() {
                 <QuickLink href="#" label="ดูผู้ใช้ทั้งหมด" icon="users" color="primary" disabled />
                 <QuickLink href="#" label="การตั้งค่า" icon="cog" color="warning" disabled />
               </div>
+            </div>
+          </div>
+
+          {/* -------------------- Profile Section -------------------- */}
+          <div className="row mb-5">
+            <div className="col-12">
+              <h2 className="h3 mb-4 text-white">
+                <i className="fas fa-user-circle text-info me-2"></i>
+                ข้อมูลผู้ใช้
+              </h2>
+              <ProfileSection />
             </div>
           </div>
 

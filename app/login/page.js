@@ -43,9 +43,9 @@ export default function LoginPage() {
             }
           }
           
-          // ✅ **If no redirect parameter, go to profile page**
-          console.log('No redirect parameter, going to profile page');
-          router.replace('/profile');
+          // ✅ **If no redirect parameter, go to admin dashboard**
+          console.log('No redirect parameter, going to admin dashboard');
+          router.replace('/admin/dashboard');
         } catch (error) {
           console.error('Error parsing user data:', error);
           localStorage.removeItem('token');

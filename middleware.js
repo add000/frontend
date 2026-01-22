@@ -10,15 +10,15 @@ const roleDefaultRoutes = {
 
 // ✅ **Get default route for user role**
 const getDefaultRouteForRole = (role) => {
-  return roleDefaultRoutes[role] || '/profile';
+  return roleDefaultRoutes[role] || '/admin/dashboard';
 };
 
 // ✅ **Check if user should be redirected to default route**
 const shouldRedirectToDefault = (pathname, userRole) => {
   // Only redirect from specific entry points (like Laravel discussion suggested)
   const entryPoints = ['/', '/dashboard'];
-  // Don't redirect if user is already going to a specific dashboard or profile
-  const exemptRoutes = ['/profile', '/admin/dashboard', '/owner/dashboard', '/sales/dashboard', '/warehouse/dashboard'];
+  // Don't redirect if user is already going to a specific dashboard
+  const exemptRoutes = ['/admin/dashboard', '/owner/dashboard', '/sales/dashboard', '/warehouse/dashboard'];
   return entryPoints.includes(pathname) && userRole && !exemptRoutes.includes(pathname);
 };
 
@@ -135,17 +135,20 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // ✅ **Special handling for /profile - check auth but don't redirect**
+  // ✅ **Special handling for /profile - redirect to appropriate dashboard**
   if (pathname === '/profile') {
     const user = getUserFromRequest(request);
     if (!user) {
       console.log('No user found for profile, redirecting to login');
       const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('redirect', encodeURIComponent('/profile'));
+      loginUrl.searchParams.set('redirect', encodeURIComponent('/admin/dashboard'));
       return NextResponse.redirect(loginUrl);
     }
-    console.log('User authenticated for profile, allowing access');
-    return NextResponse.next();
+    console.log('User authenticated for profile, redirecting to dashboard');
+    const userRole = user.role_name;
+    const defaultRoute = getDefaultRouteForRole(userRole);
+    const dashboardUrl = new URL(defaultRoute, request.url);
+    return NextResponse.redirect(dashboardUrl);
   }
 
   // ✅ **Get user from request**

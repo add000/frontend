@@ -8,7 +8,7 @@ export const roleDefaultRoutes = {
 
 // ✅ **Get default route for user role**
 export const getDefaultRouteForRole = (role) => {
-  return roleDefaultRoutes[role] || '/profile';
+  return roleDefaultRoutes[role] || '/admin/dashboard';
 };
 
 // ✅ **Check if route is a dashboard route (should redirect to default)**

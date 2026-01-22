@@ -255,33 +255,7 @@ export default function LiquidNavbar() {
                         <span className="text-success small fw-semibold">Online</span>
                       </div>
                       
-                      {/* Profile Icon */}
-                      <Link 
-                        href="/profile"
-                        className="btn btn-outline-light btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                        style={{
-                          width: '36px',
-                          height: '36px',
-                          padding: '0',
-                          border: '1px solid rgba(255, 255, 255, 0.3)',
-                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                          backdropFilter: 'blur(10px)',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = 'none';
-                        }}
-                        title="โปรไฟล์"
-                      >
-                        <i className="fas fa-user text-white" style={{ fontSize: '14px' }}></i>
-                      </Link>
+                      {/* User Profile - Removed, now integrated in dashboards */}
                     </div>
                   </>
                 )}
@@ -396,22 +370,7 @@ export default function LiquidNavbar() {
                         <span className="text-success small fw-semibold">Online</span>
                       </div>
                       
-                      <Link 
-                        href="/profile"
-                        className="btn btn-outline-light btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                        style={{
-                          width: '36px',
-                          height: '36px',
-                          padding: '0',
-                          border: '1px solid rgba(255, 255, 255, 0.3)',
-                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                          backdropFilter: 'blur(10px)',
-                          transition: 'all 0.3s ease'
-                        }}
-                        title="โปรไฟล์"
-                      >
-                        <i className="fas fa-user text-white" style={{ fontSize: '14px' }}></i>
-                      </Link>
+                      {/* User Profile - Removed, now integrated in dashboards */}
                     </div>
                   )}
                   

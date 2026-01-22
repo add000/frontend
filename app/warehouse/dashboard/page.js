@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/config/AuthProvider';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import LoadingPage from '../../components/LoadingPage';
+import ProfileSection from '../../components/ProfileSection';
 
 export default function WarehouseDashboard() {
   const { user } = useAuth();
@@ -144,6 +145,17 @@ export default function WarehouseDashboard() {
                 <QuickLink href="#" label="นำออกสต็อก" icon="arrow-down" color="warning" disabled />
                 <QuickLink href="#" label="ดูสต็อกทั้งหมด" icon="warehouse" color="info" disabled />
               </div>
+            </div>
+          </div>
+
+          {/* -------------------- Profile Section -------------------- */}
+          <div className="row mb-5">
+            <div className="col-12">
+              <h2 className="h3 mb-4 text-white">
+                <i className="fas fa-user-circle text-info me-2"></i>
+                ข้อมูลผู้ใช้
+              </h2>
+              <ProfileSection />
             </div>
           </div>
 
