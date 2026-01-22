@@ -18,23 +18,87 @@ export default function OwnerDashboard() {
   const [statsLoading, setStatsLoading] = useState(false);
 
   useEffect(() => {
-    // ✅ **Skip auth check if user is already available to prevent unnecessary redirects**
+    // ✅ **Only check authentication if user is not available**
     if (user) {
       console.log('OwnerDashboard - User already authenticated:', user);
       console.log('OwnerDashboard - User role:', user.role_name);
-      return; // Don't run auth check if user is already available
+      
+      // ✅ **ดึงข้อมูลสถิติ** - Load stats for authenticated user
+      let isMounted = true;
+      const fetchStats = async () => {
+        setStatsLoading(true);
+        
+        // Create timeout promise
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => {
+            reject(new Error('การโหลดข้อมูลหมดเวลา (1 นาที)'));
+          }, 60000); // 1 minute timeout
+        });
+
+        try {
+          // Race between actual fetch and timeout
+          await Promise.race([
+            // TODO: ดึงข้อมูลสถิติจาก API
+            new Promise(resolve => {
+              console.log('Fetching owner stats...');
+              // ตัวอย่างข้อมูล mock
+              setTimeout(() => {
+                if (!isMounted) return;
+                resolve();
+              }, 1000); // Simulate 1 second API call
+            }),
+            timeoutPromise
+          ]);
+          
+          if (!isMounted) return;
+          
+          setStats({
+            totalRevenue: 2500000,
+            monthlyRevenue: 450000,
+            totalOrders: 156,
+            totalCustomers: 89
+          });
+        } catch (err) {
+          console.error('Error fetching stats:', err);
+          
+          // Handle timeout error specifically
+          if (err.message.includes('หมดเวลา')) {
+            // Show error notification
+            if (typeof window !== 'undefined' && window.Swal) {
+              window.Swal.fire({
+                icon: 'error',
+                title: 'หมดเวลาการโหลดข้อมูล',
+                text: 'ไม่สามารถโหลดข้อมูลสถิติได้ภายใน 1 นาที กรุณาลองใหม่',
+                confirmButtonColor: '#374151',
+                background: '#1f1f1f',
+                color: '#fff',
+              });
+            }
+            
+            // Set error state or show fallback data
+            setStats({
+              totalRevenue: 0,
+              monthlyRevenue: 0,
+              totalOrders: 0,
+              totalCustomers: 0
+            });
+          }
+        } finally {
+          if (isMounted) setStatsLoading(false);
+        }
+      };
+
+      fetchStats();
+
+      return () => {
+        isMounted = false;
+      };
     }
 
-    // ตรวจสอบสิทธิ์พร้อม timeout - only run if no user
-    const authCheckTimeout = setTimeout(() => {
-      console.log('Authentication check timeout - no user found, redirecting to login');
-      router.replace('/login');
-    }, 30000); // 30 second timeout for auth check
-
-    // ✅ **ตรวจสอบสิทธิ์**
+    // ✅ **Only redirect to login if user is genuinely not available**
     if (!user) {
+      console.log('No user found, redirecting to login');
       const currentPath = window.location.pathname;
-      console.log('No user, redirecting to login');
       
       // Enhanced redirect with multiple fallback mechanisms
       const redirectTimeout = setTimeout(() => {
@@ -67,83 +131,6 @@ export default function OwnerDashboard() {
       }
       return;
     }
-    
-    console.log('OwnerDashboard - User:', user);
-    console.log('OwnerDashboard - User role:', user.role_name);
-
-    // Clear timeout if user is found
-    clearTimeout(authCheckTimeout);
-
-    // ✅ **ดึงข้อมูลสถิติ**
-    let isMounted = true;
-    const fetchStats = async () => {
-      setStatsLoading(true);
-      
-      // Create timeout promise
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => {
-          reject(new Error('การโหลดข้อมูลหมดเวลา (1 นาที)'));
-        }, 60000); // 1 minute timeout
-      });
-
-      try {
-        // Race between actual fetch and timeout
-        await Promise.race([
-          // TODO: ดึงข้อมูลสถิติจาก API
-          new Promise(resolve => {
-            console.log('Fetching owner stats...');
-            // ตัวอย่างข้อมูล mock
-            setTimeout(() => {
-              if (!isMounted) return;
-              resolve();
-            }, 1000); // Simulate 1 second API call
-          }),
-          timeoutPromise
-        ]);
-        
-        if (!isMounted) return;
-        
-        setStats({
-          totalRevenue: 2500000,
-          monthlyRevenue: 450000,
-          totalOrders: 1250,
-          totalCustomers: 320
-        });
-      } catch (err) {
-        console.error('Error fetching stats:', err);
-        
-        // Handle timeout error specifically
-        if (err.message.includes('หมดเวลา')) {
-          // Show error notification
-          if (typeof window !== 'undefined' && window.Swal) {
-            window.Swal.fire({
-              icon: 'error',
-              title: 'หมดเวลาการโหลดข้อมูล',
-              text: 'ไม่สามารถโหลดข้อมูลสถิติได้ภายใน 1 นาที กรุณาลองใหม่',
-              confirmButtonColor: '#374151',
-              background: '#1f1f1f',
-              color: '#fff',
-            });
-          }
-          
-          // Set error state or show fallback data
-          setStats({
-            totalRevenue: 0,
-            monthlyRevenue: 0,
-            totalOrders: 0,
-            totalCustomers: 0
-          });
-        }
-      } finally {
-        if (isMounted) setStatsLoading(false);
-      }
-    };
-
-    fetchStats();
-
-    return () => {
-      isMounted = false;
-    };
   }, [user, router]);
 
   // ✅ **แสดง loading ถ้ายังไม่มี user**
