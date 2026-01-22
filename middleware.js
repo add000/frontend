@@ -24,12 +24,6 @@ const shouldRedirectToDefault = (pathname, userRole) => {
 
 // ✅ **Debug function to get user from request**
 const getUserFromRequest = (request) => {
-  // Add timeout for user retrieval
-  const userRetrievalTimeout = setTimeout(() => {
-    console.warn('User retrieval timeout - returning null');
-    return null;
-  }, 3000); // 3 second timeout for user retrieval
-
   try {
     // ตรวจสอบ cookies ทั้งหมด
     console.log('=== MIDDLEWARE DEBUG ===');
@@ -45,14 +39,14 @@ const getUserFromRequest = (request) => {
       try {
         const decodedUser = decodeURIComponent(userCookie);
         const user = JSON.parse(decodedUser);
-        console.log('Parsed user from cookie:', user);
-        console.log('User role from cookie:', user.role_name);
-        clearTimeout(userRetrievalTimeout);
+        console.log('✅ Parsed user from cookie:', user);
+        console.log('✅ User role from cookie:', user.role_name);
         return user;
       } catch (parseError) {
-        console.error('Error parsing user cookie:', parseError);
-        clearTimeout(userRetrievalTimeout);
+        console.error('❌ Error parsing user cookie:', parseError);
       }
+    } else {
+      console.log('❌ No user cookie found');
     }
     
     // ✅ **ถ้าไม่มี user cookie ให้ลองดึงจาก token**
@@ -60,30 +54,30 @@ const getUserFromRequest = (request) => {
     console.log('Token cookie exists:', !!token);
     
     if (!token) {
-      console.log('No token found in cookies');
-      clearTimeout(userRetrievalTimeout);
+      console.log('❌ No token found in cookies');
       return null;
     }
+    
+    console.log('Token cookie value:', token);
     
     // ✅ **สำหรับ JWT token**
     try {
       const parts = token.split('.');
       if (parts.length === 3) {
         const payload = JSON.parse(atob(parts[1]));
-        console.log('User from JWT payload:', payload);
-        clearTimeout(userRetrievalTimeout);
+        console.log('✅ User from JWT payload:', payload);
         return payload;
+      } else {
+        console.log('❌ Invalid JWT format, parts:', parts.length);
       }
     } catch (tokenError) {
-      console.error('Error parsing JWT token:', tokenError);
+      console.error('❌ Error parsing JWT token:', tokenError);
     }
     
-    console.log('No user data found in cookies or token');
-    clearTimeout(userRetrievalTimeout);
+    console.log('❌ No user data found in cookies or token');
     return null;
   } catch (error) {
-    console.error('Error in getUserFromRequest:', error);
-    clearTimeout(userRetrievalTimeout);
+    console.error('❌ Error in getUserFromRequest:', error);
     return null;
   }
 };
