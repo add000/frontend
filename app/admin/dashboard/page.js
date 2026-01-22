@@ -8,7 +8,7 @@ import LoadingPage from '../../components/LoadingPage';
 import ProfileSection from '../../components/ProfileSection';
 
 export default function AdminDashboard() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -19,16 +19,16 @@ export default function AdminDashboard() {
   const [statsLoading, setStatsLoading] = useState(false);
 
   useEffect(() => {
-    // ตรวจสอบสิทธิ์พร้อม timeout
-    const authCheckTimeout = setTimeout(() => {
-      console.log('Authentication check timeout - redirecting to login');
-      router.replace('/login');
-    }, 30000); // 30 second timeout for auth check
+    // ✅ **Wait for AuthProvider to initialize before checking auth**
+    if (loading) {
+      console.log('AdminDashboard - AuthProvider still loading, waiting...');
+      return;
+    }
 
-    // ✅ **ตรวจสอบสิทธิ์**
+    // ✅ **Only check auth after AuthProvider is ready**
     if (!user) {
+      console.log('AdminDashboard - No user after AuthProvider init, redirecting to login');
       const currentPath = window.location.pathname;
-      console.log('No user, redirecting to login');
       
       // Enhanced redirect with multiple fallback mechanisms
       const redirectTimeout = setTimeout(() => {
@@ -62,11 +62,8 @@ export default function AdminDashboard() {
       return;
     }
     
-    console.log('AdminDashboard - User:', user);
+    console.log('AdminDashboard - User authenticated:', user);
     console.log('AdminDashboard - User role:', user.role_name);
-
-    // Clear timeout if user is found
-    clearTimeout(authCheckTimeout);
 
     // ✅ **ดึงข้อมูลสถิติ**
     let isMounted = true;
@@ -136,7 +133,7 @@ export default function AdminDashboard() {
     return () => {
       isMounted = false;
     };
-  }, [user, router]);
+  }, [user, loading]);
 
   // ✅ **แสดง loading ถ้ายังไม่มี user**
   if (!user) {
