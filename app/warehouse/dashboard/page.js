@@ -31,18 +31,34 @@ export default function WarehouseDashboard() {
       const currentPath = window.location.pathname;
       console.log('No user, redirecting to login');
       
-      // Add timeout for redirect
+      // Enhanced redirect with multiple fallback mechanisms
       const redirectTimeout = setTimeout(() => {
         console.log('Redirect timeout - forcing navigation');
         window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
       }, 5000); // 5 second timeout for redirect
       
+      // Try multiple redirect methods in order of preference
       try {
+        // Method 1: Next.js router (preferred)
         router.replace(`/login?redirect=${encodeURIComponent(currentPath)}`);
-        clearTimeout(redirectTimeout); // Clear timeout if redirect succeeds
-      } catch (error) {
-        console.error('Router redirect failed:', error);
-        // Timeout will handle fallback
+        clearTimeout(redirectTimeout);
+      } catch (routerError) {
+        console.error('Router redirect failed:', routerError);
+        try {
+          // Method 2: Window location replace
+          window.location.replace(`/login?redirect=${encodeURIComponent(currentPath)}`);
+          clearTimeout(redirectTimeout);
+        } catch (replaceError) {
+          console.error('Location replace failed:', replaceError);
+          try {
+            // Method 3: Window location assign (fallback)
+            window.location.assign(`/login?redirect=${encodeURIComponent(currentPath)}`);
+            clearTimeout(redirectTimeout);
+          } catch (assignError) {
+            console.error('Location assign failed:', assignError);
+            // Final fallback - timeout will handle it
+          }
+        }
       }
       return;
     }
