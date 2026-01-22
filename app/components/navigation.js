@@ -380,179 +380,44 @@ export default function LiquidNavbar() {
                         <span className="text-success small fw-semibold">Online</span>
                       </div>
                       
-                      {/* User Profile Dropdown */}
-                      <div className="dropdown">
-                        <button 
-                          className="btn btn-outline-light d-flex align-items-center gap-2"
-                          type="button"
-                          id="profileDropdown"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                          style={{
-                            borderRadius: '25px',
-                            padding: '8px 16px',
-                            fontWeight: '500',
-                            border: '1px solid rgba(255, 255, 255, 0.3)',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            backdropFilter: 'blur(10px)',
-                            color: 'white',
-                            textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
-                            transition: 'all 0.3s ease',
-                            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-                          }}
-                        >
-                          <i className="fas fa-user-circle"></i>
-                          <span>{user?.firstname || 'User'}</span>
-                          <i className="fas fa-chevron-down ms-1" style={{ fontSize: '12px' }}></i>
-                        </button>
-                        <ul className="dropdown-menu dropdown-menu-end" style={{
-                          backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                      {/* User Profile Button - Direct Dashboard Access */}
+                      <Link 
+                        className="btn btn-outline-light d-flex align-items-center gap-2"
+                        href={
+                          user?.role_name === 'admin' ? '/admin/dashboard' :
+                          user?.role_name === 'owner' ? '/owner/dashboard' :
+                          user?.role_name === 'sales' ? '/sales/dashboard' :
+                          user?.role_name === 'warehouse' ? '/warehouse/dashboard' :
+                          '/dashboard'
+                        }
+                        style={{
+                          borderRadius: '25px',
+                          padding: '8px 16px',
+                          fontWeight: '500',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
                           backdropFilter: 'blur(10px)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
-                          borderRadius: '15px',
-                          padding: '8px',
-                          minWidth: '200px'
-                        }}>
-                          {/* Dashboard links based on user role */}
-                          <li>
-                            <h6 className="dropdown-header text-white mb-2">
-                              <i className="fas fa-tachometer-alt me-2"></i>Dashboard
-                            </h6>
-                          </li>
-                          <li><hr className="dropdown-divider" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }} /></li>
-                          
-                          {user?.role_name === 'admin' && (
-                            <>
-                              <li>
-                                <Link className="dropdown-item text-white d-flex align-items-center gap-2" 
-                                  href="/admin/dashboard"
-                                  style={{
-                                    borderRadius: '8px',
-                                    padding: '8px 12px',
-                                    transition: 'all 0.3s ease'
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'transparent';
-                                  }}
-                                >
-                                  <i className="fas fa-user-shield text-primary"></i>
-                                  <span>Admin Dashboard</span>
-                                </Link>
-                              </li>
-                            </>
-                          )}
-                          
-                          {user?.role_name === 'owner' && (
-                            <>
-                              <li>
-                                <Link className="dropdown-item text-white d-flex align-items-center gap-2" 
-                                  href="/owner/dashboard"
-                                  style={{
-                                    borderRadius: '8px',
-                                    padding: '8px 12px',
-                                    transition: 'all 0.3s ease'
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'transparent';
-                                  }}
-                                >
-                                  <i className="fas fa-crown text-success"></i>
-                                  <span>Owner Dashboard</span>
-                                </Link>
-                              </li>
-                            </>
-                          )}
-                          
-                          {user?.role_name === 'sales' && (
-                            <>
-                              <li>
-                                <Link className="dropdown-item text-white d-flex align-items-center gap-2" 
-                                  href="/sales/dashboard"
-                                  style={{
-                                    borderRadius: '8px',
-                                    padding: '8px 12px',
-                                    transition: 'all 0.3s ease'
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'rgba(251, 146, 60, 0.2)';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'transparent';
-                                  }}
-                                >
-                                  <i className="fas fa-chart-line text-warning"></i>
-                                  <span>Sales Dashboard</span>
-                                </Link>
-                              </li>
-                            </>
-                          )}
-                          
-                          {user?.role_name === 'warehouse' && (
-                            <>
-                              <li>
-                                <Link className="dropdown-item text-white d-flex align-items-center gap-2" 
-                                  href="/warehouse/dashboard"
-                                  style={{
-                                    borderRadius: '8px',
-                                    padding: '8px 12px',
-                                    transition: 'all 0.3s ease'
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.2)';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'transparent';
-                                  }}
-                                >
-                                  <i className="fas fa-warehouse text-info"></i>
-                                  <span>Warehouse Dashboard</span>
-                                </Link>
-                              </li>
-                            </>
-                          )}
-                          
-                          <li><hr className="dropdown-divider" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }} /></li>
-                          <li>
-                            <button 
-                              className="dropdown-item text-white d-flex align-items-center gap-2"
-                              onClick={handlelogout}
-                              style={{
-                                borderRadius: '8px',
-                                padding: '8px 12px',
-                                transition: 'all 0.3s ease',
-                                border: 'none',
-                                background: 'transparent',
-                                width: '100%'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = 'transparent';
-                              }}
-                            >
-                              <i className="fas fa-sign-out-alt text-danger"></i>
-                              <span>ออกจากระบบ</span>
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
+                          color: 'white',
+                          textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
+                          transition: 'all 0.3s ease',
+                          boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                          textDecoration: 'none'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                        }}
+                      >
+                        <i className="fas fa-user-circle"></i>
+                        <span>{user?.firstname || 'User'}</span>
+                        <i className="fas fa-arrow-right ms-1" style={{ fontSize: '12px' }}></i>
+                      </Link>
                     </div>
                   )}
                   
