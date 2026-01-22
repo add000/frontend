@@ -274,6 +274,7 @@ export default function LiquidNavbar() {
                             textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
                             transition: 'all 0.3s ease',
                             boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                            zIndex: '10',
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
