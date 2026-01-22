@@ -298,7 +298,35 @@ export default function LiquidNavbar() {
                   </>
                 )}
                 
-                              </div>
+                {/* Login Button - Only show when not logged in */}
+                {!tokenState && (
+                  <Link className="btn btn-outline-light"
+                    href="/login"
+                    role="button"
+                    style={{
+                      borderRadius: '25px',
+                      padding: '10px 20px',
+                      fontWeight: '500',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(10px)',
+                      color: 'white',
+                      textShadow: '0 1px 6px rgba(0, 0, 0, 0.3)',
+                      transition: 'all 0.3s ease',
+                      boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                    }}>เข้าสู่ระบบ</Link>
+                )}
+              </div>
 
               {/* Mobile Navigation */}
               <div className="d-lg-none w-100">
