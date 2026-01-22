@@ -24,6 +24,12 @@ const shouldRedirectToDefault = (pathname, userRole) => {
 
 // ✅ **Debug function to get user from request**
 const getUserFromRequest = (request) => {
+  // Add timeout for user retrieval
+  const userRetrievalTimeout = setTimeout(() => {
+    console.warn('User retrieval timeout - returning null');
+    return null;
+  }, 3000); // 3 second timeout for user retrieval
+
   try {
     // ตรวจสอบ cookies ทั้งหมด
     console.log('=== MIDDLEWARE DEBUG ===');
@@ -41,9 +47,11 @@ const getUserFromRequest = (request) => {
         const user = JSON.parse(decodedUser);
         console.log('Parsed user from cookie:', user);
         console.log('User role from cookie:', user.role_name);
+        clearTimeout(userRetrievalTimeout);
         return user;
       } catch (parseError) {
         console.error('Error parsing user cookie:', parseError);
+        clearTimeout(userRetrievalTimeout);
       }
     }
     
@@ -53,6 +61,7 @@ const getUserFromRequest = (request) => {
     
     if (!token) {
       console.log('No token found in cookies');
+      clearTimeout(userRetrievalTimeout);
       return null;
     }
     
@@ -62,6 +71,7 @@ const getUserFromRequest = (request) => {
       if (parts.length === 3) {
         const payload = JSON.parse(atob(parts[1]));
         console.log('User from JWT payload:', payload);
+        clearTimeout(userRetrievalTimeout);
         return payload;
       }
     } catch (tokenError) {
@@ -69,17 +79,26 @@ const getUserFromRequest = (request) => {
     }
     
     console.log('No user data found in cookies or token');
+    clearTimeout(userRetrievalTimeout);
     return null;
   } catch (error) {
     console.error('Error in getUserFromRequest:', error);
+    clearTimeout(userRetrievalTimeout);
     return null;
   }
 };
 
 // ✅ **Helper function to check if user has required role**
 const hasRole = (user, requiredRole) => {
+  // Add timeout for role checking
+  const roleCheckTimeout = setTimeout(() => {
+    console.warn('Role check timeout - assuming no role');
+    return false;
+  }, 5000); // 5 second timeout for role check
+
   if (!user || !user.role_name) {
     console.log('No user or role_name in hasRole check');
+    clearTimeout(roleCheckTimeout);
     return false;
   }
   
@@ -88,11 +107,13 @@ const hasRole = (user, requiredRole) => {
   if (Array.isArray(requiredRole)) {
     const result = requiredRole.includes(user.role_name);
     console.log('Array check result:', result);
+    clearTimeout(roleCheckTimeout);
     return result;
   }
   
   const result = user.role_name === requiredRole;
   console.log('Single role check result:', result);
+  clearTimeout(roleCheckTimeout);
   return result;
 };
 

@@ -60,12 +60,26 @@ export function AuthProvider({ children }) {
   const [initialized, setInitialized] = useState(false);
 
   const getUserPermissions = async (userId) => {
+    // Add timeout for permission fetching
+    const permissionTimeout = setTimeout(() => {
+      console.warn('Permission fetch timeout - returning empty permissions');
+      return [];
+    }, 5000); // 5 second timeout for permission fetch
+
     try {
       const { apiFetch } = await import('./api');
-      const response = await apiFetch(`/api/users/${userId}/permissions`);
+      const response = await Promise.race([
+        apiFetch(`/api/users/${userId}/permissions`),
+        new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('การดึงข้อมูลสิทธิ์หมดเวลา (5 วินาที)')), 5000);
+        })
+      ]);
+      
+      clearTimeout(permissionTimeout);
       return await response.json();
     } catch (error) {
       console.error('Error fetching user permissions:', error);
+      clearTimeout(permissionTimeout);
       return [];
     }
   };

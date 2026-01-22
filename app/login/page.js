@@ -100,13 +100,24 @@ export default function LoginPage() {
     setIsSubmitting(true); // Start request queue
 
     try {
-      const res = await apiFetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      // Create timeout promise for login request
+      const loginTimeout = new Promise((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('การเข้าสู่ระบบหมดเวลา (30 วินาที)'));
+        }, 30000); // 30 second timeout for login
       });
+
+      // Race between login API and timeout
+      const res = await Promise.race([
+        apiFetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        }),
+        loginTimeout
+      ]);
       
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -197,35 +208,47 @@ export default function LoginPage() {
     } catch (err) {
       console.error('Login error:', err);
       
-      // Increment failed attempts
-      const newFailedAttempts = failedAttempts + 1;
-      setFailedAttempts(newFailedAttempts);
-      
-      // Show warning after 3 failed attempts
-      if (newFailedAttempts >= 3) {
+      // Handle timeout error specifically
+      if (err.message.includes('หมดเวลา')) {
         await Swal.fire({
-          icon: 'warning',
-          title: 'คำเตือน',
-          text: 'การเข้าสู่ระบบล้มเหลวหลายครั้ง กรุณาตรวจสอบข้อมูลและลองใหม่อีกครั้ง',
+          icon: 'error',
+          title: 'หมดเวลาการเข้าสู่ระบบ',
+          text: 'ไม่สามารถเข้าสู่ระบบได้ภายใน 30 วินาที กรุณาลองใหม่',
+          confirmButtonColor: '#374151',
           background: '#1f1f1f',
           color: '#fff',
-          iconColor: '#f59e0b',
-          padding: '3em',
-          confirmButtonColor: '#374151',
-          customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
         });
       } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'เข้าสู่ระบบไม่สำเร็จ',
-          text: `ความพยายามในการเข้าสู่ระบบ (ครั้งที่ ${newFailedAttempts})`,
-          background: '#1f1f1f',
-          color: '#fff',
-          iconColor: '#f87171',
-          padding: '3em',
-          confirmButtonColor: '#374151',
-          customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
-        });
+        // Increment failed attempts
+        const newFailedAttempts = failedAttempts + 1;
+        setFailedAttempts(newFailedAttempts);
+        
+        // Show warning after 3 failed attempts
+        if (newFailedAttempts >= 3) {
+          await Swal.fire({
+            icon: 'warning',
+            title: 'คำเตือน',
+            text: 'การเข้าสู่ระบบล้มเหลวหลายครั้ง กรุณาตรวจสอบข้อมูลและลองใหม่อีกครั้ง',
+            background: '#1f1f1f',
+            color: '#fff',
+            iconColor: '#f59e0b',
+            padding: '3em',
+            confirmButtonColor: '#374151',
+            customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'เข้าสู่ระบบไม่สำเร็จ',
+            text: `ความผิดพลาดในการเข้าสู่ระบบ (ครั้งที่ ${newFailedAttempts})`,
+            background: '#1f1f1f',
+            color: '#fff',
+            iconColor: '#f87171',
+            padding: '3em',
+            confirmButtonColor: '#374151',
+            customClass: { popup: 'rounded-5', confirmButton: 'rounded-5' },
+          });
+        }
       }
     } finally {
       setIsSubmitting(false); // Reset request queue
