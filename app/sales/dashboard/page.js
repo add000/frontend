@@ -33,10 +33,29 @@ export default function SalesDashboard() {
     let isMounted = true;
     const fetchStats = async () => {
       setStatsLoading(true);
+      
+      // Create timeout promise
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('การโหลดข้อมูลหมดเวลา (1 นาที)'));
+        }, 60000); // 1 minute timeout
+      });
+
       try {
-        // TODO: ดึงข้อมูลสถิติจาก API
-        console.log('Fetching sales stats...');
-        // ตัวอย่างข้อมูล mock
+        // Race between actual fetch and timeout
+        await Promise.race([
+          // TODO: ดึงข้อมูลสถิติจาก API
+          new Promise(resolve => {
+            console.log('Fetching sales stats...');
+            // ตัวอย่างข้อมูล mock
+            setTimeout(() => {
+              if (!isMounted) return;
+              resolve();
+            }, 1000); // Simulate 1 second API call
+          }),
+          timeoutPromise
+        ]);
+        
         if (!isMounted) return;
         
         setStats({
@@ -47,6 +66,29 @@ export default function SalesDashboard() {
         });
       } catch (err) {
         console.error('Error fetching stats:', err);
+        
+        // Handle timeout error specifically
+        if (err.message.includes('หมดเวลา')) {
+          // Show error notification
+          if (typeof window !== 'undefined' && window.Swal) {
+            window.Swal.fire({
+              icon: 'error',
+              title: 'หมดเวลาการโหลดข้อมูล',
+              text: 'ไม่สามารถโหลดข้อมูลสถิติได้ภายใน 1 นาที กรุณาลองใหม่',
+              confirmButtonColor: '#374151',
+              background: '#1f1f1f',
+              color: '#fff',
+            });
+          }
+          
+          // Set error state or show fallback data
+          setStats({
+            todaySales: 0,
+            monthlySales: 0,
+            totalCustomers: 0,
+            pendingOrders: 0
+          });
+        }
       } finally {
         if (isMounted) setStatsLoading(false);
       }

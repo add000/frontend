@@ -34,10 +34,22 @@ export default function AdminDashboard() {
     let isMounted = true;
     const fetchStats = async () => {
       setStatsLoading(true);
+      
+      // Create timeout promise
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('การโหลดข้อมูลหมดเวลา (1 นาที)'));
+        }, 60000); // 1 minute timeout
+      });
+
       try {
-        const [usersRes, rolesRes] = await Promise.all([
-          usersAPI.getAll(),
-          rolesAPI.getAll(),
+        // Race between actual fetch and timeout
+        const [usersRes, rolesRes] = await Promise.race([
+          Promise.all([
+            usersAPI.getAll(),
+            rolesAPI.getAll(),
+          ]),
+          timeoutPromise
         ]);
 
         const users = await usersRes.json();
@@ -53,6 +65,29 @@ export default function AdminDashboard() {
         });
       } catch (err) {
         console.error('Error fetching stats:', err);
+        
+        // Handle timeout error specifically
+        if (err.message.includes('หมดเวลา')) {
+          // Show error notification
+          if (typeof window !== 'undefined' && window.Swal) {
+            window.Swal.fire({
+              icon: 'error',
+              title: 'หมดเวลาการโหลดข้อมูล',
+              text: 'ไม่สามารถโหลดข้อมูลสถิติได้ภายใน 1 นาที กรุณาลองใหม่',
+              confirmButtonColor: '#374151',
+              background: '#1f1f1f',
+              color: '#fff',
+            });
+          }
+          
+          // Set error state or show fallback data
+          setStats({
+            totalUsers: 0,
+            totalRoles: 0,
+            activeUsers: 0,
+            inactiveUsers: 0,
+          });
+        }
       } finally {
         if (isMounted) setStatsLoading(false);
       }
