@@ -32,20 +32,23 @@ export default function LoginPage() {
           const urlParams = new URLSearchParams(window.location.search);
           const redirectParam = urlParams.get('redirect');
           
-          if (redirectParam) {
-            try {
-              const redirectPath = decodeURIComponent(redirectParam);
-              console.log('Redirecting to specified path:', redirectPath);
-              router.replace(redirectPath);
-              return;
-            } catch (error) {
-              console.error('Error decoding redirect path:', error);
+          // ✅ **Force reload to ensure AuthProvider updates**
+          setTimeout(() => {
+            if (redirectParam) {
+              try {
+                const redirectPath = decodeURIComponent(redirectParam);
+                console.log('Redirecting to specified path:', redirectPath);
+                window.location.href = redirectPath; // Use window.location.href for full reload
+                return;
+              } catch (error) {
+                console.error('Error decoding redirect path:', error);
+              }
             }
-          }
-          
-          // ✅ **If no redirect parameter, go to admin dashboard**
-          console.log('No redirect parameter, going to admin dashboard');
-          router.replace('/admin/dashboard');
+            
+            // ✅ **If no redirect parameter, go to admin dashboard**
+            console.log('No redirect parameter, going to admin dashboard');
+            window.location.href = '/admin/dashboard'; // Use window.location.href for full reload
+          }, 100); // Small delay to ensure localStorage is set
         } catch (error) {
           console.error('Error parsing user data:', error);
           localStorage.removeItem('token');
@@ -197,9 +200,9 @@ export default function LoginPage() {
         // ✅ **Redirect to final path with increased delay for database processing**
         console.log('Redirecting to:', redirectPath);
         
-        // Increased delay for smooth data retrieval and database processing
+        // Use full page reload to ensure AuthProvider is properly initialized
         setTimeout(() => {
-          router.replace(redirectPath);
+          window.location.href = redirectPath; // Full page reload instead of router.replace
         }, 1200); // Increased from immediate to 1200ms for smoother experience
 
       } else {
