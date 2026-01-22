@@ -22,7 +22,8 @@ export default function OwnerDashboard() {
     const authCheckTimeout = setTimeout(() => {
       if (!user) {
         console.log('Authentication check timeout - redirecting to login');
-        router.replace('/login');
+        const currentPath = window.location.pathname;
+        window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
       }
     }, 30000); // 30 second timeout for auth check
 
