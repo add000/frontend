@@ -9,14 +9,38 @@ const getUserFromToken = () => {
   if (typeof window === 'undefined') return null;
   
   try {
+    // ✅ **Try localStorage first (primary source after login)**
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      const user = JSON.parse(userString);
+      console.log('AuthProvider - Found user in localStorage:', user);
+      return user;
+    }
+    
+    // ✅ **Fallback to JWT token parsing**
     const token = localStorage.getItem('token');
-    if (!token) return null;
+    if (!token) {
+      console.log('AuthProvider - No token found in localStorage');
+      return null;
+    }
+    
+    console.log('AuthProvider - Parsing JWT token:', token);
     
     // แยกข้อมูลจาก JWT token (ไม่ต้อง verify ใน production)
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      console.error('AuthProvider - Invalid JWT format');
+      return null;
+    }
+    
+    const payload = JSON.parse(atob(parts[1]));
+    console.log('AuthProvider - Parsed JWT payload:', payload);
     return payload;
   } catch (error) {
-    console.error('Error parsing token:', error);
+    console.error('AuthProvider - Error parsing token/user:', error);
+    // Clear corrupted data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     return null;
   }
 };
@@ -85,22 +109,27 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    if (initialized) return; // ป้องกันการทำงานซ้ำ
-    
     const initAuth = async () => {
       try {
+        console.log('AuthProvider - Initializing auth...');
         const userData = getUserFromToken();
         if (userData) {
+          console.log('AuthProvider - Setting user:', userData);
           setUser(userData);
           
           // ดึงข้อมูลสิทธิ์ถ้าไม่ใช่ admin (admin มีสิทธิ์ทั้งหมด)
           if (!isAdmin(userData)) {
+            console.log('AuthProvider - Fetching permissions for user:', userData.id);
             const userPermissions = await getUserPermissions(userData.id);
             setPermissions(userPermissions);
+          } else {
+            console.log('AuthProvider - User is admin, skipping permission fetch');
           }
+        } else {
+          console.log('AuthProvider - No user data found');
         }
       } catch (error) {
-        console.error('Auth initialization failed:', error);
+        console.error('AuthProvider - Auth initialization failed:', error);
       } finally {
         setLoading(false);
         setInitialized(true);
@@ -108,7 +137,23 @@ export function AuthProvider({ children }) {
     };
 
     initAuth();
-  }, [initialized]);
+
+    // ✅ **Listen for storage changes (cross-tab sync)**
+    const handleStorageChange = (e) => {
+      console.log('AuthProvider - Storage changed:', e.key);
+      if (e.key === 'user' || e.key === 'token') {
+        console.log('AuthProvider - User data changed, re-initializing...');
+        setInitialized(false); // Reset to allow re-initialization
+        setTimeout(initAuth, 100); // Small delay to ensure storage is updated
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []); // Remove initialized dependency to allow re-initialization
 
   const checkPermission = (resource, action) => {
     if (!user) return false;
