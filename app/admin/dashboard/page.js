@@ -21,11 +21,8 @@ export default function AdminDashboard() {
   useEffect(() => {
     // ตรวจสอบสิทธิ์พร้อม timeout
     const authCheckTimeout = setTimeout(() => {
-      if (!user) {
-        console.log('Authentication check timeout - redirecting to login');
-        const currentPath = window.location.pathname;
-        window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
-      }
+      console.log('Authentication check timeout - redirecting to login');
+      router.replace('/login');
     }, 30000); // 30 second timeout for auth check
 
     // ✅ **ตรวจสอบสิทธิ์**

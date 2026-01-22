@@ -18,13 +18,17 @@ export default function OwnerDashboard() {
   const [statsLoading, setStatsLoading] = useState(false);
 
   useEffect(() => {
-    // ตรวจสอบสิทธิ์พร้อม timeout
+    // ✅ **Skip auth check if user is already available to prevent unnecessary redirects**
+    if (user) {
+      console.log('OwnerDashboard - User already authenticated:', user);
+      console.log('OwnerDashboard - User role:', user.role_name);
+      return; // Don't run auth check if user is already available
+    }
+
+    // ตรวจสอบสิทธิ์พร้อม timeout - only run if no user
     const authCheckTimeout = setTimeout(() => {
-      if (!user) {
-        console.log('Authentication check timeout - redirecting to login');
-        const currentPath = window.location.pathname;
-        window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
-      }
+      console.log('Authentication check timeout - no user found, redirecting to login');
+      router.replace('/login');
     }, 30000); // 30 second timeout for auth check
 
     // ✅ **ตรวจสอบสิทธิ์**
