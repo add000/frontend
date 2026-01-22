@@ -18,6 +18,12 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // ✅ **Skip auth check if we're on login page to prevent redirect loops**
+    if (window.location.pathname === '/login') {
+      setIsLoading(false);
+      return;
+    }
+
     const checkAuthAndRedirect = () => {
       const token = localStorage.getItem('token');
       const userString = localStorage.getItem('user');
