@@ -18,7 +18,14 @@ export default function SalesDashboard() {
   const [statsLoading, setStatsLoading] = useState(false);
 
   useEffect(() => {
-    // ตรวจสอบสิทธิ์
+    // ตรวจสอบสิทธิ์พร้อม timeout
+    const authCheckTimeout = setTimeout(() => {
+      if (!user) {
+        console.log('Authentication check timeout - redirecting to login');
+        router.replace('/login');
+      }
+    }, 30000); // 30 second timeout for auth check
+
     if (!user) {
       const currentPath = window.location.pathname;
       console.log('No user, redirecting to login');
@@ -28,6 +35,9 @@ export default function SalesDashboard() {
     
     console.log('SalesDashboard - User:', user);
     console.log('SalesDashboard - User role:', user.role_name);
+
+    // Clear timeout if user is found
+    clearTimeout(authCheckTimeout);
 
     // ดึงข้อมูลสถิติ
     let isMounted = true;

@@ -19,6 +19,14 @@ export default function AdminDashboard() {
   const [statsLoading, setStatsLoading] = useState(false);
 
   useEffect(() => {
+    // ตรวจสอบสิทธิ์พร้อม timeout
+    const authCheckTimeout = setTimeout(() => {
+      if (!user) {
+        console.log('Authentication check timeout - redirecting to login');
+        router.replace('/login');
+      }
+    }, 30000); // 30 second timeout for auth check
+
     // ✅ **ตรวจสอบสิทธิ์**
     if (!user) {
       const currentPath = window.location.pathname;
@@ -29,6 +37,9 @@ export default function AdminDashboard() {
     
     console.log('AdminDashboard - User:', user);
     console.log('AdminDashboard - User role:', user.role_name);
+
+    // Clear timeout if user is found
+    clearTimeout(authCheckTimeout);
 
     // ✅ **ดึงข้อมูลสถิติ**
     let isMounted = true;
