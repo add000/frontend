@@ -147,8 +147,21 @@ export default function LoginPage() {
         console.log('Role:', data.user.role_name);
 
         // ✅ **ตั้ง cookies สำหรับ middleware (สำรอง)**
-        document.cookie = `token=${data.token}; path=/; max-age=86400`;
-        document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; path=/; max-age=86400`;
+        console.log('🍪 Setting cookies...');
+        document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+        console.log('Token cookie set:', document.cookie);
+        
+        document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; path=/; max-age=86400; SameSite=Lax`;
+        console.log('User cookie set:', document.cookie);
+        
+        // ✅ **Debug: Check if cookies are accessible**
+        setTimeout(() => {
+          console.log('🍪 Checking cookies after set:', document.cookie);
+          const tokenCheck = document.cookie.includes('token=');
+          const userCheck = document.cookie.includes('user=');
+          console.log('Token cookie exists:', tokenCheck);
+          console.log('User cookie exists:', userCheck);
+        }, 100);
 
         if (rememberMe) {
           const updatedAccounts = [...savedAccounts.filter(a => a.username !== formData.username), formData];
