@@ -218,7 +218,7 @@ export default function AdminDashboard() {
               <div className="row g-3">
                 <QuickLink href="/admin/users" label="จัดการผู้ใช้" icon="users" color="primary" />
                 <QuickLink href="/admin/roles" label="จัดการบทบาท" icon="user-shield" color="success" />
-                <QuickLink href="/admin/roles/1/permissions" label="จัดการสิทธิ์" icon="key" color="warning" />
+                <QuickLink href="/admin/permissions" label="จัดการสิทธิ์" icon="key" color="warning" />
                 <QuickLink href="#" label="รายงาน" icon="chart-bar" color="info" disabled />
               </div>
             </div>
