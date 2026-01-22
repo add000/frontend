@@ -29,7 +29,20 @@ export default function SalesDashboard() {
     if (!user) {
       const currentPath = window.location.pathname;
       console.log('No user, redirecting to login');
-      router.replace(`/login?redirect=${encodeURIComponent(currentPath)}`);
+      
+      // Add timeout for redirect
+      const redirectTimeout = setTimeout(() => {
+        console.log('Redirect timeout - forcing navigation');
+        window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+      }, 5000); // 5 second timeout for redirect
+      
+      try {
+        router.replace(`/login?redirect=${encodeURIComponent(currentPath)}`);
+        clearTimeout(redirectTimeout); // Clear timeout if redirect succeeds
+      } catch (error) {
+        console.error('Router redirect failed:', error);
+        // Timeout will handle fallback
+      }
       return;
     }
     
