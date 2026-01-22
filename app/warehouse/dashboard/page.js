@@ -7,7 +7,7 @@ import LoadingPage from '../../components/LoadingPage';
 import ProfileSection from '../../components/ProfileSection';
 
 export default function WarehouseDashboard() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const [stats, setStats] = useState({
     totalProducts: 0,
@@ -18,18 +18,16 @@ export default function WarehouseDashboard() {
   const [statsLoading, setStatsLoading] = useState(false);
 
   useEffect(() => {
-    // ตรวจสอบสิทธิ์พร้อม timeout
-    const authCheckTimeout = setTimeout(() => {
-      if (!user) {
-        console.log('Authentication check timeout - redirecting to login');
-        router.replace('/login');
-      }
-    }, 30000); // 30 second timeout for auth check
+    // ✅ **Wait for AuthProvider to initialize before checking auth**
+    if (loading) {
+      console.log('WarehouseDashboard - AuthProvider still loading, waiting...');
+      return;
+    }
 
-    // ตรวจสอบสิทธิ์
+    // ✅ **Only check auth after AuthProvider is ready**
     if (!user) {
+      console.log('WarehouseDashboard - No user after AuthProvider init, redirecting to login');
       const currentPath = window.location.pathname;
-      console.log('No user, redirecting to login');
       
       // Enhanced redirect with multiple fallback mechanisms
       const redirectTimeout = setTimeout(() => {
@@ -63,11 +61,8 @@ export default function WarehouseDashboard() {
       return;
     }
     
-    console.log('WarehouseDashboard - User:', user);
+    console.log('WarehouseDashboard - User authenticated:', user);
     console.log('WarehouseDashboard - User role:', user.role_name);
-
-    // Clear timeout if user is found
-    clearTimeout(authCheckTimeout);
 
     // ดึงข้อมูลสถิติ
     let isMounted = true;
@@ -139,7 +134,7 @@ export default function WarehouseDashboard() {
     return () => {
       isMounted = false;
     };
-  }, [user, router]);
+  }, [user, loading]);
 
   // แสดง loading ถ้ายังไม่มี user
   if (!user) {
