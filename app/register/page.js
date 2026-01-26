@@ -28,7 +28,7 @@ export default function RegisterPage() {
 
   const fetchRoles = async () => {
     try {
-      const res = await rolesAPI.getAll();
+      const res = await apiFetch('/api/roles/public');
       const data = await res.json();
       setRoles(data);
     } catch (error) {
