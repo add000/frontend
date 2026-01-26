@@ -1,12 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
-import { apiFetch } from '../config/api';
+import { apiFetch, rolesAPI } from '../config/api';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [roles, setRoles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     username: '',
@@ -15,11 +17,24 @@ export default function RegisterPage() {
     fullname: '',
     lastname: '',
     status: 'inactive',
-    acceptTerms: false,
-    role_id: '', // เพิ่ม role_id
+    role_id: '',
   });
 
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
+  const fetchRoles = async () => {
+    try {
+      const res = await rolesAPI.getAll();
+      const data = await res.json();
+      setRoles(data);
+    } catch (error) {
+      console.error('Failed to fetch roles:', error);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -36,7 +51,7 @@ export default function RegisterPage() {
     if (!formData.firstname) newErrors.firstname = 'กรุณาเลือกคำนำหน้าชื่อ';
     if (!formData.fullname) newErrors.fullname = 'กรุณากรอกชื่อ';
     if (!formData.lastname) newErrors.lastname = 'กรุณากรอกนามสกุล';
-    if (!formData.acceptTerms) newErrors.acceptTerms = 'กรุณายอมรับข้อตกลง';
+    if (!formData.role_id) newErrors.role_id = 'กรุณาเลือกบทบาท';
     return newErrors;
   };
 
@@ -49,6 +64,7 @@ export default function RegisterPage() {
       return;
     }
 
+    setLoading(true);
     try {
       const res = await apiFetch('/api/users', {
         method: 'POST',
@@ -73,14 +89,13 @@ export default function RegisterPage() {
           fullname: '',
           lastname: '',
           status: 'inactive',
-          acceptTerms: false,
-          role_id: '', // เพิ่ม role_id
+          role_id: '',
         });
         setErrors({});
       } else {
         Swal.fire({
           title: 'เกิดข้อผิดพลาด!',
-          text: result?.message || 'สมัครสมาชิกไม่สำเร็จ!',
+          text: result?.error || result?.message || 'สมัครสมาชิกไม่สำเร็จ!',
           icon: 'error',
           confirmButtonText: 'ตกลง',
         });
@@ -93,6 +108,8 @@ export default function RegisterPage() {
         icon: 'error',
         confirmButtonText: 'ตกลง',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -194,26 +211,36 @@ export default function RegisterPage() {
           />
           {errors.lastname && <div style={{ color: '#dc3545' }}>{errors.lastname}</div>}
         </div>
-        {/* Accept Terms */}
-        <div className="mb-3 form-check">
-          <input
-            type="checkbox"
-            id="acceptTerms"
-            name="acceptTerms"
-            checked={formData.acceptTerms}
+        {/* Role Selection */}
+        <div className="mb-3">
+          <label htmlFor="role_id" className="form-label">บทบาท</label>
+          <select
+            id="role_id"
+            name="role_id"
+            value={formData.role_id}
             onChange={handleChange}
-            className="form-check-input bg-transparent rounded-3"
-          />
-          <label className="form-check-label" htmlFor="acceptTerms">
-            ฉันยอมรับข้อกำหนดและเงื่อนไขของเว็บไซต์นี้
-          </label>
-          {errors.acceptTerms && <div style={{ color: '#dc3545' }}>{errors.acceptTerms}</div>}
+            className="form-control bg-transparent border border-gray-400 rounded-5 px-3 py-2 text-gray-800 focus:outline-none"
+            style={{ border: errors.role_id ? '2px solid #dc3545' : '1px solid #6b7280' }}
+          >
+            <option value="">โปรดเลือกบทบาท</option>
+            {roles.map((role) => (
+              <option key={role.id} value={role.id}>
+                {role.name}
+              </option>
+            ))}
+          </select>
+          {errors.role_id && <div style={{ color: '#dc3545' }}>{errors.role_id}</div>}
         </div>
 
         {/* Submit + Back */}
         <div className="d-flex flex-column align-items-center gap-2">
-          <button type="submit" className="btn btn-outline-light w-100" style={{ borderRadius: '25px' }}>
-            สมัครสมาชิก
+          <button 
+            type="submit" 
+            className="btn btn-outline-light w-100" 
+            style={{ borderRadius: '25px' }}
+            disabled={loading}
+          >
+            {loading ? 'กำลังสมัคร...' : 'สมัครสมาชิก'}
           </button>
           <Link href="/login" className="btn btn-outline-light w-100" style={{ borderRadius: '25px' }}>
             ย้อนกลับ
